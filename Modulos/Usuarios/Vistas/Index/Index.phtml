@@ -1,0 +1,38 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+</div>
+
+<?php if (isset($this->usuarios) && count($this->usuarios)): ?>
+        
+        <div class="filaTitulos">
+        <?php
+        echo '<div class="celda id"><b>ID</b></div>';
+        echo '<div class="celda apellidos"><b>Usuario</b></div>';
+        echo '<div class="celda domicilio"><b>Role</b></div>';
+        echo '<div class="celda nro_doc"><b></b></div>';
+        ?>
+    </div>
+
+        
+        <?php foreach ($this->usuarios as $us): ?>
+            
+        <div id="<?php echo $us['id']; ?>" class="filaDatos">
+            <div class="celda id">
+                <?php echo $us['id']; ?>
+            </div>
+            <div class="celda apellidos">
+                <?php echo $us['username']; ?>
+            </div>
+            <div class="celda apellidos">
+                <?php echo $us['role']; ?>
+            </div>
+            <div class="celda apellidos">
+                <a href="<?php echo $_layoutParams['root'] . '?option=Usuarios&sub=index&otro=permisos&id=' . $us['id']; ?>">
+                   Permisos
+                </a>
+            </div>
+        </div>
+           
+        <?php endforeach; ?>
+
+<?php endif; ?>

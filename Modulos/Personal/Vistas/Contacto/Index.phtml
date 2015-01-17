@@ -1,0 +1,55 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+</div>
+<div class="tabla">
+    <div class="filaTitulos">
+        <?php
+        echo '<div class="celda id"><b>Nº</b></div>';
+        echo '<div class="celda apellidos"><b>Apellidos y Nombres</b></div>';
+        echo '<div class="celda nro_doc"><b>Tipo</b></div>';
+        echo '<div class="celda domicilio"><b>Contacto</b></div>';
+        ?>
+    </div>
+</div>
+<div class="tabla">
+    <?php
+    foreach ($this->datos as $personal) {
+        echo '<div id=' . $personal['id'] . ' class="filaDatos">
+            <a href="' . BASE_URL . '?option=Personal&sub=index&cont=editar&id=' . $personal['id'] . '" class="Ntooltip">';
+        echo '<div class="celda id">';
+        echo $this->i;
+        echo '</div>';
+        echo '<div ';
+        if(MOSTRAR_ICONOS == 1) {
+            echo 'id="apellidos"';
+        }
+        echo ' class="celda apellidos"><b>';
+        echo $personal['apellidos'] . ', ' . $personal['nombres'];
+        echo '</b></div>';
+        echo '<div ';
+        if(MOSTRAR_ICONOS == 1) {
+            echo 'id=tipo';
+        }
+        echo ' class="celda nro_doc">';
+        echo $personal['tipo'];
+        echo '</div>';
+        echo '<div ';
+        if(MOSTRAR_ICONOS == 1) {
+            echo 'id="contacto"';
+        }
+         echo ' class="celda domicilio" title="' . $personal['valor'] . '">';
+        echo $personal['valor'];
+        echo '</div>';
+       
+        $this->i++;
+        echo '</a></div>';
+    }
+    ?>
+</div>
+<div id="paginacion">
+<?php if (isset($this->paginacion)) echo $this->paginacion; ?>
+</div>
+<?php if (Session::accesoViewEstricto(array('usuario'))): ?>
+    <!--Si el nivel es especial muestro el link-->
+    <a href="<?php BASE_URL; ?>?option=Personal&sub=nuevo">Nuevo</a>
+<?php endif; ?>

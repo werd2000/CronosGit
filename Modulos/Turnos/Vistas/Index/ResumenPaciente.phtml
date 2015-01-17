@@ -1,0 +1,72 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+
+    <select name="pacienteResumen" id="pacienteResumen">
+        <option value=0 label=""></option>
+        <?php foreach ($this->listaPacientes as $paciente): ?>
+            <?php if ($paciente->getId() === $this->idPaciente) { ?>
+                <option value=<?php echo $paciente->getId(); ?>
+                        label="<?php echo $paciente->getApellidos() . ', ' . $paciente->getNombres(); ?>"
+                        selected="selected">
+                            <?php echo $paciente->getApellidos() . ', ' . $paciente->getNombres(); ?> 
+                </option>
+            <?php } else { ?>
+                <option value=<?php echo $paciente->getId(); ?> label="<?php echo $paciente->getApellidos() . ', ' . $paciente->getNombres(); ?>"><?php echo $paciente->getApellidos() . ', ' . $paciente->getNombres(); ?></option>
+            <?php } ?>
+        <?php endforeach ?>
+    </select>
+</div>
+<div class="filaResumen">
+    <div class="celdaResumen">
+        <?php
+        echo '<b>' . $this->datos[0]['dia'] . '</b>';
+        ?>
+    </div>
+    <div class="celdaResumen">
+        <?php
+        echo '<b>' . $this->datos[0]['hora'] . '</b>';
+        ?>
+    </div>
+    <div class="celdaResumen">
+        <?php
+        echo '<b>' . $this->datos[0]['profesional'] . '</b>';
+        ?>
+    </div>
+</div>
+<div id="tablaResumenPaciente">
+    <?php for ($index = 1; $index < count($this->datos); $index++) { ?>
+        <div class="filaResumen">
+            <div class="celdaResumen">
+                <?php
+                echo $this->datos[$index]['dia'];
+                ?>
+            </div>
+            <div class="celdaResumen">
+                <?php
+                echo $this->datos[$index]['hora'];
+                ?>
+            </div>
+            <div class="celdaResumen">
+                <?php
+                echo $this->datos[$index]['profesional'];
+                ?>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
+    <div class="filaResumen">
+        <div class="celdaResumen">
+            <?php if (isset($this->totalMensual)){
+                echo 'Total Mensual: ' . $this->totalMensual . ' sesiones';
+            }?>
+        </div>
+        <div class="celdaResumen">
+        </div>
+        <div class="celdaResumen">
+        </div>
+    </div>
+
+
+</div>
+

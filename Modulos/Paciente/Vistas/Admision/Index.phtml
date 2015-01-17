@@ -1,0 +1,77 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+</div>
+<div class="tabla">
+    <div class="filaTitulos">
+        <?php
+        echo '<div class="celda id"><b>Nº</b></div>';
+        echo '<div class="celda apellidos"><b>Fecha</b></div>';
+        echo '<div class="celda domicilio"><b>Interesado</b></div>';
+        echo '<div class="celda nro_doc"><b>Paciente</b></div>';
+        echo '<div class="celda fechaNac"><b>Tel.</b></div>';
+        echo '<div class="celda diagnostico"><b>Diagnóstico</b></div>';
+        ?>
+    </div>
+</div>
+<div class="tabla">
+    <?php
+    foreach ($this->datos as $paciente) {
+        
+        echo '<div id=' . $paciente['id'] . ' class="filaDatos">
+            <a href="' . BASE_URL . '?option=Paciente&sub=admision&cont=editar&id=' . $paciente['id'] . '" class="Ntooltip">';
+        echo '<div class="celda id">';
+        echo $this->i;
+        echo '</div>';
+        
+        echo '<div ';
+        if(MOSTRAR_ICONOS == 1) {
+            echo 'id="fecha_nac"';
+        }
+         echo ' class="celda fechaNac" title="' . $paciente['edad'] . ' años">';
+        echo $paciente['fecha'];
+        echo '</div>';
+        
+        echo '<div ';
+        if(MOSTRAR_ICONOS == 1) {
+            echo 'id="apellidos"';
+        }
+        echo ' class="celda apellidos"><b>';
+        echo $paciente['interesado'];
+        echo '</b></div>';
+        
+        echo '<div ';
+        if(MOSTRAR_ICONOS == 1) {
+            echo 'id="domicilio"';
+        }
+        echo ' class="celda apellidos">';
+        echo $paciente['paciente'];
+        echo '</div>';
+        
+        echo '<div ';
+        if(MOSTRAR_ICONOS == 1){ echo 'id="tel"';}
+        echo ' class="celda fecha_nac">';
+        echo $paciente['tel'];
+        echo '</div>';
+        
+        echo '<div ';
+        if(MOSTRAR_ICONOS == 1) {
+            echo 'id="diagnostico"';
+        }
+        echo ' class="celda diagnostico">';
+        echo $paciente['diagnostico'];
+        echo '</div>';
+        
+        
+        $this->i++;
+        echo '</a></div>';
+    }
+    ?>
+</div>
+<div id="paginacion">
+<?php if (isset($this->paginacion)) echo $this->paginacion; ?>
+</div>
+<?php if (Session::accesoViewEstricto(array('usuario'))): ?>
+    <!--Si el nivel es especial muestro el link-->
+    <a href="<?php BASE_URL; ?>?option=Paciente&sub=nuevo">Nuevo</a>
+<?php endif; ?>
+</div>

@@ -1,0 +1,30 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+</div>
+
+<h3>Usuario: <?php echo $this->info['username']; ?><br />Role: <?php echo $this->info['role'] ?></h3>
+
+<form name="form1" method="post" action="">
+    <input type="hidden" value="1" name="guardar">
+<?php if (isset($this->permisos) && count($this->permisos)): ?>
+        <?php foreach ($this->permisos as $pr): ?>
+            <?php if ($this->role[$pr]['valor'] == 1): ?>
+                <?php $v = "habilitado"; ?>
+            <?php else: ?>
+                <?php $v = "denegado"; ?>
+            <?php endif; ?>
+            <label for="valorOcupacionEmpresa" class="optional"><?php echo $this->usuario[$pr]['permiso']; ?></label>
+                <select name="perm_<?php echo $this->usuario[$pr]['id'] ?>">
+                    <option value="x" <?php if ($this->usuario[$pr]['heredado']): ?> selected="selected" <?php endif; ?>>
+                        Heredado <?php echo '(' . $v . ')'; ?>
+                    </option>
+                    <option value="1" <?php if ($this->usuario[$pr]['valor'] == 1 && $this->usuario[$pr]['heredado'] == ""): ?> selected="selected" <?php endif; ?>>
+                        Habilitado</option>
+                    <option value="" <?php if ($this->usuario[$pr]['valor'] == "" && $this->usuario[$pr]['heredado'] == ""): ?> selected="selected" <?php endif; ?>>
+                        Denegado</option>
+                </select>
+            
+        <?php endforeach ?>
+        <input type="submit" value="Guardar" class="boton" />
+<?php endif ?>
+</form>

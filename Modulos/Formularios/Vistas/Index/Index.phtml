@@ -1,0 +1,15 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+</div>
+
+<div class="tabla">
+    <div id="formularios" class="lista_ul">
+        <ul>
+    <?php
+    foreach ($this->datos as $formulario) { ?>
+            <li><a href="<?php echo BASE_URL.'Public'.DS.'Descargas'.DS.'Formularios'.DS.$formulario;?>">
+        <?php echo $formulario;?></a></li>
+     <?php }    ?>
+            </ul>
+</div>
+    </div>

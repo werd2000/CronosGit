@@ -1,0 +1,84 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+    <input type="text" class="input" name="fecha_turno" id="fechaTurno" value="<?php if (isset($this->fecha)) echo $this->fecha; ?>" class="hasDatepicker">
+</div>
+<div class="filaResumen">
+    <?php foreach ($this->encabezado as $titulo) { ?>
+    <div class="celdaResumen col1quinto">
+        <?php echo '<b>'.$titulo.'</b>';  ?>
+    </div>
+    <?php } ?>
+    
+</div>
+<div id="tablaResumen">
+    <?php for ($index = 0; $index < count($this->datos); $index++) { ?>
+        <div class="filaResumen">
+            <div class="celdaResumen col1quinto">
+                <?php
+                echo $this->datos[$index]['personal'];
+                ?>
+            </div>
+            <div class="celdaResumen col1quinto">
+                <?php
+                echo $this->datos[$index]['turnos_dados'];
+                ?>
+            </div>
+            <div class="celdaResumen col1quinto">
+                <?php
+                echo $this->datos[$index]['horas'];
+                ?>
+            </div>
+            <div class="celdaResumen col1quinto">
+                <?php
+                echo $this->datos[$index]['horas'];
+                ?>
+            </div>
+            <div class="celdaResumen col1quinto">
+                <?php
+                echo $this->datos[$index]['horas'];
+                ?>
+            </div>
+        </div>
+        <div>
+            <?php
+                foreach ($this->datos[$index]['detalle'] as $dia){ ?>
+                    <div id="tablaDetalle">
+                        <div class="celdaResumen col1quinto">
+                        <?php echo $dia['dia']; ?>
+                        </div>
+                        <div class="celdaResumen col1quinto">
+                            <?php echo $dia['cant_turnos']; ?>
+                        </div>
+                        <div class="celdaResumen col1quinto">
+                            <?php echo $dia['cant_turnos']/2; ?>
+                        </div>
+                        <div class="celdaResumen col1quinto">
+                            <?php echo $dia['cant_turnos']/2; ?>
+                        </div>
+                        <div class="celdaResumen col1quinto">
+                            <?php echo $dia['cant_turnos']/2; ?>
+                        </div>
+                    </div>
+                <?php } ?>
+        </div>
+        <?php
+    }
+    ?>
+</div>
+<div id="turnosProfesional">
+    <label for="profesional" class="optional"><b>Seleccione un profesional:</b></label> 
+    <select name="profesional" id="profesional" onClick="cambiar();">
+        <?php foreach ($this->listaProfesionales as $profesional): ?>
+            <option value=<?php echo $profesional->getId(); ?> label="<?php echo $profesional->getApellidos() . ', ' . $profesional->getNombres(); ?>"><?php echo $profesional->getApellidos() . ', ' . $profesional->getNombres(); ?></option>
+        <?php endforeach ?>
+    </select>    
+</div>
+<div id="turnosPaciente">
+    <label for="paciente" class="optional"><b>Seleccione un paciente:</b></label> 
+    <select name="paciente" id="paciente" onClick="cambiarPaciente();">
+        <option value=0 label=""></option>
+        <?php foreach ($this->listaPacientes as $paciente): ?>
+            <option value=<?php echo $paciente->getId(); ?> label="<?php echo $paciente->getApellidos() . ', ' . $paciente->getNombres(); ?>"><?php echo $paciente->getApellidos() . ', ' . $paciente->getNombres(); ?></option>
+        <?php endforeach ?>
+    </select>    
+</div>

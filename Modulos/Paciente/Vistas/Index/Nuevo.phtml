@@ -1,0 +1,104 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <h4><?php echo $this->titulo; ?></h4>
+</div>
+
+<div id = "tabs">
+    <ul>
+        <li><a href="#tabs-1">Datos Principales</a></li>
+    </ul>
+    <div id = "tabs-1">
+        <form id="nuevo_paciente" method="post" action="index.php?mod=Paciente&cont=index&met=nuevo" class="form-horizontal" role="form">
+            <div class="col-md-7 ui-corner-all">
+                <fieldset>
+                    <legend>PACIENTE:</legend>
+                    <input type="hidden" name="guardar" value="1" />
+                    <div class="form-group">
+                        <label for="estado" class="required col-sm-2 control-label">Estado:</label>
+                        <div class="col-sm-10">
+                            <select name="estado" id="estado" class="form-control">
+                                <?php
+                                foreach ($this->estadosPaciente as $estado) {
+                                    echo "<option value=\"$estado\" label=\"$estado\" $seleccionado>$estado</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos" class="required col-sm-2 control-label">Apellidos:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="apellidos" id="apellidos"
+                                   value="" maxlength="25" size="25" 
+                                   class="form-control" required
+                                   data-bv-notempty-message="El Apellido es obligatorio">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombres" class="required col-sm-2 control-label">Nombres:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="nombres" id="nombres" 
+                                   value="" maxlength="25" size="25" 
+                                   class="form-control" required
+                                   data-bv-notempty-message="El Nombre es obligatorio">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_doc" class="optional col-sm-2 control-label">Tipo Doc:</label>
+                        <div class="col-sm-10">
+                            <select name="tipo_doc" id="tipo_doc" class="form-control">
+                                <option value="0" label="DNI" selected="selected">DNI</option>
+                                <option value="1" label="CI">CI</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nro_doc" class="required col-sm-2 control-label">DNI:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="input" name="nro_doc" id="nro_doc"
+                                   value="" class="form-control" required
+                                   data-bv-notempty-message="El Nro de Documento es obligatorio">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nacionalidad" class="required col-sm-2 control-label">Nacionalidad:</label>
+                        <div class="col-sm-10">
+                            <select name="nacionalidad" id="nacionalidad" class="form-control">
+                                <option value="ARGENTINA" label="ARGENTINA">ARGENTINA</option>
+                                <option value="PARAGUAY" label="PARAGUAY">PARAGUAY</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sexo" class="optional col-sm-2 control-label">Sexo:</label>
+                        <div class="col-sm-10">
+                            <select name="sexo" id="sexo" class="form-control">
+                                <?php
+                                foreach ($this->listaSexos as $sexo) {
+                                    echo "<option value=\"$sexo\" label=\"$sexo\" $seleccionado>$sexo</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaNac" class="required col-sm-2 control-label">Fecha Nac.:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="fechaNac" id="fechaNac" 
+                                   value="" class="hasDatepicker" 
+                                   class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="diagnostico" class="optional col-sm-2 control-label">Diagnóstico:</label>
+                        <div class="col-sm-10">
+                            <textarea name="diagnostico" id="diagnostico" 
+                                      rows="4" cols="60" class="form-control">
+                            </textarea>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <input type="submit" class="btn btn-lg btn-primary btn-block" name="boton_guardar" value="Guardar">
+        </form>
+    </div>
+</div>

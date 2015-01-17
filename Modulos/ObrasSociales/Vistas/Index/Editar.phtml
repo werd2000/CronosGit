@@ -1,0 +1,24 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+</div>
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Datos Principales</a></li>
+        <li><a href="#tabs-2">Facturación</a></li>
+    </ul>
+    <div id="tabs-1">
+        <form id="nuevo_paciente" method="post" action="">
+            <input type="hidden" name="guardar" value="1" />
+            <label for="denominacion" class="required">Denominación:</label>
+            <input type="text" class="input" name="denominacion" id="denominacion" value="<?php if (isset($this->datos['denominacion'])) echo $this->datos['denominacion']; ?>" maxlength="25">
+            <label for="direccion" class="required">Dirección:</label>
+            <input type="text" class="input" name="direccion" id="direccion" value="<?php if (isset($this->datos['direccion'])) echo $this->datos['direccion']; ?>" placeholder="Ingrese el nombre" maxlength="25">
+            <label for="provincia" class="required">Provincia:</label>
+            <input type="text" class="input" name="provincia" id="provincia" value="<?php if (isset($this->datos['provincia'])) echo $this->datos['provincia']; ?>" placeholder="Ingrese la provincia" maxlength="25">
+            <label for="cuit" class="optional">Cuit:</label>
+            <input type="text" class="input" name="cuit" id="cuit" value="<?php if (isset($this->datos['cuit'])) echo $this->datos['cuit']; ?>" placeholder="Ingrese el nro de CUIT">
+            <input type="submit" class="boton" name="boton_guardar" value="Guardar">
+        </form>
+    </div>
+    <div id="tabs-2"><?php include_once 'Facturacion.php'; ?></div>
+</div>

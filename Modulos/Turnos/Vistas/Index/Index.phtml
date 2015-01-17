@@ -1,0 +1,98 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+    <input type="text" class="input" name="fecha_turno" id="fechaTurno" value="<?php if (isset($this->fecha)) echo $this->fecha; ?>" class="hasDatepicker">
+</div>
+
+<div id="turnosProfesional">
+    <label for="profesional" class="optional"><b>Seleccione un profesional:</b></label> 
+    <select name="profesional" id="profesional" onClick="cambiar();">
+        <?php foreach ($this->listaProfesionales as $profesional): ?>
+            <option value=<?php echo $profesional->getId(); ?> label="<?php echo $profesional->getApellidos() . ', ' . $profesional->getNombres(); ?>"><?php echo $profesional->getApellidos() . ', ' . $profesional->getNombres(); ?></option>
+        <?php endforeach ?>
+    </select>    
+</div>
+<div id="turnosPaciente">
+    <label for="paciente" class="optional"><b>Seleccione un paciente:</b></label> 
+    <select name="paciente" id="paciente">
+        <option value=0 label=""></option>
+        <?php foreach ($this->listaPacientes as $paciente): ?>
+            <option value=<?php echo $paciente->getId(); ?> label="<?php echo $paciente->getApellidos() . ', ' . $paciente->getNombres(); ?>"><?php echo $paciente->getApellidos() . ', ' . $paciente->getNombres(); ?></option>
+        <?php endforeach ?>
+    </select>    
+</div>
+
+<div id = "tabs">
+    <ul>
+        <li><a href="#tabs-1">AM</a></li>
+        <li><a href="#tabs-2">PM</a></li>
+    </ul>
+    <div id = "tabs-1">
+        <div id="turnosdiaAM">
+            <div id="col_horario">
+                <?php
+                foreach ($this->horario as $celda) {
+                    echo $celda->render();
+                }
+                ?>
+            </div>
+            <?php foreach ($this->profesionalesDiaAM as $turno) { ?>
+                <div id="col_horarioProfesional" idEncProfesional=" <?php echo $turno->getPersonal()->getId(); ?>"
+                     turno="AM" class="" <?php if(isset($class)) echo $class; ?> >
+                         <?php
+                         foreach ($this->horarioProfesionalAM[$turno->getPersonal()->getId()] as $horario) {
+                             if (is_a($horario, 'Personal')) {
+                                 ?>
+                            <div id="<?php echo $turno->getId(); ?>" idProfesional="<?php echo $horario->getId(); ?>"
+                                 turno="AM" class="cel_horario turno_profesional"<?php if(isset($class)) echo $class; ?> >
+                                     <?php echo $horario; ?>
+                            </div>
+                            <?php
+                        } else {
+                            $class = $this->estadosTurnos[$horario->getEstadoTurno()];
+                            $class_observaciones = '';
+                            $title = '';
+                            if ($horario->getObservaciones() == '') {
+                                $class_observaciones = '';
+                            } else {
+                                $class_observaciones = ' observaciones_turno';
+                                $title = 'titulo="' . $horario->getObservaciones() . '"';
+                            }
+                            ?>
+                            <div id="<?php echo $horario->getId(); ?>" idPaciente="<?php echo $horario->getPaciente()->getId(); ?>"
+                                  turno="AM" class="turno_paciente <?php
+                                 echo $class . $class_observaciones .
+                                 '" ' . $title;
+                                 ?> >
+                                     <?php echo $horario->getPaciente()->getAyN(); ?>
+                            </div>
+                        <?php } ?>
+                    <?php } ?>
+                </div>
+                <?php
+            }
+            echo $this->msg_dlg;
+            ?>
+        </div>
+    </div>
+    <div id = "tabs-2"><?php include_once 'PM.php'; ?></div>
+
+    <!--</div>-->
+    <div id="personal-toolbar-options">
+        <a href="?option=Turnos&sub=index&met=personalAusente"><i class="icon-personal_ausente_14"></i></a>
+    </div>	
+    <div id="paciente-toolbar-options">
+        <a href="?option=Turnos&sub=index&met=personal_ausente"><i class="icon-personal_ausente_14"></i></a>
+        <a href="?option=Turnos&sub=index&met=personal_tarde"><i class="icon-personal_tarde_14"></i></a>
+        <a href="?option=Turnos&sub=index&met=paciente_ausente"><i class="icon-paciente_ausente_14"></i></a>
+        <a href="?option=Turnos&sub=index&met=paciente_tarde"><i class="icon-paciente_tarde_14"></i></a>
+        <a href="?option=Turnos&sub=index&met=reunion_equipo"><i class="icon-reunion_equipos24"></i></a>
+        <a href="?option=Turnos&sub=index&met=devolucion"><i class="icon-devolucion24"></i></a>
+        <a href="observaciones_turno"><i class="icon-pencil_24"></i></a>
+    </div>
+
+    <div id="dialog-form" title="Observaciones">
+        <form>
+            <textarea name="observaciones" id="observaciones" rows="8" cols="42" class="text ui-widget-content ui-corner-all">
+            "<?php echo $title; ?>"</textarea>
+        </form>
+    </div>

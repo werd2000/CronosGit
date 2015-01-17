@@ -1,0 +1,68 @@
+<form id="nuevo_paciente" method="post" action="<?php echo BASE_URL; ?>?option=Tareas&sub=index&met=nuevo">
+    <input type="hidden" name="guardar" value="1" />
+    <input type="hidden" name="depende_de" value="<?php if (isset($this->datos['depende_de'])) echo $this->datos['depende_de']; ?>" />
+
+    <label for="repetir" class="required">Se repite:</label>
+    <select class="select" name="repetir" id="repetir">
+        <?php
+        foreach ($this->listaRepetir as $repetir) { ?>
+            <option value="<?php echo $repetir; ?>" 
+                    label="<?php echo $repetir; ?>">
+                <?php echo $repetir; ?>
+            </option>
+       <?php } ?>
+    </select>
+
+
+    <label for="depende_de" class="required">Depende de:</label>
+    <select class="select" name="depende_de" id="depende_de">
+        <option value="0" label="NINGUNO">Ninguno</option>
+        <?php
+        foreach ($this->listaTareas as $tarea) { ?>
+            <option value="<?php echo $tarea->getId(); ?>" 
+                    label="<?php echo $tarea->getDescripcion(); ?>">
+                <?php echo $tarea->getDescripcion(); ?>
+            </option>
+       <?php } ?>
+    </select>
+
+    
+    <label for="tipo_tarea" class="required">Tipo de Tarea:</label>
+    <select class="select" name="tipo_tarea" id="tipo_tarea">
+        <?php
+        foreach ($this->listaTipoTareas as $tipoTarea) {
+            if ($this->datos['tipo_tarea'] == $tipoTarea) {
+                $seleccionado = ' selected="selected" ';
+            } else {
+                $seleccionado = '';
+            }
+            echo "<option value=\"$tipoTarea\" label=\"$tipoTarea\" $seleccionado>$tipoTarea</option>";
+       }?>
+    </select>
+
+    <label for="fechaInicio" class="required">Fecha Inicio:</label>
+    <input type="text" class="input" class="hasDatepicker" name="fechaInicio" id="fechaInicio" value="<?php if (isset($this->datos['fechaInicio'])) echo $this->datos['fechaInicio']; ?>" placeholder="Ingrese fecha inicio">
+    <label for="fechaFin" class="optional">Fecha Fin:</label>
+    <input type="text" class="input" class="hasDatepicker" name="fechaFin" id="fechaFin" value="<?php if (isset($this->datos['fechaFin'])) echo $this->datos['fechaFin']; ?>" placeholder="Ingrese fecha fin">
+    <label for="descripcion" class="optional">Descripción:</label>
+    <input type="text" class="input" name="descripcion" id="descripcion" value="<?php if (isset($this->datos['descripcion'])) echo $this->datos['descripcion']; ?>" placeholder="Ingrese la descripcion" autocomplete="on">
+    <label for="estado" class="optional">Estado:</label>    
+    <select class="select" name="estado" id="estado">
+        <?php
+        foreach ($this->listaEstados as $estado) {
+            if ($this->datos['estado'] == $estado) {
+                $seleccionado = ' selected="selected" ';
+            } else {
+                $seleccionado = '';
+            }
+            echo "<option value=\"$estado\" label=\"$estado\" $seleccionado>$estado</option>";
+       }?>
+    </select>
+    
+<!--    <label for="historial" class="required">Historial:</label>
+<textarea class="input mceEditor" name="historial" id="historial" rows="6"></textarea>-->
+    <label for="observaciones" class="required">Observaciones:</label>
+    <textarea class="input mceEditor defaultSimpleSkin" name="observaciones" id="observaciones" rows="6"> </textarea>
+
+    <input type="submit" class="boton" name="boton_guardar" value="Guardar">
+</form>

@@ -1,0 +1,105 @@
+<div id="titulo" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <h4><?php echo $this->titulo; ?></h4>
+</div>
+<div id = "tabs">
+    <ul>
+        <li><a href="#tabs-1">Datos Principales</a></li>
+        <li><a href="#tabs-2">Datos de Contacto</a></li>
+        <li><a href="#tabs-DL">Datos Laborales</a></li>
+        <li><a href="#tabs-4">Foto</a></li>
+    </ul>
+    <div id = "tabs-1">
+        <form id="nuevo_personal" method="post" action="" class="form-horizontal" role="form">
+            <input type="hidden" name="guardar" value="1" />
+            <div class="form-group">
+                <label for="apellidos" class="required col-sm-2 control-label">Apellidos:</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" name="apellidos" id="apellidos" value="<?php echo $this->datos->getApellidos(); ?>" maxlength="25">
+                </div>
+            </div>
+            <div class="form-group">
+            <label for="nombres" class="required col-sm-2 control-label">Nombres:</label>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" name="nombres" id="nombres" value="<?php echo $this->datos->getNombres(); ?>" placeholder="Ingrese el nombre" maxlength="25">
+            </div>
+            </div>
+            <div class="form-group">
+            <label for="domicilio" class="required col-sm-2 control-label">Domicilio:</label>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" name="domicilio" id="domicilio" value="<?php echo $this->datos->getDomicilio(); ?>" placeholder="Ingrese el domicilio" autocomplete="off">
+            </div>
+            </div>
+            <div class="form-group">
+            <label for="localidad" class="required col-sm-2 control-label">Localidad:</label>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" name="localidad" id="localidad" value="<?php echo $this->datos->getLocalidad(); ?>" placeholder="Ingrese la Localidad" autocomplete="on">
+            </div>
+            </div>
+            <div class="form-group">
+            <label for="nacionalidad" class="required col-sm-2 control-label">Nacionalidad:</label>
+            <div class="col-sm-10">
+                <select name="nacionalidad" id="nacionalidad">
+                <?php
+                    foreach ($this->listaNacionalidades as $nacionalidad) {
+                        if ($this->datos->getNacionalidad() == $nacionalidad) {
+                            $seleccionado = ' selected="selected" ';
+                        } else {
+                            $seleccionado = '';
+                        }
+                        echo "<option value=\"$nacionalidad\" label=\"$nacionalidad\" $seleccionado>$nacionalidad</option>";
+                }?>
+            </select>
+            </div>
+            </div>
+            <div class="form-group">
+            <label for="tipo_doc" class="required col-sm-2 control-label">Tipo Doc:</label>
+            <div class="col-sm-10">
+            <select name="tipo_doc" id="tipo_doc">
+                <?php
+                    foreach ($this->listaTipoDoc as $indice=>$tipoDoc) {
+                        if ($this->datos->getTipo_doc() == $indice) {
+                            $seleccionado = ' selected="selected" ';
+                        } else {
+                            $seleccionado = '';
+                        }
+                        echo "<option value=\"$indice\" label=\"$tipoDoc\" $seleccionado>$tipoDoc</option>";
+                }?>
+            </select>
+            </div>
+            </div>
+            <div class="form-group">
+            <label for="nro_doc" class="required col-sm-2 control-label">DNI:</label>
+            <div class="col-sm-10">
+            <input type="text" class="form-control" name="nro_doc" id="nro_doc" value="<?php echo $this->datos->getNro_doc(); ?>" placeholder="Ingrese el nro de documento">
+            </div>
+            </div>
+            <div class="form-group">
+            <label for="sexo" class="required col-sm-2 control-label">Sexo:</label>
+            <div class="col-sm-10">
+            <select name="sexo" id="sexo">
+                <?php
+                    foreach ($this->listaSexos as $sexo) {
+                        if ($this->datos->getSexo() == $sexo) {
+                            $seleccionado = ' selected="selected" ';
+                        } else {
+                            $seleccionado = '';
+                        }
+                        echo "<option value=\"$sexo\" label=\"$sexo\" $seleccionado>$sexo</option>";
+                }?>
+            </select>
+            </div>
+            </div>
+            <div class="form-group">
+            <label for="fechaNac" class="required col-sm-2 control-label">Fecha Nacimiento:</label>
+            <div class="col-sm-10">
+            <input type="date" name="fechaNac" id="fechaNac" value="<?php if ($this->datos->getFecha_nac()) echo $this->datos->getFecha_nac(); ?>"  class="hasDatepicker form-control">
+            </div>
+            </div>
+            <input type="submit" class="btn btn-lg btn-primary btn-block" name="boton_guardar" value="Guardar">
+        </form>
+    </div>
+    <div id = "tabs-2"><?php include_once 'DatosContacto.php'; ?></div>
+    <div id = "tabs-DL"><?php include_once 'DatosLaborales.php'; ?></div>
+    <div id = "tabs-4"><?php include_once 'FotoPersonal.php'; ?></div>
+
+</div>

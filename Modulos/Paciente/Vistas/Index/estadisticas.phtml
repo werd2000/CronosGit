@@ -1,0 +1,33 @@
+<div id="estadisticas-paciente" class="ui-corner-all">
+    <div class='col'>
+        <?php
+        if (isset($this->estadisticas['total'])) {
+            echo '<p class="est_pacientes">' . $this->estadisticas['total'] . '</p>';
+        }
+        if (isset($this->estadisticas['varones'])) {
+            echo '<p class="est_varones">' . $this->estadisticas['varones'] . '</p>';
+        }
+        if (isset($this->estadisticas['mujeres'])) {
+            echo '<p class="est_mujeres">' . $this->estadisticas['mujeres'] . '</p>';
+        }
+        ?>
+    </div>
+    <div class='col'>
+        <div class='dibujo-grafica' align='center'>
+            <img src="<?php echo $this->estadisticas['grafica']?>" alt='grafico'/>
+        </div>
+    </div>
+    <div class='col'>
+        <?php
+        if (isset($this->estadisticas['obrasocial'])) {
+                foreach ($this->estadisticas['obrasocial'] as $osocial) {
+                    $denominacion = implode('', array_keys($osocial));
+                    $cant = implode('', $osocial);
+                    if ($cant > 0){
+                        echo '<p class="est_pacientes_os">' . $cant . ' pacientes de ' . $denominacion . '</p>';
+                    }
+                }
+        }
+        ?>
+    </div>
+</div>

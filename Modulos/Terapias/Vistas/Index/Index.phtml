@@ -1,0 +1,41 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+</div>
+
+<div class="tabla">
+    <div class="filaTitulos">
+        <?php
+        echo '<div class="celda id"><b>Nº</b></div>';
+        echo '<div class="celda"><b>Terapia</b></div>';
+        ?>
+    </div>
+</div>
+<div class="tabla">
+    <?php
+    foreach ($this->datos as $terapia) {
+        echo '<div id=' . $terapia->getId() . ' class="filaDatos">
+            <a href="' . BASE_URL . '?option=Terapias&sub=index&cont=editar&id=' . $terapia->getId() . '">';
+        echo '<div class="celda id">';
+        echo $this->i;
+        echo '</div>';
+        echo '<div ';
+        if(MOSTRAR_ICONOS == 1) {
+            echo 'id="terapia"';
+        }
+        echo ' class="celda"><b>';
+        echo $terapia->getTerapia();
+        echo '</b></div>';
+        
+        $this->i++;
+        echo '</a></div>';
+    }
+    ?>
+</div>
+<div id="paginacion">
+<?php if (isset($this->paginacion)) echo $this->paginacion; ?>
+</div>
+<?php if (Session::accesoViewEstricto(array('usuario'))): ?>
+    <!--Si el nivel es especial muestro el link-->
+    <a href="<?php BASE_URL; ?>?option=Terapias&sub=nuevo">Nuevo</a>
+<?php endif; ?>
+</div>

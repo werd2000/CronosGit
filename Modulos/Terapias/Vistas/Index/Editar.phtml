@@ -1,0 +1,10 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+</div>
+<form id="nueva_terapia" method="post" action="">
+    <input type="hidden" name="guardar" value="1" />
+    <label for="terapia" class="required">Terapia:</label>
+    <input type="text" class="input" name="terapia" id="terapia" value="<?php if (isset($this->datos['terapia'])) echo $this->datos['terapia']; ?>" maxlength="25">
+    
+    <input type="submit" class="boton" name="boton_guardar" value="Guardar">
+</form>

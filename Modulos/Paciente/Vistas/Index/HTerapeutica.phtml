@@ -1,0 +1,52 @@
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <?php echo '<b>Nº</b>'; ?>
+                </th>
+                <th>
+                    <?php echo '<b>Terapia</b>'; ?>
+                </th>
+                <th>
+                    <?php echo '<b>Tipo</b>'; ?>
+                </th>
+                <th>
+                    <?php echo '<b>Fecha</b>'; ?>
+                </th>
+                <th>
+                    <?php echo '<b>Profesional</b>'; ?>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $this->i = 1;
+            foreach ($this->hTerapeutica as $hTerapeutica) { ?>
+                <tr id="<?php echo $hTerapeutica->getId(); ?>">
+            <a href="<?php echo BASE_URL . '?option=pdfphsrl&sub=imprimir_informe&id=' . $hTerapeutica->getId(); ?>" class="Ntooltip">
+                <td>
+                    <?php echo $this->i; ?>
+                </td>
+                <td>
+                    <b><?php echo $hTerapeutica->getObjProfesional()->getDatosLaborales()->getPuesto(); ?></b>
+                </td>
+                <td>
+                    <b><?php echo $hTerapeutica->getTipo(); ?></b>
+                </td>
+                <td>
+                    <?php echo $hTerapeutica->getFechaObservacion(); ?>
+                </td>
+                <td>
+                    <?php echo $hTerapeutica->getObjProfesional(); ?>
+                </td>
+                <?php $this->i++; ?>
+            </a>
+            </tr>
+        <?php } ?>
+
+        </tbody>
+    </table>
+</div>
+<?php include 'nuevoHTerapeutica.phtml'; ?>     
+

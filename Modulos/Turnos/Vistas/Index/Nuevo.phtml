@@ -1,0 +1,22 @@
+<div id="dialog-form" title="Create new user">
+  <p class="validateTips">All form fields are required.</p>
+ 
+  <form>
+  <fieldset>
+    <label for="profesional" class="optional"><b>Seleccione un profesional:</b></label> 
+    <select name="profesional" id="profesional" onClick="cambiar();">
+        <?php foreach ($this->listaProfesionales as $profesional): ?>
+            <option value=<?php echo $profesional->getId(); ?> label="<?php echo $profesional->getApellidos() . ', ' . $profesional->getNombres(); ?>"><?php echo $profesional->getApellidos() . ', ' . $profesional->getNombres(); ?></option>
+        <?php endforeach ?>
+    </select>
+    
+    <label for="paciente" class="optional"><b>Seleccione un paciente:</b></label>
+    <select name="paciente" id="paciente" onClick="cambiarPaciente();">
+        <option value=0 label=""></option>
+        <?php foreach ($this->listaPacientes as $paciente): ?>
+            <option value=<?php echo $paciente->getId(); ?> label="<?php echo $paciente->getApellidos() . ', ' . $paciente->getNombres(); ?>"><?php echo $paciente->getApellidos() . ', ' . $paciente->getNombres(); ?></option>
+        <?php endforeach ?>
+    </select>
+  </fieldset>
+  </form>
+</div>

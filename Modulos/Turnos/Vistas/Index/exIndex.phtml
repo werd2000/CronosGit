@@ -1,0 +1,80 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+</div>
+<!--<div id = "tabs">-->
+<!--    <ul>
+        <li><a href="#tabs-1">Datos Principales</a></li>
+        <li><a href="#tabs-2">Datos de Contacto</a></li>
+    </ul>-->
+<!--    <div id = "tabs-1">-->
+
+    <div id="fechaTurnos" title="<?php if (isset($this->datos['fechaTurno']))
+            echo $this->datos['fechaTurno'];
+        ?>">
+        <label for="fechaTurno" class="label">Fecha:</label>
+        <input type="text" class="input" name="fechaTurno" id="fechaTurno" 
+            value="<?php if (isset($this->datos['fechaTurno']))
+            echo $this->datos['fechaTurno'];
+        ?>" 
+            placeholder="Haga click para ingresar la fecha" 
+            class="hasDatepicker">
+    </div>
+
+
+    <div class="tabla">
+        <div class="filaTitulos">
+            <div class="celda hs"><b>Hora</b></div>
+    <?php for ($i = 1; $i <= 5; $i++) { ?>
+                <div class="celda">
+
+                    <input type="hidden" name="idProfesional" id="idProfesional<?php echo $i; ?>">
+
+                    <select class="select turnos" name="profesional[]" id="profesional<?php echo $i; ?>"
+                            salon="<?php echo $i; ?>" turno="AM" hora="hora">
+                        <option value="Seleccione" label="Seleccione">Seleccione</option>
+                        <?php
+                        foreach ($this->listaPersonal as $profesional) {
+
+                            if ($this->datos['profesional'] == $profesional['id']) {
+                                $seleccionado = ' selected="selected" ';
+                            } else {
+                                $seleccionado = '';
+                            }
+                            echo '<option value="' . $profesional['id'] . '" label="' .
+                            $profesional['apellidos'].', '.$profesional['nombres'] . '"' . $seleccionado . ">" .
+                            $profesional['apellidos'].', '.$profesional['nombres'] . "</option>";
+                        }
+                        ?>                           
+                    </select>
+                </div>
+        <?php } ?>
+        </div>
+
+            <?php for ($h = 0; $h < count($this->horarioAm); $h++) { ?>
+            <div class="filaDatos">
+                <div class="celda hs"><b><?php echo $this->horarioAm[$h]; ?></b></div>
+        <?php for ($i = 1; $i <= 5; $i++) { ?>
+                    <div class="celda">
+                        <select class="select turnos" name="paciente[]" id="<?php echo 'F'.$h.'C'.$i; ?>"
+                                salon="<?php echo $i; ?>" hora="<?php echo $this->horarioAm[$h]; ?>" >
+                            <option value="Seleccione" label="Seleccione">Seleccione</option>
+                            <?php
+                            foreach ($this->listaPacientes as $paciente) {
+                                if ($this->datos['paciente'] == $paciente['id']) {
+                                    $seleccionado = ' selected="selected" ';
+                                } else {
+                                    $seleccionado = '';
+                                }
+                                echo '<option value="' . $paciente['id'] . '" label="' . $paciente['apellidos'].', '.$paciente['nombres'] . '"' . $seleccionado . ">" . $paciente['apellidos'].', '.$paciente['nombres'] . "</option>";
+                            }
+                            ?>                           
+                        </select>
+                    </div>
+            <?php } ?>
+            </div>
+    <?php } ?>
+    </div>
+<!--    </div>-->
+<!--    <div id = "tabs-2">
+    </div>        -->
+<!--</div>-->

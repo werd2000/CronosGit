@@ -1,0 +1,146 @@
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <?php echo $this->titulo; ?>
+</div>
+<div id = "tabs">
+    <ul>
+        <li><a href="#tabs-1">Datos Principales</a></li>
+    </ul>
+    <div id = "tabs-1">
+        <form id="nuevo_paciente" method="post" action="">
+            <input type="hidden" name="guardar" value="1" />
+            <label for="fecha" class="required">Fecha:</label>
+            <input type="text" class="input" name="fecha" id="fecha" 
+                   value="<?php echo (isset($this->datos['fecha'])) ?  $this->datos['fecha'] : date("d/m/Y"); ?>" 
+                   placeholder="Haga click para ingresar la fecha" 
+                   class="hasDatepicker">
+
+            <label for="interesado" class="required">Interesado:</label>
+            <input type="text" class="input" name="interesado" id="interesado" 
+                   value="<?php if (isset($this->datos['interesado'])) 
+                   echo $this->datos['interesado']; ?>" maxlength="25">
+            <label for="paciente" class="required">Paciente:</label>
+            <input type="text" class="input" name="paciente" id="paciente" 
+                   value="<?php if (isset($this->datos['paciente'])) 
+                       echo $this->datos['paciente']; ?>">
+            <label for="domicilio" class="optional">Domicilio:</label>
+            <input type="text" class="input" name="domicilio" id="domicilio" 
+                   value="<?php if (isset($this->datos['domicilio'])) 
+                   echo $this->datos['domicilio']; ?>" 
+                   placeholder="Ingrese el domicilio" autocomplete="off">
+            <label for="tel" class="optional">Tel:</label>
+            <input type="text" class="input" name="tel" id="tel" 
+                   value="<?php if (isset($this->datos['tel'])) 
+                   echo $this->datos['tel']; ?>">
+            <label for="cel" class="optional">Cel:</label>
+            <input type="text" class="input" name="cel" id="cel" 
+                   value="<?php if (isset($this->datos['cel'])) 
+                   echo $this->datos['cel']; ?>">
+            <label for="edad" class="optional">Edad:</label>
+            <input type="text" class="input" name="edad" id="edad" 
+                   value="<?php if (isset($this->datos['edad'])) 
+                   echo $this->datos['edad']; ?>">
+            <label for="sexo" class="optional">Sexo:</label>
+            <?php $opciones = array('VARON','MUJER'); ?>
+            <select name="sexo" id="sexo">
+                    <?php foreach ($opciones as $opcion): ?>
+                    <?php if ($opcion == $this->datos['sexo']): ?>
+                        <option value="<?php echo $opcion; ?>" label="<?php echo $opcion; ?>" selected="selected" ><?php echo $opcion; ?></option>
+                    <?php else: ?>
+                        <option value="<?php echo $opcion; ?>" label="<?php echo $opcion; ?>"><?php echo $opcion; ?></option>
+                    <?php endif ?>
+                    <?php endforeach ?>
+            </select>
+            <label for="diagnostico" class="optional">Diagnóstico:</label>
+            <textarea name="diagnostico" id="diagnostico" rows="4" cols="60">
+                <?php if (isset($this->datos['diagnostico']))
+                    echo $this->datos['diagnostico'];
+                ?>
+            </textarea>
+            <label for="obra_social" class="optional">Obra Social:</label> 
+            <select name="obra_social" id="obra_social">
+                <?php foreach ($this->listaOSociales as $oSocial): ?>
+                    <?php if ($oSocial['id'] == $this->datos['obra_social']): ?>
+                        <option value=<?php echo $oSocial['id']; ?> label="<?php echo $oSocial['denominacion']; ?>" selected="selected" ><?php echo $oSocial['denominacion']; ?></option>
+                    <?php else: ?>
+                        <option value=<?php echo $oSocial['id']; ?> label="<?php echo $oSocial['denominacion']; ?>"><?php echo $oSocial['denominacion']; ?></option>
+                    <?php endif ?>
+                <?php endforeach ?>
+            </select>
+            <label for="carnet_discapacidad" class="optional">Carnet Discapacidad:</label> 
+            <?php $opciones = array('SI','NO'); ?>
+            <select name="carnet_discapacidad" id="carnet_discapacidad">
+                    <?php foreach ($opciones as $opcion): ?>
+                    <?php if ($opcion == $this->datos['carnet_discapacidad']): ?>
+                        <option value="<?php echo $opcion; ?>" label="<?php echo $opcion; ?>" selected="selected" ><?php echo $opcion; ?></option>
+                    <?php else: ?>
+                        <option value="<?php echo $opcion; ?>" label="<?php echo $opcion; ?>"><?php echo $opcion; ?></option>
+                    <?php endif ?>
+                    <?php endforeach ?>
+            </select>
+            <label for="escolarizado" class="optional">Escolarizado</label> 
+            <select name="escolarizado" id="escolarizado">
+                    <?php foreach ($opciones as $opcion): ?>
+                    <?php if ($opcion == $this->datos['escolarizado']): ?>
+                        <option value="<?php echo $opcion; ?>" label="<?php echo $opcion; ?>" selected="selected" ><?php echo $opcion; ?></option>
+                    <?php else: ?>
+                        <option value="<?php echo $opcion; ?>" label="<?php echo $opcion; ?>"><?php echo $opcion; ?></option>
+                    <?php endif ?>
+                    <?php endforeach ?>
+            </select>
+            <label for="escolarizado_en" class="optional">Escolarizado en:</label>
+            <input type="text" class="input" name="escolarizado_en" id="escolarizado_en" 
+                value="<?php if (isset($this->datos['escolarizado_en']))
+                echo $this->datos['escolarizado_en'];?>">
+            <label for="recibe_terapia" class="optional">Recibe Terapia</label>
+            <select name="recibe_terapia" id="recibe_terapia">
+                <?php foreach ($opciones as $opcion): ?>
+                <?php if ($opcion == $this->datos['recibe_terapia']): ?>
+                    <option value="<?php echo $opcion; ?>" label="<?php echo $opcion; ?>" selected="selected" ><?php echo $opcion; ?></option>
+                <?php else: ?>
+                    <option value="<?php echo $opcion; ?>" label="<?php echo $opcion; ?>"><?php echo $opcion; ?></option>
+                <?php endif ?>
+                <?php endforeach ?>
+            </select>
+            <label for="terapia_que_recibe" class="optional">Terapia que recibe</label>
+            <textarea name="terapia_que_recibe" id="diagnostico" rows="4" cols="60">
+                <?php if (isset($this->datos['terapia_que_recibe']))
+                    echo $this->datos['terapia_que_recibe'];
+                ?>
+            </textarea>
+            <label for="derivado" class="optional">Derivado</label>
+            <select name="derivado" id="derivado">
+                <?php foreach ($opciones as $opcion): ?>
+                <?php if ($opcion == $this->datos['derivado']): ?>
+                    <option value="<?php echo $opcion; ?>" label="<?php echo $opcion; ?>" selected="selected" ><?php echo $opcion; ?></option>
+                <?php else: ?>
+                    <option value="<?php echo $opcion; ?>" label="<?php echo $opcion; ?>"><?php echo $opcion; ?></option>
+                <?php endif ?>
+                <?php endforeach ?>
+            </select>
+            <label for="derivado_por" class="optional">Derivado por:</label>
+            <input type="text" class="input" name="derivado_por" id="derivado_por" 
+                value="<?php if (isset($this->datos['derivado_por']))
+                echo $this->datos['derivado_por'];?>">
+            <label for="turno_preferente" class="optional">Turno preferente:</label> 
+            <?php $opciones = array('MAÑANA','TARDE'); ?>
+            <select name="turno_preferente" id="turno_preferente">
+                <?php foreach ($opciones as $opcion): ?>
+                    <?php if ($opcion == $this->datos['turno_preferente']): ?>
+                        <option value=<?php echo $opcion; ?> label="<?php echo $opcion; ?>" selected="selected" ><?php echo $opcion; ?></option>
+                    <?php else: ?>
+                        <option value=<?php echo $opcion; ?> label="<?php echo $opcion; ?>"><?php echo $opcion; ?></option>
+                    <?php endif ?>
+                <?php endforeach ?>
+            </select>
+            <label for="Observaciones" class="optional">Observaciones</label>
+            <textarea name="Observaciones" id="Observaciones" rows="4" cols="60">
+                <?php if (isset($this->datos['Observaciones']))
+                    echo $this->datos['Observaciones'];
+                ?>
+            </textarea>
+            
+    
+            <input type="submit" class="boton" name="boton_guardar" value="Guardar">
+        </form>
+    </div>
+</div>
