@@ -1,2 +1,3 @@
 # CronosGit
-Administración de Paciente
+Administración de Pacientes
+Walter Enrique Ruiz Diaz
