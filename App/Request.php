@@ -15,7 +15,7 @@ Class App_Request
                 'Ventas',
                 'Usuarios',
                 'Proveedores',
-                'Clientes',
+                'Paciente',
                 'Personal',
                 'Cuentas',
                 'Tareas',

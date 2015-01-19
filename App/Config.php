@@ -1,13 +1,13 @@
 <?php
 
-define('BASE_URL', 'http://localhost/Contasoft_Bakhita/');
-//define('BASE_URL', 'http://www.acsjbakhita.org/Contasoft/');
+define('BASE_URL', 'http://localhost/Cronos/');
+//define('BASE_URL', 'http://www.pequehogar.com.ar/Cronos/');
 define('DEFAULT_CONTROLADOR', 'index');
 define('DEFAULT_LAYOUT', 'Default');
 define('IMAGEN_PUBLICA', BASE_URL . 'Public/Img/');
 define('ICONOS', BASE_URL . 'Vistas/Layout/Default/Img/iconos/');
 
-//define('APP_NAME', 'CONTASOFT');
+//define('APP_NAME', 'CRONOS');
 //define('APP_DESCRIPCION', 'Sistema de administracion contable');
 //define('APP_AUTOR', 'werd');
 //define('APP_SLOGAN', 'Sistema de administracion contable');
@@ -21,7 +21,7 @@ define('DB_USER','root');
 //define('DB_USER','gg000334_conta');
 define('DB_PASS','');
 //define('DB_PASS','ProyectoBakhita2000');
-define('DB_NAME','gg000334_contasoft');
+define('DB_NAME','ig000179_contasoft');
 define('DB_CHAR','utf8');
 
 define('FPDF_FONTPATH', BASE_PATH . 'LibQ/Fpdf/font/');

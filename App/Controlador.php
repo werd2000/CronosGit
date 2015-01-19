@@ -71,7 +71,8 @@ abstract class App_Controlador {
 //            echo 'es leible ' . $rutaModelo . '<br>';
             require_once $rutaModelo;
 //            echo $rutaModelo . '<br>';
-            $modelo = new $modelo;
+            $clase = $modulo . '_Modelos_' . $modelo;
+            $modelo = new $clase;
             return $modelo;
         } else {
             throw new Exception('Error de modelo: ' . $modelo);
@@ -167,13 +168,7 @@ abstract class App_Controlador {
      * @param string $clave
      * @return string 
      */
-    protected function getTexto($clave) {
-//        if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
-//            $_POST[$clave] = htmlspecialchars($_POST[$clave], ENT_QUOTES);
-//            return $_POST[$clave];
-//        }
-//
-//        return '';
+    protected function getTextoPost($clave) {
         $retorno = filter_input(INPUT_POST, $clave, FILTER_SANITIZE_STRING);
         return $retorno;
     }
@@ -183,7 +178,7 @@ abstract class App_Controlador {
      * @param string $clave
      * @return int 
      */
-    protected function getInt($clave) {
+    protected function getIntPost($clave) {
         if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
             $_POST[$clave] = filter_input(INPUT_POST, $clave, FILTER_VALIDATE_INT);
             return $_POST[$clave];
@@ -225,12 +220,6 @@ abstract class App_Controlador {
     protected function getSql($clave) {
         if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
             $_POST[$clave] = strip_tags($_POST[$clave]);
-
-//            if(!get_magic_quotes_gpc()){
-//                $_POST[$clave] = mysql_real_escape_string($_POST[$clave]);
-//                print_r($_POST[$clave]);
-//            }
-
             return trim($_POST[$clave]);
         }
     }
@@ -269,6 +258,13 @@ abstract class App_Controlador {
         }
         if (array_key_exists('error', $array)) {
             $this->_vista->_msj_error = $array['error'];
+        }
+    }
+    
+    public function isAutenticado()
+    {
+        if (!App_Session::get('autenticado')){
+            $this->redireccionar('mod=Usuarios&cont=Login&met=index');
         }
     }
 

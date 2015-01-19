@@ -3,10 +3,10 @@
  * Diccionario Español Argentina
  */
 /** App **/
-define('APP_NAME', 'CONTASOFT');
-define('APP_DESCRIPCION', 'Sistema de administracion contable');
+define('APP_NAME', 'CRONOS');
+define('APP_DESCRIPCION', 'Sistema de administracion de Pacientes');
 define('APP_AUTOR', 'werd');
-define('APP_SLOGAN', 'Sistema de administracion contable');
+define('APP_SLOGAN', 'Sistema de administracion de Pacientes');
 /** Usuarios **/
 define('MOD_USUARIOS', 'Usuarios');
 /** Registro **/

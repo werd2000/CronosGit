@@ -2,7 +2,7 @@
 
 namespace LibQ\View;
 
-class CompositeView implements ViewInterface
+class LibQ_View_CompositeView implements ViewInterface
 {
     protected $views = array();
     

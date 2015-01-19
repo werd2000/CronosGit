@@ -30,7 +30,8 @@ class App_Vista
 
         if ($modulo) {
             $this->_rutas['vista'] = BASE_PATH . 'Modulos' . DS . ucfirst($modulo) . DS . 'Vistas' . DS . ucfirst($controlador) . DS;
-            $this->_rutas['js'] = BASE_URL . 'Modulos/' . ucfirst($modulo) . '/Vistas/' . ucfirst($controlador) . '/Js/';
+//            $this->_rutas['js'] = BASE_URL . 'Modulos/' . ucfirst($modulo) . '/Vistas/' . ucfirst($controlador) . '/Js/';
+            $this->_rutas['js'] = BASE_URL . 'Vistas' . DS . 'Layout' . DS . DEFAULT_LAYOUT . '/Js/';
             $this->_rutas['css'] = BASE_URL . 'Modulos/' . ucfirst($modulo) . '/Vistas/' . ucfirst($controlador) . '/Css/';
         } else {
             $this->_rutas['vista'] = BASE_PATH . 'Vistas' . DS . ucfirst($controlador) . DS;
@@ -76,6 +77,7 @@ class App_Vista
             'ruta_css' => BASE_URL . 'Vistas/Layout/' . DEFAULT_LAYOUT . '/Css/',
             'ruta_Img' => BASE_URL . 'Vistas/Layout/' . DEFAULT_LAYOUT . '/Img/',
             'ruta_js' => BASE_URL . 'Vistas/Layout/' . DEFAULT_LAYOUT . '/Js/',
+            'ruta_bootstrap' => BASE_URL . 'Vistas/Layout/' . DEFAULT_LAYOUT . '/bootstrap/',
             'js' => $js,
             'root' => BASE_URL,
             'css' => $css,
@@ -153,10 +155,24 @@ class App_Vista
     {
         if (is_array($js) && count($js)) {
             foreach ($js as $archivoJs) {
-                $this->_js[] = BASE_URL . 'Vistas/' . $this->_request->getControlador() . '/js/' . $archivoJs . '.js';
+//                echo BASE_URL . $this->_request->getModulo() . DS . 'Vistas' . DS . ucfirst($this->_request->getControlador()) . DS . 'Js' . DS . $archivoJs . '.js';
+                $this->_js[] = BASE_URL . 'Modulos' . DS . $this->_request->getModulo() . DS . 'Vistas' . DS . ucfirst($this->_request->getControlador()) . DS . 'Js' . DS . $archivoJs . '.js';
             }
         } else {
             throw new Exception('Error de Js');
+        }
+    }
+    
+    public function setVistaCss(array $css)
+    {
+        $modulo = $this->_request->getModulo();
+        if (is_array($css) && count($css)) {
+            foreach ($css as $archivoCss) {
+//                var_dump(MODS_PATH . $modulo . DS . 'Vistas' . DS . ucfirst($this->_request->getControlador()) . DS . 'css' . DS . $archivoCss . '.css');
+                $this->_css[] = BASE_URL . 'Modulos' . DS . $modulo . DS . 'Vistas' . DS . ucfirst($this->_request->getControlador()) . DS . 'css' . DS . $archivoCss . '.css';
+            }
+        } else {
+            throw new Exception('Error de CSS');
         }
     }
     
@@ -181,15 +197,12 @@ class App_Vista
      * @param array $js
      * @throws Exception 
      */
-    public function setJs(array $js, $absoluto = TRUE)
+    public function setJs(array $js)
     {
         if (is_array($js) && count($js)) {
             foreach ($js as $archivoJs) {
-                if($absoluto){
-                    $this->_js[] = $this->_rutas['js'] . $archivoJs . '.js';
-                }  else {
-                    $this->_js[] = $archivoJs;
-                }
+//                echo $this->_rutas['js'] . $archivoJs . '.js';
+                $this->_js[] = $this->_rutas['js'] . $archivoJs . '.js';
             }
         } else {
             throw new Exception('Error de Js');

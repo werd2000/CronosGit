@@ -283,62 +283,23 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         /** Estado del paciente * */
         $this->_vista->estadosPaciente = $this->_estadoPaciente;
         /** Cargo los archivos js */
-        $this->_vista->setJs(array('bootstrapValidator.min'));
+        $this->_vista->setJs(array('bootstrapValidator.min'),TRUE);
         $this->_vista->setVistaJs(array('validarNuevo', 'util', 'tag-it'));
         $this->_vista->setVistaJs(array('tinymce/tinymce.min', 'iniciarTinyMce'));
 
         /** Si el Post viene con guardar = 1 */
         if ($this->getIntPost('editar') == 1) {
             $this->_guardar();
-            $this->redireccionar();
+            $this->_guardarDomicilio();
+            $this->redireccionar('?option=Paciente&sub=index&cont=editar&id='.$idPac);
         }
         /** Si no es para guardar lleno el form con datos de la bd */
         $paciente = $this->_paciente->getPaciente("id = " . $idPac);
         /** Envío los datos a la vista */
         $this->_vista->datos = $paciente;
-        var_dump($paciente);
+//        var_dump($paciente);
         $this->_vista->domicilio = $paciente->getDomicilio();
 
-        if ($paciente->getDomicilio()->getId() != null) {
-             if ($this->_paciente->editarDomicilioPaciente(
-                            array(
-                        'tipo_domicilio' => 'Real',
-                        'calle' => parent::getPostParam('calle'),
-                        'casa_nro' => parent::getPostParam('casa_nro'),
-                        'barrio' => parent::getPostParam('barrio'),
-                        'localidad' => parent::getPostParam('localidad'),
-                        'cp' => parent::getPostParam('cp'),
-                        'piso' => parent::getPostParam('piso'),
-                        'depto' => parent::getPostParam('depto'),
-                        'provincia' => parent::getPostParam('provincia'),
-                        'pais' => parent::getPostParam('pais')
-                            ), 'id_paciente = ' . $idPac
-                    ) > 0) {
-                $this->_msj_error = 'Datos Modificados';
-            } else {
-                $this->_msj_error = 'No se modificó';
-            }
-        } else {
-            if ($this->_paciente->insertarDomicilioPaciente(
-                            array(
-                                'id_paciente' => $idPac,
-                                'tipo_domicilio' => 'Real',
-                                'calle' => parent::getPostParam('calle'),
-                                'casa_nro' => parent::getPostParam('casa_nro'),
-                                'barrio' => parent::getPostParam('barrio'),
-                                'localidad' => parent::getPostParam('localidad'),
-                                'cp' => parent::getPostParam('cp'),
-                                'piso' => parent::getPostParam('piso'),
-                                'depto' => parent::getPostParam('depto'),
-                                'provincia' => parent::getPostParam('provincia'),
-                                'pais' => parent::getPostParam('pais')
-                            )
-                    ) > 0) {
-                $this->_msj_error = 'Datos Modificados';
-            } else {
-                $this->_msj_error = 'No se modificó';
-            }
-        }
         /** Envío los datos de Terapia */
         $this->_vista->listaTerapias = $this->_paciente->getTerpias();
         $this->_vista->datosTerapia = $paciente->getTerapias();
@@ -385,6 +346,29 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         }
         return $rtdo;
     }
+    
+    private function _guardarDomicilio()
+    {
+        $rtdo = '';
+        $datos = $this->_limpiarDatos();
+        $errores = $this->_validarPost($datos);
+        $aGuardarDomicilio = $this->_prepararDatosDomicilio($datos);
+        if ($errores->getRetEval()) {
+            $this->_vista->_msj_error = $errores->getErrString();
+        } else {
+            if (isset($datos['editar'])) {
+                $rtdo = $this->_paciente->editarDomicilioPaciente($aGuardarDomicilio, 'id_paciente=' . $aGuardarDomicilio['id']);
+            } else {
+                $rtdo = $this->_paciente->insertarDomicilioPaciente($aGuardarDomicilio);
+            }
+            if ($rtdo) {
+                $this->_vista->_mensaje = 'DATOS_GUARDADOS';
+            } else {
+                $this->_vista->_mensaje = 'DATOS_NO_GUARDADOS';
+            }
+        }
+        return $rtdo;
+    }
 
     /**
      * Limpia los datos que vienen del Post
@@ -402,7 +386,6 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         $datos['calle'] = filter_input(INPUT_POST, 'calle', FILTER_SANITIZE_STRING);
         $datos['casa_nro'] = filter_input(INPUT_POST, 'casa_nro', FILTER_SANITIZE_STRING);
         $datos['barrio'] = filter_input(INPUT_POST, 'barrio', FILTER_SANITIZE_STRING);
-        var_dump($datos);
         return $datos;
     }
 
@@ -434,6 +417,24 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
             'sexo' => parent::getPostParam('sexo'),
             'fecha_nac' => LibQ_Fecha::getFechaBd(parent::getPostParam('fechaNac')),
             'diagnostico' => parent::getPostParam('diagnostico')
+        );
+        return $datosPaciente;
+    }
+    
+    private function _prepararDatosDomicilio($datos)
+    {
+        $datosPaciente = array(
+            'id'=>parent::getPostParam('id'),
+            'tipo_domicilio' => 'Real',
+            'calle' => parent::getPostParam('calle'),
+            'casa_nro' => parent::getPostParam('casa_nro'),
+            'barrio' => parent::getPostParam('barrio'),
+            'localidad' => parent::getPostParam('localidad'),
+            'cp' => parent::getPostParam('cp'),
+            'piso' => parent::getPostParam('piso'),
+            'depto' => parent::getPostParam('depto'),
+            'provincia' => parent::getPostParam('provincia'),
+            'pais' => parent::getPostParam('pais')
         );
         return $datosPaciente;
     }

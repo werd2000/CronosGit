@@ -15,7 +15,7 @@ class Usuarios_Modelos_loginModelo extends App_Modelo
     public function getUsuario($usuario, $password)
     {
         $sql = "select * from conta_usuarios where username = '$usuario' " .
-                "and password = '" . Hash::getHash('sha1',$password,HASH_KEY) ."'";
+                "and password = '" . LibQ_Hash::getHash('sha1',$password,HASH_KEY) ."'";
         $this->_db->setTipoDatos('Array');
         $this->_db->query($sql);
         return $this->_db->fetchRow();

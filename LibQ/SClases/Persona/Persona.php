@@ -107,7 +107,8 @@ abstract class LibQ_Sclases_Persona_Persona {
     }
     
     public function getFecha_nac() {
-        return new LibQ_Fecha($this->_fecha_nac);
+        $fecha = new LibQ_Fecha($this->_fecha_nac);
+        return $fecha->getDate();
     }
     
     public function getNacionalidad() {

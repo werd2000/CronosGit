@@ -5,7 +5,7 @@
  *
  * @author WERD
  */
-class Url
+class LibQ_Url
 {
     /**
      * Las clases de caracteres para la validación de expresiones regulares

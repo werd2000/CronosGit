@@ -1,3 +1,2 @@
-# CronosGit
-Administración de Pacientes
-Walter Enrique Ruiz Diaz
+Cronos===
+Sistema de gestion de pacientes.
