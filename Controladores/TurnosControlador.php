@@ -1,6 +1,6 @@
 <?php
 
-class TurnosControlador extends Controlador
+class Controladores_TurnosControlador extends App_Controlador
 {
 
     public function __construct() 

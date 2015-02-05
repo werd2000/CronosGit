@@ -1,5 +1,5 @@
 <?php
-
+require_once MODS_PATH . 'Paciente' . DS . 'Modelos' . DS . 'IndexModelo.php';
 require_once BASE_PATH . 'LibQ/fpdf_ips.php';
 
 class Controladores_PdfControlador extends App_Controlador
@@ -23,8 +23,8 @@ class Controladores_PdfControlador extends App_Controlador
 
     public function pedidoIps($id)
     {
-        $this->_modeloPaciente = $this->cargarModelo('index', 'Paciente');
-        $paciente = $this->_modeloPaciente->getPaciente("id == $id");
+        $this->_modeloPaciente = new Paciente_Modelos_indexModelo();
+        $paciente = $this->_modeloPaciente->getPaciente("id = $id");
         $this->_pdf->AddPage('p', 'legal');
         $this->_pdf->SetFont('Helvetica', 'B', 12);
         $this->_pdf->Cell(0, -40, 'SOLICITUD DE PRESTACION ESPECIAL', 0, 1, 'C');
@@ -38,7 +38,7 @@ class Controladores_PdfControlador extends App_Controlador
         $this->_pdf->Cell(50, 60, 'Edad: ' . utf8_decode($paciente->getEdad()) . utf8_decode(' Años'), 0, 1);
         $this->_pdf->Cell(0, -45, utf8_decode('Diagnóstico: ') . utf8_decode($paciente->getDiagnostico()), 0, 1);
         $mes_anio = $_GET['getV'];
-        $fecha = new fecha('now');
+        $fecha = new LibQ_Fecha('now');
         if($mes_anio != ''){
             $mes_actual = explode('/', $mes_anio);
             $mes = $mes_actual[0];
@@ -108,7 +108,7 @@ class Controladores_PdfControlador extends App_Controlador
                 $this->_pdf->Cell(50, 60, 'Edad: ' . utf8_decode($paciente->getEdad()) . utf8_decode(' Años'), 0, 1);
                 $this->_pdf->Cell(0, -45, utf8_decode('Diagnóstico: ') . utf8_decode($paciente->getDiagnostico()), 0, 1);
                 $mes_anio = $_GET['getV'];
-                $fecha = new fecha('now');
+                $fecha = new LibQ_Fecha('now');
                 if($mes_anio != ''){
                     $mes_actual = explode('/', $mes_anio);
                     $mes = $mes_actual[0];

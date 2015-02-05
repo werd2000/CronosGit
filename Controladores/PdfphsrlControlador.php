@@ -2,7 +2,7 @@
 
 require_once BASE_PATH . 'LibQ/fpdfphsrl.php';
 
-class PdfphsrlControlador extends Controlador
+class Controladores_pdfphsrlControlador extends App_Controlador
 {
 
     private $_pdf;
