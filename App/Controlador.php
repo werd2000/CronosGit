@@ -1,7 +1,4 @@
 <?php
-
-//require_once BASE_PATH . 'LibQ' . DS . 'IniParser.php';
-
 /**
  * Clase Abstracta Controlador 
  * de está clase se extienden todos los controladores
@@ -13,9 +10,16 @@ abstract class App_Controlador {
      * @var Vista 
      */
     protected $_vista;
+    /**
+     * Controla el acceso a la informaciÃ³n
+     * @var type 
+     */
     protected $_acl;
+    /**
+     * Solicitud requerida en la url
+     * @var String
+     */
     protected $_request;
-    protected $_cfg;
 
     /**
      * El constuctor inicializa la vista con el objeto Request 
@@ -24,17 +28,11 @@ abstract class App_Controlador {
         $this->_request = new App_Request();
 //        $this->_acl = new App_Acl();
         $this->_cargarVista();
-//        $this->_cfg = new iniParser("config.ini"); 
-//        $this->_controlarParametrosIni();
     }
 
-    private function _controlarParametrosIni() {
-//        echo $this->_cfg->get("Empresa", "nombre");
-        if ($this->_cfg->get("Empresa", "nombre")) {
-            $this->redireccionar('option=Paciente&sub=admision');
-        }
-    }
-
+    /**
+     * Cargga la vista de acuerdo al objeto request y el controlador de accesos.
+     */
     private function _cargarVista() {
         $this->_vista = new App_Vista($this->_request, $this->_acl);
     }
@@ -66,11 +64,8 @@ abstract class App_Controlador {
                 $rutaModelo = BASE_PATH . 'Modulos' . DS . ucfirst($modulo) . DS . 'Modelos' . DS . $modelo . '.php';
             }
         }
-//        echo $rutaModelo;
         if (is_readable($rutaModelo)) {
-//            echo 'es leible ' . $rutaModelo . '<br>';
             require_once $rutaModelo;
-//            echo $rutaModelo . '<br>';
             $clase = $modulo . '_Modelos_' . $modelo;
             $modelo = new $clase;
             return $modelo;
@@ -102,11 +97,8 @@ abstract class App_Controlador {
                 $rutaPlugin = BASE_PATH . 'Modulos' . DS . ucfirst($modulo) . DS . 'Plugins' . DS . $plugin . '.php';
             }
         }
-//        echo $rutaPlugin;
         if (is_readable($rutaPlugin)) {
-//            echo 'es leible ' . $rutaPlugin . '<br>';
             require_once $rutaPlugin;
-//            echo $rutaPlugin . '<br>';
             $plugin = new $plugin;
             return $plugin;
         } else {
@@ -123,7 +115,6 @@ abstract class App_Controlador {
      */
     protected function getLibreria($libreria) {
         $rutaLibreria = BASE_PATH . 'LibQ' . DS . $libreria . '.php';
-//        echo $rutaLibreria;
         if (is_readable($rutaLibreria)) {
             require_once $rutaLibreria;
         } else {
@@ -179,12 +170,8 @@ abstract class App_Controlador {
      * @return int 
      */
     protected function getIntPost($clave) {
-        if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
-            $_POST[$clave] = filter_input(INPUT_POST, $clave, FILTER_VALIDATE_INT);
-            return $_POST[$clave];
-        }
-
-        return 0;
+        $retorno = filter_input(INPUT_POST, $clave, FILTER_SANITIZE_NUMBER_INT);
+        return $retorno;
     }
 
     /**
@@ -192,8 +179,8 @@ abstract class App_Controlador {
      * @param mixed $int
      * @return int 
      */
-    protected function filtrarInt($int) {
-        $int = (int) $int;
+    protected function filtrarInt($intParam) {
+        $int = (int) $intParam;
         if (is_int($int)) {
             return $int;
         } else {
@@ -207,9 +194,7 @@ abstract class App_Controlador {
      * @return mixed 
      */
     protected function getPostParam($clave) {
-        if (isset($_POST[$clave])) {
-            return $_POST[$clave];
-        }
+        return filter_input(INPUT_POST, $clave);
     }
 
     /**
@@ -218,9 +203,10 @@ abstract class App_Controlador {
      * @return string 
      */
     protected function getSql($clave) {
-        if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
-            $_POST[$clave] = strip_tags($_POST[$clave]);
-            return trim($_POST[$clave]);
+        $retorno = $this->getPostParam($clave);
+        if (isset($retorno) && !empty($retorno)) {
+            $retorno = strip_tags($this->getPostParam($clave));
+            return trim($retorno);
         }
     }
 
@@ -230,10 +216,11 @@ abstract class App_Controlador {
      * @return string 
      */
     protected function getAlphaNum($clave) {
-        if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
-            $_POST[$clave] = (string) preg_replace('/[^A-Z0-9_]/i', '', $_POST[$clave]);
-            return trim($_POST[$clave]);
+        $retorno = filter_input(INPUT_POST, $clave); 
+        if (isset($retorno) && !empty($retorno)) {
+            $retorno = (string) preg_replace('/[^A-Z0-9_]/i', '', filter_input(INPUT_POST, $clave));
         }
+        return trim($retorno);
     }
 
     /**
@@ -264,7 +251,7 @@ abstract class App_Controlador {
     public function isAutenticado()
     {
         if (!App_Session::get('autenticado')){
-            $this->redireccionar('mod=Usuarios&cont=Login&met=index');
+            $this->redireccionar(URL_LOGIN);
         }
     }
 

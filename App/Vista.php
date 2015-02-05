@@ -1,4 +1,7 @@
 <?php
+/**
+ * La clase vista construye la vista a mostrar
+ */
 use LibQ\View\View,
     LibQ\View\CompositeView;
 
@@ -8,14 +11,45 @@ require_once BASE_PATH . 'LibQ' . DS . 'View' . DS . 'CompositeView.php' ;
 
 class App_Vista
 {
-
+    /**
+     * El objeto request donde distingo los parametros para la vista.
+     * @var App_Request
+     */
     private $_request;
+    /**
+     * Un array con los archivos js a cargar en la vista.
+     * @var Array
+     */
     private $_js;
+    /**
+     * El objeto ACL que controla los permisos del usuario para ver o no la vista.
+     * @var ACL
+     */
     private $_acl;
+    /**
+     * Un array con las rutas a utilizar en la vista.
+     * @var Array
+     */
     private $_rutas;
+    /**
+     * Un array con los archivos css a incluir en la vista.
+     * @var Array
+     */
     private $_css;
+    /**
+     * Un array con las rutas CDN a incluir en la vista
+     * @var Array
+     */
     private $_cdn;
+    /**
+     * Nombre de un archivo css para usar en la vista actual.
+     * @var String
+     */
     private $_style;
+    /**
+     * Script para ser incluido en el tag <body>.
+     * @var String
+     */
     private $_bodyOnLoad;
 
     public function __construct(App_Request $peticion, App_Acl $_acl=null)
@@ -24,15 +58,12 @@ class App_Vista
         $this->_js = array();
         $this->_acl = $_acl;
         $this->_rutas = array();
-
         $modulo = $this->_request->getModulo();
         $controlador = $this->_request->getControlador();
-
         if ($modulo) {
             $this->_rutas['vista'] = BASE_PATH . 'Modulos' . DS . ucfirst($modulo) . DS . 'Vistas' . DS . ucfirst($controlador) . DS;
-//            $this->_rutas['js'] = BASE_URL . 'Modulos/' . ucfirst($modulo) . '/Vistas/' . ucfirst($controlador) . '/Js/';
-            $this->_rutas['js'] = BASE_URL . 'Vistas' . DS . 'Layout' . DS . DEFAULT_LAYOUT . '/Js/';
-            $this->_rutas['css'] = BASE_URL . 'Modulos/' . ucfirst($modulo) . '/Vistas/' . ucfirst($controlador) . '/Css/';
+            $this->_rutas['js'] = BASE_URL . 'Modulos/' . ucfirst($modulo) . '/Vistas/' . ucfirst($controlador) . '/Js/';
+            $this->_rutas['css'] = BASE_URL . 'Modulos/' . ucfirst($modulo) . '/Vistas/' . ucfirst($controlador) . '/Css/';            
         } else {
             $this->_rutas['vista'] = BASE_PATH . 'Vistas' . DS . ucfirst($controlador) . DS;
             $this->_rutas['js'] = BASE_URL . 'Vistas/' . ucfirst($controlador) . '/Js/';
@@ -48,90 +79,155 @@ class App_Vista
      */
     public function renderizar($vista, $item = false)
     {
+        $css   = $this->_controlCss();
+        $js    = $this->_controlJs();
+        $style = $this->_controlStyle();
+        $bodyOnLoad = $this->_controlBodyOnLoad();
+//        $_acl = $this->_acl;
+        $rutaVista = $this->_controlRutaVista($vista);
+        $header = $this->_incluirHeader($js, $css, $style, $bodyOnLoad);
+        $encabezado = $this->_incluirEncabezado();
+        $body = $this->_incluirBody($rutaVista);
+        $footer = $this->_incluirFooter();
+        $this->_crearPagina($header,$encabezado,$body,$footer);
+    }
+    
+    /**
+     * Controla que la variable css sea un Array.
+     * @return Array
+     */
+    private function _controlCss()
+    {
         $css = array();
-
         if (count($this->_css)) {
             $css = $this->_css;
         }
-
+        return $css;
+    }
+    
+    /**
+     * Controla que la variable js sea un Array.
+     * @return Array
+     */
+    private function _controlJs()
+    {
         $js = array();
-
         if (count($this->_js)) {
             $js = $this->_js;
         }
-        
+        return $js;
+    }
+    
+     /**
+     * Controla que la variable style sea un Array.
+     * @return Array
+     */
+    private function _controlStyle()
+    {
         $style = array();
-        
         if (count($this->_style)) {
             $style = $this->_style;
         }
-        
+        return $style;
+    }
+    
+    /**
+     * Controla que la variable bodyOnLoad sea un string.
+     * @return String
+     */
+    private function _controlBodyOnLoad()
+    {
         $bodyOnLoad = '';
-        
         if (is_string($this->_bodyOnLoad)) {
             $bodyOnLoad = $this->_bodyOnLoad;
         }
-
-
+        return $bodyOnLoad;
+    }
+    
+    /**
+     * Controla que la ruta de la vista exista y sea leible.
+     * Si no lanza una exception.
+     * @param String $vista
+     * @return string
+     * @throws Exception
+     */
+    private function _controlRutaVista($vista)
+    {
+        $rutaVista = $this->_rutas['vista'] . ucfirst($vista) . '.phtml';
+        if (!is_readable($rutaVista)) {
+            throw new Exception('Error de vista');
+        }
+        return $rutaVista;
+    }
+    
+    /**
+     * Incluye el header de la vista
+     * @return View
+     */
+    private function _incluirHeader($js, $css, $style, $bodyOnLoad)
+    {
         $_layoutParams = array(
             'ruta_css' => BASE_URL . 'Vistas/Layout/' . DEFAULT_LAYOUT . '/Css/',
+            'ruta_bootstrap' => BASE_URL . 'Vistas/Layout/' . DEFAULT_LAYOUT . '/bootstrap/',
             'ruta_Img' => BASE_URL . 'Vistas/Layout/' . DEFAULT_LAYOUT . '/Img/',
             'ruta_js' => BASE_URL . 'Vistas/Layout/' . DEFAULT_LAYOUT . '/Js/',
-            'ruta_bootstrap' => BASE_URL . 'Vistas/Layout/' . DEFAULT_LAYOUT . '/bootstrap/',
             'js' => $js,
             'root' => BASE_URL,
             'css' => $css,
-            'style'=> $style,
-            'bodyOnLoad'=>$bodyOnLoad
+            'style' => $style,
+            'bodyOnLoad' => $bodyOnLoad
         );
-
-        $_acl = $this->_acl;
-
-        $rutaVista = $this->_rutas['vista'] . ucfirst($vista) . '.phtml';
-        if (!is_readable($rutaVista)){
-            throw new Exception('Error de vista');
-        }
-        
-        
-        $header = new \LibQ\View\LibQ_View_CompositeView("header");
+        $header = new View("header");
         $header->content = include_once BASE_PATH . 'Vistas' . DS . 'Layout' . DS . DEFAULT_LAYOUT . DS . 'Header.php';
-                
-        $encabezado = new \LibQ\View\LibQ_View_CompositeView("encabezado");
+        return $header;
+    }
+    
+    /**
+     * Incluye un encabezado en la vista.
+     * @return View
+     */
+    private function _incluirEncabezado()
+    {
+        $encabezado = new View("encabezado");
         $encabezado->content = include_once BASE_PATH . 'Vistas' . DS . 'Layout' . DS . DEFAULT_LAYOUT . DS . 'Encabezado.php';
-
-        $body = new \LibQ\View\LibQ_View_CompositeView("body");
+        return $encabezado;
+    }
+    
+    /**
+     * Incluye el body en la vista.
+     * @param Strng $rutaVista La ruta del body a incluir.
+     * @return View
+     */
+    private function _incluirBody($rutaVista)
+    {
+        $body = new View("body");
         $body->content = include_once $rutaVista;
-
-//        $lateral_izq = new \LibQ\View\LibQ_View_CompositeView("lateral_izq");
-//        $lateral_izq->content = include_once BASE_PATH . 'Vistas' . DS . 'Layout' . DS . DEFAULT_LAYOUT . DS . 'Lateral_izq.php';
-        
-        $footer = new \LibQ\View\LibQ_View_CompositeView("footer");
+        return $body;
+    }
+    
+    /**
+     * Incluye el footer en la vista.
+     * @return View
+     */
+    private function _incluirFooter()
+    {
+        $footer = new View("footer");
         $footer->content = include_once BASE_PATH . 'Vistas' . DS . 'Layout' . DS . DEFAULT_LAYOUT . DS . 'Footer.php';
-
-        $compositeView = new \LibQ\View\LibQ_View_CompositeView;
-
+        return $footer;
+    }
+    
+    private function _crearPagina($header, $encabezado, $body, $footer)
+    {
+        $compositeView = new LibQ\View\LibQ_View_CompositeView();
         echo $compositeView->attachView($header)
                 ->attachView($encabezado)
                 ->attachView($body)
-//                ->attachView($lateral_izq)
                 ->attachView($footer)
                 ->render();
-
-
-//        $rutaVista = $this->_rutas['vista'] . ucfirst($vista) . '.phtml';
-////        echo $rutaVista;
-//        if (is_readable($rutaVista)){
-//            include_once BASE_PATH . 'Vistas' . DS . 'Layout' . DS . DEFAULT_LAYOUT . DS . 'Header.php';
-//            include_once BASE_PATH . 'Vistas' . DS . 'Layout' . DS . DEFAULT_LAYOUT . DS . 'Encabezado.php';
-//            include_once $rutaVista;
-//            include_once BASE_PATH . 'Vistas' . DS . 'Layout' . DS . DEFAULT_LAYOUT . DS . 'Footer.php';
-//        }  else {
-//            throw new Exception('Error de vista');
-//        }
     }
 
     /**
-     * Incluye un archivo Js propio de esa vista
+     * Incluye una ruta CDN propio de esa vista
      * @param array $js
      * @throws Exception 
      */
@@ -145,7 +241,7 @@ class App_Vista
             throw new Exception('Error de Js');
         }
     }
-
+    
     /**
      * Incluye un archivo Js propio de esa vista
      * @param array $js
@@ -153,29 +249,40 @@ class App_Vista
      */
     public function setVistaJs(array $js)
     {
+        $ruta = $this->_request->getModulo();
+        $ruta .= '/Vistas/' . ucfirst($this->_request->getControlador());
+        
         if (is_array($js) && count($js)) {
             foreach ($js as $archivoJs) {
-//                echo BASE_URL . $this->_request->getModulo() . DS . 'Vistas' . DS . ucfirst($this->_request->getControlador()) . DS . 'Js' . DS . $archivoJs . '.js';
-                $this->_js[] = BASE_URL . 'Modulos' . DS . $this->_request->getModulo() . DS . 'Vistas' . DS . ucfirst($this->_request->getControlador()) . DS . 'Js' . DS . $archivoJs . '.js';
+                if($ruta=='login'){
+                    $ruta = 'Usuarios/Vistas/Login/';
+                }
+                $this->_js[] = BASE_URL . 'Modulos/' . 
+                        $ruta . '/Js/' . $archivoJs . '.js';
             }
         } else {
             throw new Exception('Error de Js');
         }
     }
+
     
     public function setVistaCss(array $css)
     {
-        $modulo = $this->_request->getModulo();
+        $ruta = $this->_request->getModulo();
+        $ruta .= '/Vistas/' . ucfirst($this->_request->getControlador());
         if (is_array($css) && count($css)) {
             foreach ($css as $archivoCss) {
-//                var_dump(MODS_PATH . $modulo . DS . 'Vistas' . DS . ucfirst($this->_request->getControlador()) . DS . 'css' . DS . $archivoCss . '.css');
-                $this->_css[] = BASE_URL . 'Modulos' . DS . $modulo . DS . 'Vistas' . DS . ucfirst($this->_request->getControlador()) . DS . 'css' . DS . $archivoCss . '.css';
+                if($ruta=='login'){
+                    $ruta = 'Usuarios/Vistas/Login/';
+                }
+                $this->_css[] = BASE_URL . 'Modulos/' . 
+                        $ruta . '/css/'. $archivoCss . '.css';
             }
         } else {
             throw new Exception('Error de CSS');
         }
     }
-    
+        
     /**
      * Incluye un archivo Js propio de ese layout
      * @param array $js
@@ -197,18 +304,21 @@ class App_Vista
      * @param array $js
      * @throws Exception 
      */
-    public function setJs(array $js)
+    public function setJs(array $js, $absoluto = TRUE)
     {
         if (is_array($js) && count($js)) {
             foreach ($js as $archivoJs) {
-//                echo $this->_rutas['js'] . $archivoJs . '.js';
-                $this->_js[] = $this->_rutas['js'] . $archivoJs . '.js';
+                if ($absoluto) {
+                    $this->_js[] = BASE_URL . 'Vistas/Layout/' . DEFAULT_LAYOUT . '/Js/' . $archivoJs . '.js';
+                } else {
+                    $this->_js[] = $archivoJs;
+                }
             }
         } else {
             throw new Exception('Error de Js');
         }
     }
-    
+        
 
     /**
      * Incluye un archivo Js propio de esa vista
@@ -225,6 +335,8 @@ class App_Vista
             throw new Exception('Error de Css');
         }
     }
+    
+    
     
     /**
      * Incluye un estilo propio de esa vista
