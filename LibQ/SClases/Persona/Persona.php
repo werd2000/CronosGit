@@ -59,7 +59,7 @@ abstract class LibQ_Sclases_Persona_Persona {
      * @var array 
      */
     protected $_contactos;
-
+    
     public function __construct($persona = array()) {
         $this->_apellidos = $persona['apellidos'];
         $this->_fecha_nac = $persona['fecha_nac'];
@@ -131,7 +131,7 @@ abstract class LibQ_Sclases_Persona_Persona {
     {
         return $this->_contactos;
     }
-    
+        
     public function getDomicilio()
     {
         return $this->_domicilio;

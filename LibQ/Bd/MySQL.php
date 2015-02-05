@@ -118,7 +118,7 @@ class MySQLAdapter implements ManejadorBaseDeDatosInterface
         $query = 'UPDATE ' . $table . ' SET ' . $set 
                . (($where) ? ' WHERE ' . $where : '');
         $sql = new Sql($query);
-//        echo $sql;
+        echo $sql;
         $this->query($sql);
         return $this->getAffectedRows();  
     }
