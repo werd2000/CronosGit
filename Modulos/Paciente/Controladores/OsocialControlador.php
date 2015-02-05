@@ -47,10 +47,10 @@ class Paciente_Controladores_OsocialControlador extends pacienteControlador
             }
 
             if (isset($respuesta)) {
-                echo $respuesta;
+                echo 'DATOS DE OBRA SOCIAL GUARDADOS';
                 exit;
             } else {
-                echo 'No se guardó';
+                echo 'NO SE PUDO GUARDAR LOS DATOS DE LA OBRA SOCIAL';
                 exit;
             }
         }

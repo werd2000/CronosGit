@@ -1,18 +1,19 @@
 <?php
 
 require_once BASE_PATH . 'Modulos' . DS . 'Turnos' . DS . 'Modelos' . DS . 'IndexModelo.php';
+require_once BASE_PATH . 'Modelos' . DS . 'PacientesModelo.php';
+require_once BASE_PATH . 'Modelos' . DS . 'PersonalModelo.php';
 require_once BASE_PATH . 'LibQ' . DS . 'Fechas.php';
 require_once BASE_PATH . 'LibQ' . DS . 'jpgraph' . DS . 'src' . DS . 'jpgraph.php';
 require_once BASE_PATH . 'LibQ' . DS . 'jpgraph' . DS . 'src' . DS . 'jpgraph_bar.php';
 require_once BASE_PATH . 'LibQ' . DS . 'msg_dlg.php';
-//require_once BASE_PATH . 'LibQ' . DS . 'HTML' . DS . 'TablaDiv.php';
-//require_once BASE_PATH . 'LibQ' . DS . 'HTML' . DS . 'FilaDiv.php';
 require_once BASE_PATH . 'LibQ' . DS . 'HTML' . DS . 'CeldaDiv.php';
+require_once BASE_PATH . 'LibQ' . DS . 'BarraHerramientas.php';
 
 /**
  * Clase Turnos Controlador 
  */
-class indexControlador extends TurnosControlador {
+class Turnos_Controladores_indexControlador extends Controladores_TurnosControlador {
 
     private $_horario = array('Hora', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30');
     private $_horarioPM = array('Hora', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30');
@@ -36,90 +37,121 @@ class indexControlador extends TurnosControlador {
     private $_personal;
     private $_paciente;
 
-//    private $_headTabla;
+    /**
+     * Propiedad usada para configurar el botón VOLVER
+     * @var type Array
+     */
+    private $_paramBotonVolver = array(
+        'href' => "javascript:history.back(1)",
+        'classIcono' => 'icono-volver32',
+        'titulo' => 'Volver',
+        'class' => 'btn btn-primary'
+    );
+    private $_paramBotonInicio = array(
+        'href' => "?option=Index",
+        'classIcono' => 'icono-inicio32',
+        'titulo' => 'Inicio',
+        'class' => 'btn btn-primary'
+    );
+
 
     public function __construct() {
         parent::__construct();
-        $this->_paciente = $this->cargarModelo('Pacientes', 'default');
-        $this->_personal = $this->cargarModelo('Personal', 'default');
+        $this->_paciente = new Modelos_pacientesModelo();
+        $this->_personal = new Modelos_personalModelo();
         //$this->_turnos = $this->cargarModelo('index');
-        $this->_turnos = new indexModelo();
+        $this->_turnos = new Turnos_Modelos_indexModelo();
         parent::getLibreria('Fechas');
         parent::getLibreria('array_column');
     }
     
-    private function _menuIndex($fecha = 'now', $mesResumen = 'actual', $paciente = 0)
+    private function _paramBotonResumenMensualPaciente($paciente = 0, $mesResumen = 'actual')
     {
-        $menu = array(
-            array(
+        return array(
                 'onclick' => '',
                 'href' => "?option=Turnos&sub=index&cont=resumenPaciente&paciente="
                 . $paciente . "&mes=" . $mesResumen,
-                'title' => 'Resumen Mensual Paciente',
-                'class' => 'lista32'
-            ),
-            array(
+                'titulo' => 'Resumen Mensual Paciente',
+                'class' => 'btn btn-primary'
+            );
+    }
+    
+    private function _paramBotonResumenMensual($mesResumen = 'actual')
+    {
+        return array(
                 'onclick' => '',
                 'href' => "?option=Turnos&sub=index&cont=resumen&mes=" . $mesResumen,
-                'title' => 'Resumen Mensual',
-                'class' => 'icono-lista32'
-            ),
-            array(
+                'titulo' => 'Resumen Mensual',
+                'class' => 'btn btn-primary'
+            );
+    }
+    
+    private function _paramBotonImprimir()
+    {
+        return array(
                 'onclick' => '',
                 'href' => "javascript:imprimir_turnos()",
-                'title' => 'Imprimir',
-                'class' => 'icono-imprimir32'
-            ),
-            array(
+                'titulo' => 'Imprimir',
+                'class' => 'btn btn-primary'
+            );
+    }
+    
+    private function _paramBotonEliminarTurno($fecha)
+    {
+        return array(
                 'onclick' => '',
                 'href' => "?option=Turnos&sub=index&cont=eliminarTurnos&fecha=" . $fecha,
-                'title' => 'Eliminar Turnos',
-                'class' => 'icono-eliminar32'
-            ),
-            array(
+                'titulo' => 'Eliminar Turnos',
+                'class' => 'btn btn-primary'
+            );
+    }
+    
+    private function _paramBotonCopiarAlDiaSiguiente($fecha)
+    {
+        return array(
                 'onclick' => '',
                 'href' => "?option=Turnos&sub=index&cont=copiarAlDiaSiguiente&fecha=" . $fecha,
-                'title' => 'Copiar al día siguiente',
-                'class' => 'copiar_a_32'
-            ),
-            array(
+                'titulo' => 'Copiar al día siguiente',
+                'class' => 'btn btn-primary'
+            );
+    }
+    
+    private function _paramBotonCopiardeSemanaAnterior($fecha)
+    {
+        return array(
                 'onclick' => '',
-//                'href' => "?option=Turnos&sub=index&cont=copiarDelDiaAnterior&fecha=" . $fecha,
                 'href' => "?option=Turnos&sub=index&cont=copiarDeSemanaAnterior&fecha=" . $fecha,
-                'title' => 'Copiar de semana anterior',
-                'class' => 'copiar_de_32'
-            ),
-            array(
-                'onclick' => '',
-                'href' => "javascript:history.back(1)",
-                'title' => 'Volver',
-                'class' => 'icono-volver32'
-            ),
-            array(
-                'onclick' => '',
-                'href' => "?option=Index",
-                'title' => 'Inicio',
-                'class' => 'icono-inicio32'
-            )
-        );
-        return $menu;
+                'titulo' => 'Copiar de semana anterior',
+                'class' => 'btn btn-primary'
+            );
     }
 
     public function index($fecha = 'now', $mesResumen = 'actual', $paciente = 0) {
-        $this->_vista->_barraHerramientas = $this->_menuIndex($fecha, $mesResumen, $paciente);
+        $this->isAutenticado();
+        /** Barra de herramientas */
+        $bh = new LibQ_BarraHerramientas();
+        $bh->addBoton('Volver', $this->_paramBotonVolver);
+        $bh->addBoton('Inicio', $this->_paramBotonInicio);
+        $bh->addBoton('Resumen', $this->_paramBotonResumenMensualPaciente($paciente, $mesResumen));
+        $bh->addBoton('Mensual', $this->_paramBotonResumenMensual($mesResumen));
+        $bh->addBoton('Imprimir', $this->_paramBotonImprimir());
+        $bh->addBoton('Eliminar', $this->_paramBotonEliminarTurno($fecha));
+        $bh->addBoton('CopiarAlDiaSiguiente', $this->_paramBotonCopiarAlDiaSiguiente($fecha));
+        $bh->addBoton('CopiarDeAnterior', $this->_paramBotonCopiardeSemanaAnterior($fecha));
+        $this->_vista->_barraHerramientas = $bh->render();        
         $this->_vista->estadosTurnos = $this->_estadoTurno;
-        $fecha_creada = new fecha($fecha);
-        $this->_vista->fecha = $fecha_creada->getFecha('-');
+        $fecha_creada = new LibQ_Fecha($fecha);
+        $this->_vista->fecha = $fecha_creada->getDate();
         $this->_vista->titulo = 'Turnos del día ';
         $this->_vista->horario = $this->_columnaHorario('AM');
         $this->_vista->horarioPM = $this->_columnaHorario('PM');
-//        //Los profesionales del día y en horario AM
+//      Los profesionales del día y en horario AM
         $profesionalesDiaAM = $this->getListaTerapeutasDia($fecha_creada, 'AM');
         $pAM = array();
         foreach ($profesionalesDiaAM as $turno) {
             $pAM[] = $turno;
-            $idPersonal = $turno->getPersonal()->getId();
-            $horario = $this->_horarioProfesional($idPersonal, $fecha_creada, 'hora < \'12:00:00\'');
+//            $idPersonal = $turno->getPersonal()->getId();
+//            $horario = $this->_horarioProfesional($idPersonal, $fecha_creada, 'hora < \'12:00:00\'');
             $this->_vista->horarioProfesionalAM[$turno->getPersonal()->getId()] = $this->_horarioProfesional($turno->getPersonal()->getId(), $fecha_creada, 'hora < \'12:00:00\'');
         }
         $this->_vista->profesionalesDiaAM = $profesionalesDiaAM; //$pAM;
@@ -131,8 +163,9 @@ class indexControlador extends TurnosControlador {
         }
         $this->_vista->profesionalesDiaPM = $profesionalesDiaPM; //$pPM;
         $this->_vista->setCss(array('jquery.toolbars', 'bootstrap.icons','chosen'));
-        $this->_vista->setJs(array('turnos', 'jquery.toolbar','chosen.jquery'));
-        $this->_vista->setJs(array('msg_dlg'));
+        $this->_vista->setVistaJs(array('turnos', 'jquery.toolbar','chosen.jquery'));
+        $this->_vista->setVistaJs(array('msg_dlg'));
+        $this->_vista->setVistaCss(array('turnos'));
         
         $this->_vista->listaPacientes = $this->_turnos->getPacientes();
         $this->_vista->listaPacientes = $this->_paciente->getAlgunosPacientes(0, 0, 'apellidos', '');
@@ -188,11 +221,14 @@ class indexControlador extends TurnosControlador {
         $result = array();
         $fechaTurno = $this->_fechaToArray($fecha);
         if ($turno === 'AM') {
-            $turnosDia = $this->_turnos->getTerapeutasByFechaTurno($fechaTurno, 'hora < \'12:00:00\'');
+            $result = $this->_turnos->getTerapeutasByFechaTurno($fechaTurno, 'hora < \'12:00:00\'');
+//            $turnosDia = $this->_turnos->getTerapeutasByFechaTurno($fechaTurno, 'hora < \'12:00:00\'');
         } else {
-            $turnosDia = $this->_turnos->getTerapeutasByFechaTurno($fechaTurno, "hora > '14:00:00'");
+            $result = $this->_turnos->getTerapeutasByFechaTurno($fechaTurno, "hora > '14:00:00'");
+//            $turnosDia = $this->_turnos->getTerapeutasByFechaTurno($fechaTurno, "hora > '14:00:00'");
         }
-        return $turnosDia;
+//        return $turnosDia;
+        return $result;        
     }
 
     private function _fechaToArray($fecha) {
@@ -339,17 +375,17 @@ class indexControlador extends TurnosControlador {
 
     public function copiarAlDiaSiguiente($fecha = 'now') {
         echo 'fecha que trae: ' . $fecha . '<br>';
-        $fechaTurno = new fecha($fecha);
+        $fechaTurno = new LibQ_Fecha($fecha);
         echo 'fecha creada con lo que trae: ' . $fechaTurno . '<br>';
         echo 'dia creado: ' . $fechaTurno->getDia() . '<br>';
         echo 'mes creado: ' . $fechaTurno->getMes() . '<br>';
         echo 'anio creado: ' . $fechaTurno->getAnio() . '<br>';
         $turnos = $this->_turnos->getTurnosByFecha($fechaTurno);
-        $fecha_turno = new fecha($fecha);
+        $fecha_turno = new LibQ_Fecha($fecha);
         echo 'Nueva fecha creada con lo que trae: ' . $fechaTurno . '<br>';
         $nuevaFecha = $fechaTurno->add_date($fecha_turno->getFecha(), 1);
         echo 'Nueva fecha + 1: ' . $nuevaFecha . '<br>';
-        $newFecha = new fecha($nuevaFecha);
+        $newFecha = new LibQ_Fecha($nuevaFecha);
         echo 'Nueva con la sumada: ' . $newFecha . '<br>';
         foreach ($turnos as $turno) {
             $this->_guardarTurno($newFecha, $turno);
@@ -411,12 +447,14 @@ class indexControlador extends TurnosControlador {
         $nuevoTurno['anio'] = $nuevaFecha->getAnio();
         $nuevoTurno['hora'] = $turno->getHora();
         $nuevoTurno['idProfesional'] = $turno->getPersonal()->getId();
-        if (is_a($turno->getPaciente(), 'Paciente')) {
+        if (is_a($turno->getPaciente(), 'Paciente_Modelos_Paciente')) {
             $nuevoTurno['idPaciente'] = $turno->getPaciente()->getId();
+            echo 'pac: ' . $nuevoTurno['idPaciente'];
         } else {
             $nuevoTurno['idPaciente'] = 0;
+            echo 'pac: ' . $nuevoTurno['idPaciente'];
         }
-        if ($this->_ifExisteTurno($nuevoTurno)) {
+        if ($this->_ifExisteTurno($nuevaFecha, $nuevoTurno)) {
             echo 'ya existe<br>';
             $condicion = "id = " . $turno->getId();
             $retorno = $this->_turnos->modificarTurno($nuevoTurno, $condicion);
@@ -426,10 +464,10 @@ class indexControlador extends TurnosControlador {
         }
     }
 
-    private function _ifExisteTurno($turno) {
+    private function _ifExisteTurno($fecha, $turno) {
         $hora = $turno['hora'];
         $idProfesional = $turno['idProfesional'];
-        return $this->_turnos->getTurnoByFechaHoraProfesionalPaciente($turno, $hora, $idProfesional, $turno['idPaciente']);
+        return $this->_turnos->getTurnoByFechaHoraProfesionalPaciente($fecha, $hora, $idProfesional, $turno['idPaciente']);
     }
 
 //    public function getTerapiaDiaHora($fecha, $hora = '08:00') {

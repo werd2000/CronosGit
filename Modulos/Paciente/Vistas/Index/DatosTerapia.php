@@ -84,7 +84,7 @@
                                 if ($terapia->getObservaciones() && $terapia->getObservaciones() != '') {
                                     echo $terapia->getObservaciones();
                                 } else {
-                                    echo '-';
+                                    echo $terapia->getObservaciones();
                                 }
                                 ?>
                             </td>

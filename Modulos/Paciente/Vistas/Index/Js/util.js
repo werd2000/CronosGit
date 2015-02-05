@@ -25,7 +25,7 @@ $(function() {
                     $combo.empty();
                     $combo.append(data);
                 });
-    })
+    });
 });
 
 
@@ -67,53 +67,39 @@ $(function() {
         }
         });
     });
-})
+});
 
 $(function() {
     $("#agregarContactoPaciente").click(function() {
         var guardar = $("#guardarDatosContacto").attr("value");
-        var idPaciente = $("#idPaciente").attr("value");
+        var id_paciente = $("#id_paciente").attr("value");
         var tipo = $("#tipoContacto").val();
         var contacto = $("#valorContacto").val();
         var observaciones = $("#observacionesContactoPaciente").val();
         $.post("?option=Paciente&sub=contacto&met=nuevo",
-                {guardar: guardar, idPaciente: idPaciente, tipo: tipo, contacto: contacto, observaciones: observaciones},
+                {guardar: guardar, id_paciente: id_paciente, tipo: tipo, contacto: contacto, observaciones: observaciones},
         function(data) {
-            alert("Data Loaded: " + data);
-            $("#contenedorDetalleDatos").append('<div class="datoContacto" id="' + data + '">' +
-                    '<div class="datoDetalle">' + $("#tipoContacto").val() + '</div>' +
-                    '<div class="datoDetalle">' + $("#valorContacto").val() + '</div>' +
-                    '<div class="datoDetalle">' + $("#observacionesContactoPaciente").val() + '</div>' +
-                    '<div class="editcontrol">' +
-                    '<a class="iconoX" href="JavaScript:void(0);" idContacto="' + data + '" idPaciente="' + idPaciente + '" title="Eliminar"></a>' +
-                    '</div>' +
-                    '</div>');
+            alert(data);
+            document.location.reload();
         });
     });
-})
+});
 
 $(function() {
     $("#agregarFamiliaPaciente").click(function() {
         var guardar = $("#guardarDatosContacto").val();
-        var idPaciente = $("#idPaciente").val();
+        var id_paciente = $("#idPaciente").val();
         var parentesco = $("#parentesco").val();
         var nombre = $("#nombreFamilia").val();
         var observaciones = $("#observacionesFamilia").val();
         $.post("?option=Paciente&sub=familia&met=nuevo",
-                {guardar: guardar, idPaciente: idPaciente, parentesco: parentesco, nombre: nombre, observaciones: observaciones},
+                {guardar: guardar, id_paciente: id_paciente, parentesco: parentesco, nombre: nombre, observaciones: observaciones},
         function(data) {
-            //            alert("Data Loaded: " + data);
-            $("#contenedorDetalleDatosFamilia").append('<div class="datoContacto" id="' + data + '">' +
-                    '<div class="datoDetalle">' + parentesco + '</div>' +
-                    '<div class="datoDetalle">' + nombre + '</div>' +
-                    '<div class="datoDetalle">' + observaciones + '</div>' +
-                    '<div class="editcontrol">' +
-                    '<a class="iconoX" href="JavaScript:void(0);" idContacto="' + data + '" idPaciente="' + idPaciente + '" title="Eliminar"></a>' +
-                    '</div>' +
-                    '</div>');
+            alert(data);
+            document.location.reload();
         });
     });
-})
+});
 
 $(function() {
     $("#guardarObraSocialPaciente").click(function() {
@@ -126,10 +112,10 @@ $(function() {
         $.post("?option=Paciente&sub=Osocial&met=guardar",
                 {guardar: guardar, id: id, idPaciente: idPaciente, idObraSocial: idObraSocial, nroAfiliado: nroAfiliado, observaciones: observaciones},
         function(data) {
-            alert("Data Loaded: " + data);
+            alert(data);
         });
     });
-})
+});
 
 $(function() {
     $("#guardarEducacionPaciente").click(function() {
@@ -142,10 +128,10 @@ $(function() {
         $.post("?option=Paciente&sub=Educacion&met=guardar",
                 {guardar: guardar, id: id, idPaciente: idPaciente, idEscuela: idEscuela, curso: curso, observaciones: observaciones},
         function(data) {
-            alert("Data Loaded: " + data);
+            alert(data);
         });
     });
-})
+});
 
 $(function() {
     $(".glyphicon-remove").click(function() {
@@ -153,11 +139,11 @@ $(function() {
         var c = $(this).parent('a').attr("idContacto");
         var contexto = '';
         if (c > 0) {
-            contexto = 'contacto'
+            contexto = 'contacto';
         } else {
             c = $(this).parent('a').attr("idTerapia");
             if (c > 0) {
-                contexto = 'terapia'
+                contexto = 'terapia';
             } else {
                 c = $(this).parent('a').attr("idFamilia");
                 contexto = 'familia';
@@ -171,7 +157,7 @@ $(function() {
                 }
         );
     });
-})
+});
 
 $(function() {
     $("#eliminarTerapiaPaciente").click(function() {
@@ -187,13 +173,13 @@ $(function() {
                 }
         );
     });
-})
+});
 
 $(function() {
     $(".icono-buscar32").click(function() {
         $("#dialog-form-buscar").fadeToggle();
     });
-})
+});
 
 
 $(function() {
@@ -210,7 +196,7 @@ $(function() {
         //      } else {
         return true;
         //      }
-    }
+    };
 
     $("#dialog-upload").dialog({
         autoOpen: false,
@@ -237,5 +223,5 @@ $(function() {
             //        allFields.val( "" ).removeClass( "ui-state-error" );
         }
     });
-})
+});
 

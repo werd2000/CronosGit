@@ -46,7 +46,7 @@ class FamiliaPaciente
     public function __construct($datos)
     {
         $this->_id = $datos['id'];
-        $this->_idPaciente = $datos['idPaciente'];
+        $this->_idPaciente = $datos['id_paciente'];
         $this->_nombre = $datos['nombre'];
         $this->_observaciones = $datos['observaciones'];
         $this->_parentesco = $datos['parentesco'];

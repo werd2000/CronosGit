@@ -1,0 +1,55 @@
+#turnosProfesional {
+    visibility: hidden;
+}
+
+#turnosPaciente {
+    visibility: hidden;
+}
+.turno_profesional{
+    float: left;
+    width: 100%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #2E6E9E;
+    padding: 2px;
+    margin: 2px;
+    height: 45px;
+}
+.cel_horario{
+    width: 90%;
+    float: left;
+    background-color: #C2DCEE ;
+}
+.turno{
+    float: left;
+    width: 100%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #2E6E9E;
+    padding: 2px;
+    margin: 2px;
+    height: 45px;
+}
+#col_horario{
+    width: 100px;
+    float: left;
+    /*margin-right: 7px;*/
+    font-weight:bold;
+}
+#col_horarioProfesional{
+    width: 100px;
+    float: left;
+    /*margin-right: 7px;*/
+    font-weight:bold;
+}
+.turno_paciente{
+    float: left;
+    width: 90%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #2E6E9E;
+    padding: 2px;
+    margin: 2px;
+    height: 45px;
+    color: #04F;
+}

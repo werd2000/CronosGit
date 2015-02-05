@@ -36,10 +36,10 @@ class Paciente_Controladores_TerapiaControlador extends pacienteControlador
              ));
 
             if ($respuesta){
-                echo $respuesta;
+                echo 'DATOS DE TERAPIA GUARDADOS';
                 exit;
             }else{
-                echo 'No se guardó';
+                echo 'NO SE PUDO GUARDAR LOS DATOS DE LA TERAPIA';
                 exit;
             }
         }

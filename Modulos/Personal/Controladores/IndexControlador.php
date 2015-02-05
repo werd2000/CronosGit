@@ -80,7 +80,7 @@ class Personal_Controladores_indexControlador extends Controladores_PersonalCont
     {
         parent::__construct();
         $this->_personal = new Personal_Modelos_IndexModelo();
-        $this->_datosLaborales = $this->cargarModelo('laboral');
+        $this->_datosLaborales = new Personal_Modelos_laboralModelo(); //$this->cargarModelo('laboral');
         $this->_datosContacto = $this->cargarModelo('contacto');
     }
 

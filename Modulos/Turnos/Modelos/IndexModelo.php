@@ -7,7 +7,7 @@ require_once BASE_PATH . 'LibQ' . DS . 'Fechas.php';
 /**
  * Clase Modelo Turnos que extiende de la clase Modelo
  */
-class indexModelo extends Modelo {
+class Turnos_Modelos_indexModelo extends App_Modelo {
 
     private $_verEliminados = false;
 
@@ -48,7 +48,7 @@ class indexModelo extends Modelo {
         //echo '<pre>';print_r($retorno);
         if (is_array($retorno)) {
             foreach ($retorno as $dato) {
-                $turno[] = new Turno($dato);
+                $turno[] = new Turnos_Modelos_Turno($dato);
             }
         }
         return $turno;
@@ -170,7 +170,7 @@ class indexModelo extends Modelo {
         $retorno = $this->_db->fetchAll();
         if (is_array($retorno)) {
             foreach ($retorno as $dato) {
-                $turno[] = new Turno($dato);
+                $turno[] = new Turnos_Modelos_Turno($dato);
             }
         }
         return $turno;
@@ -210,11 +210,11 @@ class indexModelo extends Modelo {
         return $this->_db->fetchRow();
     }
 
-    public function getTurnoByFechaHoraProfesionalPaciente($fecha, $hora, $profesional, $paciente) {
+    public function getTurnoByFechaHoraProfesionalPaciente(LibQ_Fecha $fecha, $hora, $profesional, $paciente) {
         $sql = 'SELECT * FROM cronos_turnos_terapias2 WHERE
-            anio = ' . $fecha['anio'] . ' AND
-            mes = ' . $fecha['mes'] . ' AND 
-            dia = ' . $fecha['dia'] . ' AND 
+            anio = ' . $fecha->getAnio() . ' AND
+            mes = ' . $fecha->getMes() . ' AND 
+            dia = ' . $fecha->getDia() . ' AND 
             hora = "' . $hora . '" AND
             idProfesional = ' . $profesional . ' AND 
             idPaciente = ' . $paciente;
@@ -271,7 +271,7 @@ class indexModelo extends Modelo {
         $retorno = $this->_db->fetchall();
         if (is_array($retorno)) {
             foreach ($retorno as $dato) {
-                $turno[] = new Turno($dato);
+                $turno[] = new Turnos_Modelos_Turno($dato);
             }
         }
         return $turno;
@@ -324,7 +324,7 @@ class indexModelo extends Modelo {
         $lista = $this->_db->fetchall();
         if(is_array($lista)){
             foreach ($lista as $pac) {
-                $pacientes[] = new Paciente($pac);
+                $pacientes[] = new Paciente_Modelos_Paciente($pac);
             }
         }
         return $pacientes;
@@ -345,7 +345,7 @@ class indexModelo extends Modelo {
                 $this->_db->setTipoDatos('Array');
                 $this->_db->query($sql2);
                 $paciente = $this->_db->fetchrow();
-                $lista[] = new Paciente($paciente);
+                $lista[] = new Paciente_Modelos_Paciente($paciente);
             }
         }
         return $lista;

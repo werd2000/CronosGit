@@ -6,7 +6,7 @@ require_once APP_PATH . 'Modelo.php';
 /**
  * Clase Modelo Paciente que extiende de la clase Modelo
  */
-class pacientesModelo extends Modelo
+class Turnos_Modelos_pacientesModelo extends App_Modelo
 {
 
     private $_verEliminados = false;

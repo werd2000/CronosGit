@@ -36,6 +36,19 @@ class Paciente_Modelos_indexModelo extends App_Modelo
         $this->_db->query($sql);
         return $this->_crearPacientes($this->_db->fetchall());
     }
+    
+    /**
+     * Obtiene un array con los pacientes
+     * @return Resource 
+     */
+    public function getListaEscuelas()
+    {
+        $this->_verEliminados = 0;
+        $sql = 'SELECT * FROM cronos_lista_escuelas ORDER BY Nombre';
+        $this->_db->setTipoDatos('Array');
+        $this->_db->query($sql);
+        return $this->_db->fetchall();
+    }
 
     /**
      * Crea un array de pacientes
@@ -66,8 +79,30 @@ class Paciente_Modelos_indexModelo extends App_Modelo
         $pac = new Paciente_Modelos_Paciente($datos);
         $pac->setDomicilio($this->getDomicilioPaciente("id_paciente=" . $datos['id']));
         $pac->setContactos($this->getContactosPaciente("id_paciente=" . $datos['id']));
+        $pac->setFamilia($this->getFamiliaPaciente("id_paciente=" . $datos['id']));
         $pac->setEducacion($this->getEducacionPaciente("id_paciente=" . $datos['id']));
         return $pac;
+    }
+    
+    public function getFamiliaPaciente($where)
+    {
+        $this->_verEliminados = 0;
+        $sql = 'SELECT * FROM cronos_familia_paciente WHERE eliminado = ' .
+                $this->_verEliminados . ' AND ' . $where;
+        $this->_db->setTipoDatos('Array');
+        $this->_db->query($sql);
+        return $this->_crearFamiliaPaciente($this->_db->fetchAll());
+    }
+    
+    public function _crearFamiliaPaciente($lista)
+    {
+        $resultado = array();
+        if (is_array($lista) and count($lista) > 0) {
+            foreach ($lista as $datos) {
+                $resultado[] = new FamiliaPaciente($datos);
+            }
+        }
+        return $resultado;
     }
     
     public function getEducacionPaciente($where)

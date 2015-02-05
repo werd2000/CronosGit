@@ -1,11 +1,11 @@
 <?php
-
+require_once MODS_PATH . 'Paciente' . DS .'Modelos' . DS . 'indexModelo.php';
 /**
  * Clase Turno
  *
  * @author WERD
  */
-class Turno {
+class Turnos_Modelos_Turno {
 
     private $_id;
     private $_anio;
@@ -48,23 +48,17 @@ class Turno {
     private function _getProfesional($id) {
         $retorno = 0;
         if ($id != '' AND $id != 0) {
-            $personalModelo = new personalModelo();
+            $personalModelo = new Modelos_personalModelo();
             $retorno = $personalModelo->getPersonal($id);
         }
         return $retorno;
     }
 
     private function _getPaciente($id) {
+        $paciente = NULL;
         if ($id != '' AND $id != 0) {
-            $pacienteModelo = new pacientesModelo();
-            $paciente = $pacienteModelo->getPaciente($id);
-        } else {
-            $datos = array('id' => 0, 'apellidos' => '', 'nombres' => '', 'diagnostico' => '',
-                'domicilio' => '', 'eliminado' => 0, 'fecha_nac' => '', 'localidad' => '',
-                'nacionalidad' => '', 'nro_doc' => '', 'observaciones' => '', 'sexo' => '',
-                'tipo_doc' => '');
-            require_once BASE_PATH . 'Modulos' . DS . 'Paciente' . DS . 'Modelos' . DS . 'Paciente.php';
-            $paciente = new Paciente($datos);
+            $pacienteModelo = new Paciente_Modelos_indexModelo();
+            $paciente = $pacienteModelo->getPaciente("id=$id");
         }
         return $paciente;
     }
@@ -111,7 +105,9 @@ class Turno {
 
 
     public function getEstadoPaciente(){
-        return $this->getPaciente()->getEstado();
+        if($this->getPaciente() != NULL){
+            return $this->getPaciente()->getEstado();
+        }
     }
     
     public function getObservaciones(){

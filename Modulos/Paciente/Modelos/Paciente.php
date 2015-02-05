@@ -33,6 +33,11 @@ class Paciente_Modelos_Paciente extends LibQ_Sclases_Persona_Persona
     protected $_objPlanTratamiento;
     protected $_objHTerapeutica;
     protected $_educacion;
+    /**
+     * Familia
+     * @var array
+     */
+    protected $_familia;
 
     public function __construct($paciente=array())
     {
@@ -130,9 +135,7 @@ class Paciente_Modelos_Paciente extends LibQ_Sclases_Persona_Persona
 
     public function getFamilia()
     {
-        $familiaModelo = new Paciente_Modelos_familiaModelo();
-        $datos = $familiaModelo->getFamiliares($this->_id);
-        return FamiliaPaciente::getFamiliares($datos);
+        return $this->_familia;
     }
 
     private function _getOSocial()
@@ -203,6 +206,15 @@ class Paciente_Modelos_Paciente extends LibQ_Sclases_Persona_Persona
     public function setEducacion($educacion)
     {
         $this->_educacion = $educacion;
+    }
+    
+    /**
+     * Estabece el array de contactos de la persona
+     * @param Array $familia
+     */
+    public function setFamilia(Array $familia)
+    {
+        $this->_familia = $familia;
     }
 
 }

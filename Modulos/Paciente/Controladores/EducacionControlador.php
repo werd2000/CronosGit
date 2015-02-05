@@ -48,10 +48,10 @@ class Paciente_Controladores_educacionControlador extends pacienteControlador
             }
 
             if (isset($respuesta)) {
-                echo $respuesta;
+                echo 'DATOS DE EDUCACION GUARDADOS';
                 exit;
             } else {
-                echo 'No se guardó';
+                echo 'NO SE GUARDARON LOS DATOS DE EDUCACION';
                 exit;
             }
         }

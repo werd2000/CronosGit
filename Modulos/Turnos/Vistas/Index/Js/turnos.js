@@ -27,16 +27,16 @@ $(function() {
 });
 
 
-$(function() {
-    $("#fechaTurno").datepicker({
-        changeYear: true
-    })
-    $("#fechaTurno").datepicker("option", "dateFormat", "dd-mm-yy");
-});
-$(function() {
-    var fecha = $("#fechaTurno").attr("value");
-    $("#fechaTurno").datepicker("setDate", fecha);
-});
+//$(function() {
+//    $("#fechaTurno").datepicker({
+//        changeYear: true
+//    })
+//    $("#fechaTurno").datepicker("option", "dateFormat", "dd-mm-yy");
+//});
+//$(function() {
+//    var fecha = $("#fechaTurno").attr("value");
+//    $("#fechaTurno").datepicker("setDate", fecha);
+//});
 
 $(function() {
     $(".turno_paciente").bind("click", function(event) {
@@ -47,7 +47,7 @@ $(function() {
         $("#paciente").attr('idPaciente', idPaciente);
         $("#paciente").attr('rem', idTurno);
         seleccionarPaciente(idPaciente);
-    })
+    });
 
     $(".turno_paciente").bind("dblclick", function() {
         alert('dbl');
@@ -63,7 +63,7 @@ $(function() {
         $("#profesional").attr('rem', idProfesional);
         $("#profesional").attr('turno', $(this).parent().attr('turno'));
         seleccionarProfesional(idProfesional);
-    })
+    });
 });
 $(function() {
     $(".turno_profesional").toolbar({
@@ -74,7 +74,7 @@ $(function() {
             function(event, selector) {
                 var turno = 'PM';
                 var fecha = $("#fechaTurno").attr("value");
-                if ($("#tabs").find("#tabs-1").attr("aria-expanded")==true) {
+                if ($("#tabs").find("#tabs-1").attr("aria-expanded")===true) {
                     turno = "AM";
                     var idprofesional = $("#turnosdiaAM").find(".pressed").attr("idprofesional");
                 }else{
@@ -84,8 +84,8 @@ $(function() {
                 function(data) {
                     alert(data);
                     window.location.reload();
-                })
-            })
+                });
+            });
 });
 
 $(function() {
@@ -96,7 +96,7 @@ $(function() {
     $('.turno_paciente').on('toolbarItemClick',
             function(event, selector) {
                 var id = $("#turnosdiaAM").find(".pressed").attr("id");
-                if (typeof id == 'undefined'){
+                if (typeof id === 'undefined'){
                     var id = $("#turnosdiaPM").find(".pressed").attr("id");
                     var observaciones = $("#turnosdiaPM").find(".pressed").attr("titulo");
                 }
@@ -109,16 +109,16 @@ $(function() {
                     function(data) {
                         alert(data);
                         window.location.reload();
-                    })
+                    });
                 }
-            })
+            });
 });
 
 function seleccionarProfesional(elemento) {
     var combo = document.getElementById('profesional');
     var cantidad = combo.length;
     for (i = 0; i < cantidad; i++) {
-        if (combo[i].value == elemento) {
+        if (combo[i].value === elemento) {
             combo[i].selected = true;
         }
     }
@@ -128,7 +128,7 @@ function seleccionarPaciente(elemento) {
     var combo = document.getElementById('paciente');
     var cantidad = combo.length;
     for (i = 0; i < cantidad; i++) {
-        if (combo[i].value == elemento) {
+        if (combo[i].value === elemento) {
             combo[i].selected = true;
         }
     }
@@ -300,7 +300,7 @@ function profesional_reptido(salon)
 {
     var j = 1;
     for (var i = 1; i <= 5; i++) {
-        if (($("#idProfesional" + salon).attr("value") == $("#idProfesional" + i).attr("value")) && (salon != i)) {
+        if (($("#idProfesional" + salon).attr("value") === $("#idProfesional" + i).attr("value")) && (salon !== i)) {
             return true;
         }
     }
@@ -311,7 +311,7 @@ function paciente_reptido(idPaciente, hora)
 {
     var cant = 0;
     $.each($("select"), function(key) {
-        if ($(this).val() == idPaciente && $(this).attr("hora") == hora) {
+        if ($(this).val() === idPaciente && $(this).attr("hora") === hora) {
             cant++;
         }
     });
@@ -330,7 +330,7 @@ function cantidadMaximaPacienteTerapia(idPaciente, idTerapia, salon)
 
     var cant = 0;
     $.each($("select"), function(key) {
-        if ($(this).val() == idPaciente && $(this).attr("salon") == salon) {
+        if ($(this).val() === idPaciente && $(this).attr("salon") === salon) {
             cant++;
         }
     });
@@ -345,7 +345,7 @@ function cantidadMaximaPaciente(idPaciente)
 {
     var cant = 0;
     $.each($("select"), function(key) {
-        if ($(this).val() == idPaciente) {
+        if ($(this).val() === idPaciente) {
             cant++;
         }
     });
@@ -387,7 +387,7 @@ function recorrerDivs() {
                 $(elemento).css({"background-color": "#5fe"});
             }
         }
-    })
+    });
 }
 $(function() {
     $("#dialog-form").dialog({
@@ -416,7 +416,7 @@ $(function() {
         close: function() {
         }
     });
-})
+});
 
 function imprimir_turnos(){
     $("#encabezado").hide();

@@ -111,7 +111,6 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
     public function index()
     {
         $this->isAutenticado();
-//        parent::getLibreria('Fechas');
         /** Barra de herramientas */
         $bh = new LibQ_BarraHerramientas();
         $bh->addBoton('DropDown', $this->_crearBotonImprimir());
@@ -158,7 +157,7 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         parent::getLibreria('Fechas');
 //        Session::accesoEstricto(array('usuario'),true);
         /** Barra de herramientas */
-        $bh = new LibQ_BarraHerramientas('ul');
+        $bh = new LibQ_BarraHerramientas();
         $bh->addBoton('Telef', $this->_paramBotonLista);
         $bh->addBoton('Telef', $this->_paramBotonDirTelefonico);
         $bh->addBoton('Nuevo', $this->_paramBotonNuevo);
@@ -170,6 +169,7 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         $this->_vista->titulo = 'Nuevo Paciente';
         $this->_vista->setVistaJs(array('validarNuevo', 'util'));
         $this->_vista->setJs(array('bootstrapValidator.min'));
+        $this->_vista->listaSexos = $this->_listaSexos;
 
         $this->_vista->datos = $_POST;
 
@@ -202,7 +202,7 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
                 'tipo_doc' => parent::getIntPost('tipo_doc'),
                 'nro_doc' => parent::getPostParam('nro_doc'),
                 'sexo' => parent::getPostParam('sexo'),
-                'fecha_nac' => fecha::getFechaBd($fecha_nac),
+                'fecha_nac' => LibQ_Fecha::getFechaBd($fecha_nac),
                 'diagnostico' => parent::getPostParam('diagnostico')
             ));
             if ($newIdPaciente) {
@@ -234,30 +234,54 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         } else {
             $fechaImpresion = $fecha->getMes() . '/' . $fecha->getAnio();
         }
-        $_paramBotonImprimir = array(
-            'class' => 'btn dropdown-toggle btn-primary',
-            'titulo' => 'Imprimir',
-            'classIcono' => 'icono-imprimir32 dropdown',
-            'children' => array(
-                0 => array(
-                    'titulo' => 'NOTA PEDIDO IPS',
-                    'href' => "index.php?option=pdf&sub=pedidoIps&id=$id&getV=$fechaImpresion",
-                    'children' => Array(),
-                ),
-                1 => array(
-                    'titulo' => 'CONSTANCIA DE REHABILITACION',
-                    'href' => "index.php?option=pdfphsrl&sub=constanciaAsistenciaRegular&id=$id",
-                    'children' => Array(),
-                )
-            )
-        );
+        if ($id != null) {
+            $_paramBotonImprimir = array(
+                'class' => 'btn dropdown-toggle btn-primary',
+                'titulo' => 'Imprimir',
+                'classIcono' => 'icono-imprimir32 dropdown',
+                'children' => array(0 => $this->_botonNotaPedido($fechaImpresion, $id),
+                    1 => $this->_botonConstanciaRehabilitacion($id)),
+            );
+        } else {
+            $_paramBotonImprimir = array(
+                'class' => 'btn dropdown-toggle btn-primary',
+                'titulo' => 'Imprimir',
+                'classIcono' => 'icono-imprimir32 dropdown',
+                'children' => array(0 => $this->_botonNotaPedido($fechaImpresion, $id))
+            );
+        }
         return $_paramBotonImprimir;
+    }
+
+    private function _botonNotaPedido($fechaImpresion, $id)
+    {
+        if ($id == null) {
+            $href_pedido = "index.php?option=pdf&sub=pedidosIps&getV=$fechaImpresion";
+        } else {
+            $href_pedido = "index.php?option=pdf&sub=pedidoIps&id=$id&getV=$fechaImpresion";
+        }
+        $retorno = array(
+            'titulo' => 'NOTA PEDIDO IPS',
+            'href' => $href_pedido,
+            'children' => Array(),
+        );
+        return $retorno;
+    }
+
+    private function _botonConstanciaRehabilitacion($id)
+    {
+        $retorno = array(
+                'titulo' => 'CONSTANCIA DE REHABILITACION',
+                'href' => "index.php?option=pdfphsrl&sub=constanciaAsistenciaRegular&id=$id",
+                'children' => Array(),
+        );
+        return $retorno;
     }
 
     public function editar($id)
     {
         $this->isAutenticado();
-        parent::getLibreria('AjaxFileUploader.inc');
+//        parent::getLibreria('AjaxFileUploader.inc');
         /** Barra de herramientas */
         $bh = new LibQ_BarraHerramientas();
         $bh->addBoton('DropDown', $this->_crearBotonImprimir($id));
@@ -283,7 +307,7 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         /** Estado del paciente * */
         $this->_vista->estadosPaciente = $this->_estadoPaciente;
         /** Cargo los archivos js */
-        $this->_vista->setJs(array('bootstrapValidator.min'),TRUE);
+        $this->_vista->setJs(array('bootstrapValidator.min'), TRUE);
         $this->_vista->setVistaJs(array('validarNuevo', 'util', 'tag-it'));
         $this->_vista->setVistaJs(array('tinymce/tinymce.min', 'iniciarTinyMce'));
 
@@ -291,13 +315,12 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         if ($this->getIntPost('editar') == 1) {
             $this->_guardar();
             $this->_guardarDomicilio();
-            $this->redireccionar('?option=Paciente&sub=index&cont=editar&id='.$idPac);
+//            $this->redireccionar('?option=Paciente&sub=index&cont=editar&id='.$idPac);
         }
         /** Si no es para guardar lleno el form con datos de la bd */
         $paciente = $this->_paciente->getPaciente("id = " . $idPac);
         /** Envío los datos a la vista */
         $this->_vista->datos = $paciente;
-//        var_dump($paciente);
         $this->_vista->domicilio = $paciente->getDomicilio();
 
         /** Envío los datos de Terapia */
@@ -346,7 +369,7 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         }
         return $rtdo;
     }
-    
+
     private function _guardarDomicilio()
     {
         $rtdo = '';
@@ -356,15 +379,17 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         if ($errores->getRetEval()) {
             $this->_vista->_msj_error = $errores->getErrString();
         } else {
-            if (isset($datos['editar'])) {
-                $rtdo = $this->_paciente->editarDomicilioPaciente($aGuardarDomicilio, 'id_paciente=' . $aGuardarDomicilio['id']);
+            if (null != $datos['id_domicilio']) {
+                $idPac = $aGuardarDomicilio['id_paciente'];
+                unset($aGuardarDomicilio['id_paciente']);
+                $rtdo = $this->_paciente->editarDomicilioPaciente($aGuardarDomicilio, 'id_paciente=' . $idPac);
             } else {
                 $rtdo = $this->_paciente->insertarDomicilioPaciente($aGuardarDomicilio);
             }
             if ($rtdo) {
                 $this->_vista->_mensaje = 'DATOS_GUARDADOS';
             } else {
-                $this->_vista->_mensaje = 'DATOS_NO_GUARDADOS';
+                $this->_vista->_mensaje = 'DATOS_DOMICILIO_NO_GUARDADOS';
             }
         }
         return $rtdo;
@@ -386,6 +411,7 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         $datos['calle'] = filter_input(INPUT_POST, 'calle', FILTER_SANITIZE_STRING);
         $datos['casa_nro'] = filter_input(INPUT_POST, 'casa_nro', FILTER_SANITIZE_STRING);
         $datos['barrio'] = filter_input(INPUT_POST, 'barrio', FILTER_SANITIZE_STRING);
+        $datos['id_domicilio'] = filter_input(INPUT_POST, 'id_domicilio', FILTER_SANITIZE_NUMBER_INT);
         return $datos;
     }
 
@@ -404,10 +430,10 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         return $validar;
     }
 
-    private function _prepararDatosPaciente($datos)
+    private function _prepararDatosPaciente()
     {
         $datosPaciente = array(
-            'id'=>parent::getPostParam('id'),
+            'id' => parent::getPostParam('id'),
             'estado' => parent::getPostParam('estado'),
             'apellidos' => parent::getPostParam('apellidos'),
             'nombres' => parent::getPostParam('nombres'),
@@ -415,16 +441,16 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
             'tipo_doc' => parent::getIntPost('tipo_doc'),
             'nro_doc' => parent::getPostParam('nro_doc'),
             'sexo' => parent::getPostParam('sexo'),
-            'fecha_nac' => LibQ_Fecha::getFechaBd(parent::getPostParam('fechaNac')),
+            'fecha_nac' => parent::getPostParam('fechaNac'),
             'diagnostico' => parent::getPostParam('diagnostico')
         );
         return $datosPaciente;
     }
-    
+
     private function _prepararDatosDomicilio($datos)
     {
         $datosPaciente = array(
-            'id'=>parent::getPostParam('id'),
+            'id_paciente' => parent::getPostParam('id'),
             'tipo_domicilio' => 'Real',
             'calle' => parent::getPostParam('calle'),
             'casa_nro' => parent::getPostParam('casa_nro'),

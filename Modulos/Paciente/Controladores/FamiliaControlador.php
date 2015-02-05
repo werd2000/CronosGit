@@ -2,7 +2,7 @@
 /**
  * Clase Personal Controlador 
  */
-class FamiliaControlador extends pacienteControlador
+class Paciente_Controladores_familiaControlador extends pacienteControlador
 {
 
     private $_paciente;
@@ -16,29 +16,29 @@ class FamiliaControlador extends pacienteControlador
 
     public function nuevo()
     {
-        if (parent::getInt('guardar') == 1) {
-            if (!parent::getTexto('parentesco')) {
+        if (parent::getIntPost('guardar') == 1) {
+            if (!parent::getTextoPost('parentesco')) {
                 echo 'Debe ingresar el tipo de parentesco';
                 exit;
             }
 
-            if (!parent::getTexto('nombre')) {
+            if (!parent::getTextoPost('nombre')) {
                 echo 'Debe ingresar un nombre';
                 exit;
             }
             
             $respuesta = $this->_paciente->insertarFamiliarPaciente(array(
-                    'idPaciente'=>parent::getPostParam('idPaciente'),
+                    'id_paciente'=>parent::getPostParam('id_paciente'),
                     'parentesco'=>parent::getPostParam('parentesco'),
                     'nombre'=>parent::getPostParam('nombre'),
-                    'observaciones'=>parent::getPostParam('observacionesFamilia')
+                    'observaciones'=>parent::getPostParam('observaciones')
              ));
 
             if ($respuesta){
-                echo $respuesta;
+                echo 'DATOS FAMILIARES GUARDADOS';
                 exit;
             }else{
-                echo 'No se guardó';
+                echo 'NO SE GUARDARON LOS DATOS FAMILIARES';
                 exit;
             }
 
@@ -58,7 +58,7 @@ class FamiliaControlador extends pacienteControlador
          * Establezco el nivel de acceso 
          */
 //        Session::acceso('admin');
-        $this->_acl->acceso('eliminar_post');
+//        $this->_acl->acceso('eliminar_post');
         
         if (!$this->filtrarInt($id)) {
 //            $this->redireccionar('option=Personal');

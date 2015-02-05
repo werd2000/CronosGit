@@ -25,7 +25,7 @@ class Paciente extends PersonaAbstract implements iPersona{
         parent::__construct($datos);
         $this->_modelo = new PacientesModelo();
         $this->_obra_social = $this->_modelo->buscarOSPaciente(array('denominacion='. $datos['obraSocial']));
-        print_r($this->_obra_social);
+//        print_r($this->_obra_social);
         $this->_terapias = $this->_modelo->buscarTerapiasPaciente(array('idPaciente='.$datos['id']));
 
         $this->_contactos = new ContactosPacientes();

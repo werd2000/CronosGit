@@ -1,8 +1,8 @@
 <form id="nuevo_paciente" method="post" action="" class="form-horizontal" role="form">
     <input type="hidden" id="guardarDatosContacto" name="guardar" value="1" />
-    <input type="hidden" name="idPaciente" 
+    <input type="hidden" name="id_paciente" 
            value="<?php if ($this->datos->getId()) echo $this->datos->getId(); ?>" 
-           id="idPaciente">
+           id="id_paciente">
     <div class="form-group">
         <label for="tipoContacto" class="optional col-sm-2 control-label">
             Tipo de Contacto:

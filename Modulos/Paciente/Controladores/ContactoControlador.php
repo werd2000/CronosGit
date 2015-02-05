@@ -2,7 +2,7 @@
 /**
  * Clase Personal Controlador 
  */
-class ContactoControlador extends pacienteControlador
+class Paciente_Controladores_contactoControlador extends pacienteControlador
 {
 
     private $_paciente;
@@ -62,29 +62,29 @@ class ContactoControlador extends pacienteControlador
 
     public function nuevo()
     {
-        if (parent::getInt('guardar') == 1) {
-            if (!parent::getTexto('tipo')) {
+        if (parent::getIntPost('guardar') == 1) {
+            if (!parent::getTextoPost('tipo')) {
                 echo 'Debe ingresar el tipo de contacto';
                 exit;
             }
 
-            if (!parent::getTexto('contacto')) {
+            if (!parent::getTextoPost('contacto')) {
                 echo 'Debe ingresar un dato de contacto';
                 exit;
             }
             
             $respuesta = $this->_paciente->insertarContactoPaciente(array(
-                    'idPaciente'=>parent::getPostParam('idPaciente'),
-                    'tipo'=>parent::getPostParam('tipo'),
+                    'id_paciente'=>parent::getPostParam('id_paciente'),
+                    'tipo'=>parent::getPostParam('tipoContacto'),
                     'valor'=>parent::getPostParam('contacto'),
                     'observaciones'=>parent::getPostParam('observaciones')
              ));
 
             if ($respuesta){
-                echo $respuesta;
+                echo 'DATOS DE CONTACTO GUARDADO';
                 exit;
             }else{
-                echo 'No se guardó';
+                echo 'NO SE GUARDARON LOS DATOS DE CONTACTO';
                 exit;
             }
 
@@ -104,7 +104,7 @@ class ContactoControlador extends pacienteControlador
          * Establezco el nivel de acceso 
          */
 //        Session::acceso('admin');
-        $this->_acl->acceso('eliminar_post');
+//        $this->_acl->acceso('eliminar_post');
         
         if (!$this->filtrarInt($id)) {
 //            $this->redireccionar('option=Personal');
