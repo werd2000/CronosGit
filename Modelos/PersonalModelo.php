@@ -5,7 +5,7 @@
 /**
  * Clase Modelo Paciente que extiende de la clase Modelo
  */
-class personalModelo extends Modelo
+class Modelos_personalModelo extends App_Modelo
 {
 
     private $_verEliminados = 0;

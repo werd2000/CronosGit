@@ -1,10 +1,11 @@
 <?php
 //require_once BASE_PATH . 'Modulos' . DS . 'Paciente' . DS . 'Modelos' . DS . 'paciente.php';
+require_once BASE_PATH . 'Modulos' . DS . 'Paciente' . DS . 'Modelos' . DS . 'Paciente.php';
 
 /**
  * Clase Modelo Paciente que extiende de la clase Modelo
  */
-class pacientesModelo extends Modelo
+class Modelos_pacientesModelo extends App_Modelo
 {
 
     private $_verEliminados = 0;
@@ -47,7 +48,6 @@ class pacientesModelo extends Modelo
         $retorno = $this->_db->fetchRow();
 //        echo '<pre>'; print_r($retorno);
         if ($retorno!=false){
-            require_once BASE_PATH . 'Modulos' . DS . 'Paciente' . DS . 'Modelos' . DS . 'Paciente.php';
             $paciente = new Paciente($retorno);
 //            echo '<pre>'; print_r($paciente);
         }
@@ -79,7 +79,7 @@ class pacientesModelo extends Modelo
         $lista = $this->_db->fetchall();
         if(is_array($lista)){
             foreach ($lista as $pac) {
-                $pacientes[] = new Paciente($pac);
+                $pacientes[] = new Paciente_Modelos_Paciente($pac);
             }
         }
         return $pacientes;
