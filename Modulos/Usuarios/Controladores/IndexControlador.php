@@ -1,6 +1,6 @@
 <?php
-
-class indexControlador extends UsuariosControlador
+require_once MODS_PATH . 'Turnos' . DS . 'Modelos' . DS . 'IndexModelo.php';
+class Usuarios_Controladores_indexControlador extends Controladores_UsuariosControlador
 {
 
     private $_usuarios;
@@ -13,7 +13,7 @@ class indexControlador extends UsuariosControlador
 
     public function index()
     {
-        $this->_acl->acceso('admin_access');
+//        $this->_acl->acceso('admin_access');
         $menu = array(
             array(
                 'onclick'=> '',

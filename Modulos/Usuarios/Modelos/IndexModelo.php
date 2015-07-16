@@ -1,6 +1,7 @@
 <?php
+require_once APP_PATH . 'Modelo.php';
 
-class indexModelo extends Modelo
+class Usuarios_Modelos_indexModelo extends App_Modelo
 {
     public function __construct()
     {

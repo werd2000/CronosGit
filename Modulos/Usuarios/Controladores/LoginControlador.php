@@ -1,4 +1,5 @@
 <?php
+require_once BASE_PATH . 'Modulos' . DS . 'Usuarios' . DS . 'Modelos' . DS . 'LoginModelo.php';
 
 class Usuarios_Controladores_loginControlador extends App_Controlador
 {
@@ -7,7 +8,7 @@ class Usuarios_Controladores_loginControlador extends App_Controlador
     
     public function __construct(){
         parent::__construct();
-        $this->_login = $this->cargarModelo('login') ;
+        $this->_login = new Usuarios_Modelos_loginModelo();
     }
     
     public function index()
@@ -31,11 +32,13 @@ class Usuarios_Controladores_loginControlador extends App_Controlador
                 $this->_vista->renderizar('index','login');
                 exit;
             }
-            
+            echo $this->getAlphaNum('usuario');
+            echo $this->getSql('password');
             $row = $this->_login->getUsuario(
                     $this->getAlphaNum('usuario'),
                     $this->getSql('password')
                     );
+                    var_dump($row);
             
             if(!$row){
                 $this->_vista->_msj_error = 'Usuario y/o password incorrectos';
