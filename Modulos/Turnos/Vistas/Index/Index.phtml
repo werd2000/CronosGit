@@ -12,40 +12,34 @@
     </div>
 
     <div id = "turnosProfesional">
-        <div class="col-sm-3">
-            <label for = "profesional" class = "optional"><b>Seleccione un profesional:</b></label>
-        </div>
-        <div class="col-sm-4">
-            <select name = "profesional" id = "profesional" onClick = "cambiar();">
-                <?php
-                foreach ($this->listaProfesionales as $profesional) {
-                    echo '<option value="' . $profesional->getId() . '" ' .
-                    'label="' . $profesional->getApellidos() . ', ' . $profesional->getNombres() . '">' .
-                    $profesional->getApellidos() . ', ' . $profesional->getNombres() .
-                    '</option>';
-                }
-                ?>
-            </select>    
-        </div>
+        <label for = "profesional" class = "optional"><b>Seleccione un profesional:</b></label>
+        <select name = "profesional" id = "profesional" onClick = "cambiar();">
+            <?php
+            foreach ($this->listaProfesionales as $profesional) {
+                echo '<option value="' . $profesional->getId() . '" ' .
+                'label="' . $profesional->getApellidos() . ', ' . $profesional->getNombres() . '">' .
+                $profesional->getApellidos() . ', ' . $profesional->getNombres() .
+                '</option>';
+            }
+            ?>
+        </select>    
     </div>
 
-    <div id="turnosPaciente" class="row">
-        <div class="col-sm-3">
-            <label for="paciente" class="optional"><b>Seleccione un paciente:</b></label> 
-        </div>
-        <div class="col-sm-4">
-            <select name="paciente" id="paciente">
-                <option value=0 label=""></option>
-                <?php foreach ($this->listaPacientes as $paciente){
-                    echo '<option value="' . $paciente->getId() . '" ' .
-                            'label="' . $paciente->getApellidos() . ', ' . $paciente->getNombres() . '">' .
-                            $paciente->getApellidos() . ', ' . $paciente->getNombres() . 
-                            '</option>';
-                } ?>
-            </select>    
-        </div>
+    <div id="turnosPaciente">
+        <label for="paciente" class="optional"><b>Seleccione un paciente:</b></label> 
+        <select name="paciente" id="paciente">
+            <option value=0 label=""></option>
+            <?php
+            foreach ($this->listaPacientes as $paciente) {
+                echo '<option value="' . $paciente->getId() . '" ' .
+                'label="' . $paciente->getApellidos() . ', ' . $paciente->getNombres() . '">' .
+                $paciente->getApellidos() . ', ' . $paciente->getNombres() .
+                '</option>';
+            }
+            ?>
+        </select>    
     </div>
-    
+
     <div id = "tabs">
         <ul>
             <li><a href="#tabs-1">AM</a></li>

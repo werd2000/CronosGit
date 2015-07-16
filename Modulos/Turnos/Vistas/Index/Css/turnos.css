@@ -1,9 +1,9 @@
 #turnosProfesional {
-    visibility: hidden;
+    display: none;
 }
 
 #turnosPaciente {
-    visibility: hidden;
+    display: none;
 }
 .turno_profesional{
     float: left;
@@ -52,4 +52,28 @@
     margin: 2px;
     height: 45px;
     color: #04F;
+}
+#paciente-toolbar-options{
+    display: none;    
+}
+#personal-toolbar-options{
+    display: none;    
+}
+.observaciones_turno{
+    border-color: #f00;
+}
+.personal_ausente{
+    background-color: rgba(255,0,0,0.5);
+}
+.personal_tarde{
+    background-color: rgba(255,255,0,0.5);
+}
+.paciente_ausente{
+    background-color: rgba(255,125,125,0.5);
+}
+.paciente_tarde{
+    background-color: rgba(255,246,34,0.5);
+}
+.reunion_equipos{
+    background-color: rgba(255,246,34,0.5);
 }

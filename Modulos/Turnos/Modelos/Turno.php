@@ -1,5 +1,5 @@
 <?php
-require_once MODS_PATH . 'Paciente' . DS .'Modelos' . DS . 'indexModelo.php';
+require_once MODS_PATH . 'Paciente' . DS .'Modelos' . DS . 'IndexModelo.php';
 /**
  * Clase Turno
  *

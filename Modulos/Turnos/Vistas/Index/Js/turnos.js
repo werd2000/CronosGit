@@ -1,42 +1,34 @@
-$(function() {
-    $( document ).tooltip({
-        items:"[titulo]",
-        content: function() {
-            var element = $( this );
-            if ( element.is( "[titulo]" ) ) {
-                return element.attr( "titulo" );
-            }
-        },
-      position: {
-        my: "center bottom-20",
-        at: "center top",
-        using: function( position, feedback ) {
-          $( this ).css( position );
-          $( "<div>" )
-            .addClass( "arrow" )
-            .addClass( feedback.vertical )
-            .addClass( feedback.horizontal )
-            .appendTo( this );
-        }
-      }
-    });
-  });
+//$(function() {
+//    $( document ).tooltip({
+//        items:"[titulo]",
+//        content: function() {
+//            var element = $( this );
+//            if ( element.is( "[titulo]" ) ) {
+//                return element.attr( "titulo" );
+//            }
+//        },
+//      position: {
+//        my: "center bottom-20",
+//        at: "center top",
+//        using: function( position, feedback ) {
+//          $( this ).css( position );
+//          $( "<div>" )
+//            .addClass( "arrow" )
+//            .addClass( feedback.vertical )
+//            .addClass( feedback.horizontal )
+//            .appendTo( this );
+//        }
+//      }
+//    });
+//  });
   
 $(function() {
     $("#tabs").tabs();
 });
 
-
-//$(function() {
-//    $("#fechaTurno").datepicker({
-//        changeYear: true
-//    })
-//    $("#fechaTurno").datepicker("option", "dateFormat", "dd-mm-yy");
-//});
-//$(function() {
-//    var fecha = $("#fechaTurno").attr("value");
-//    $("#fechaTurno").datepicker("setDate", fecha);
-//});
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 
 $(function() {
     $(".turno_paciente").bind("click", function(event) {
@@ -100,7 +92,8 @@ $(function() {
                     var id = $("#turnosdiaPM").find(".pressed").attr("id");
                     var observaciones = $("#turnosdiaPM").find(".pressed").attr("titulo");
                 }
-                if (selector.toString().substr(36) === 'observaciones_turno') {
+                var tx = selector.toString().split("/");
+                if ($.inArray('observaciones_turno',tx)>-1) {
                     $("#observaciones").val(observaciones);
                     $("#dialog-form").attr('idTurno',id);
                     $("#dialog-form").dialog("open");

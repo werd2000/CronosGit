@@ -284,7 +284,7 @@ class Turnos_Modelos_indexModelo extends App_Modelo {
         $this->_db->setTipoDatos('Array');
         $this->_db->query($sql);
         $retorno = $this->_db->fetchRow();
-        $turno = new Turno($retorno);
+        $turno = new Turnos_Modelos_Turno($retorno);
         return $turno;
     }
 

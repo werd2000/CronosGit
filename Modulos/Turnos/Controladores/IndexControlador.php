@@ -515,7 +515,7 @@ class Turnos_Controladores_indexControlador extends Controladores_TurnosControla
 
     public function guardarTurnoProfesional() {
         if (parent::getPostParam('fecha')) {
-            $fecha = new fecha(parent::getPostParam('fecha'));
+            $fecha = new LibQ_Fecha(parent::getPostParam('fecha'));
         }
         if (parent::getPostParam('turno') === 'AM') {
             $turno = 'hora < \'12:00:00\'';
@@ -542,7 +542,7 @@ class Turnos_Controladores_indexControlador extends Controladores_TurnosControla
             $turno = 'hora > \'14:00:00\'';
         }
         $fecha = parent::getPostParam('fecha');
-        $fechaTurno = new fecha($fecha);
+        $fechaTurno = new LibQ_Fecha($fecha);
         $idProfesional = parent::getPostParam('idProfesional');
         $condicion = $turno . ' AND idProfesional=' . $idProfesional .
                 ' AND mes = ' . $fechaTurno->getMes() . ' AND dia = ' . $fechaTurno->getDia() .
@@ -663,7 +663,11 @@ class Turnos_Controladores_indexControlador extends Controladores_TurnosControla
             $id = parent::getPostParam('id');
             $condicion = 'id = ' . $id;
             $turnoBuscado = $this->_turnos->getTurnoById($id);
-            $valores = array('observaciones'=>$turnoBuscado->getObservaciones() . ' Reunión de equipo');
+            if($turnoBuscado->getObservaciones()=='Reunión de equipo'){
+                $valores = array('observaciones'=>'');
+            }else{
+                $valores = array('observaciones'=>$turnoBuscado->getObservaciones() . ' - Reunión de equipo');
+            }
             $retorno = $this->_turnos->editarTurnoPaciente($valores, $condicion);
         }
         if ($retorno >= 1) {
@@ -679,7 +683,12 @@ class Turnos_Controladores_indexControlador extends Controladores_TurnosControla
             $id = parent::getPostParam('id');
             $condicion = 'id = ' . $id;
             $turnoBuscado = $this->_turnos->getTurnoById($id);
-            $valores = array('observaciones'=>$turnoBuscado->getObservaciones() . ' Devolucion');
+            if($turnoBuscado->getObservaciones() == 'Devolucion'){
+                $o = str_replace('Devolucion', '', $turnoBuscado->getObservaciones());
+                $valores = array('observaciones'=>$o);
+            }else{
+                $valores = array('observaciones'=>$turnoBuscado->getObservaciones() . ' - Devolucion');
+            }
             $retorno = $this->_turnos->editarTurnoPaciente($valores, $condicion);
         }
         if ($retorno >= 1) {
