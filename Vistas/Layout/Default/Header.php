@@ -8,8 +8,10 @@
         <link rel="stylesheet" href="<?php echo $_layoutParams['ruta_bootstrap']; ?>/css/bootstrap.css" type="text/css" />
         <link rel="stylesheet" href="<?php echo $_layoutParams['ruta_css']; ?>redmond/jquery-ui-1.10.1.custom.css" type="text/css" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_layoutParams['ruta_css']; ?>dataTables/jquery.dataTables.css">
-        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
+        <!--<script type="text/javascript" src="Vistas/Layout/Default/Js/jquery.js"></script>-->
         <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+        <!--<script type="text/javascript" src="Vistas/Layout/Default/Js/jquery-ui-1.9.2.custom.js"></script>-->
         <script type="text/javascript" src="<?php echo $_layoutParams['ruta_bootstrap']; ?>/js/bootstrap.js"></script>
         <script type="text/javascript" src="Vistas/Layout/Default/Js/jquery.dataTables.js"></script>
         <?php if (isset($_layoutParams['js']) && count($_layoutParams['js'])): ?>

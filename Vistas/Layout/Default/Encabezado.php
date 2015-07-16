@@ -1,6 +1,6 @@
 <body>
     <div class="container">
-        <div class="page-header">
+        <section id="page-header" class="row">
             <h1>
                 <a href="<?php echo BASE_URL; ?>" class="site-name text-shadow"><?php echo APP_NAME; ?></a>
             </h1>            
@@ -18,7 +18,7 @@
                     </div>
                 <?php } ?>
             </div>
-        </div>
+        </section>
         <?php
         if (isset($this->_barraHerramientas)) {
             include 'Navegacion.php';

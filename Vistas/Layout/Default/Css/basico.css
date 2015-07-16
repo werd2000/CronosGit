@@ -10,3 +10,7 @@ tr.group,
 tr.group:hover {
     background-color: #ddd !important;
 }
+#page-header{
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
