@@ -1,17 +1,35 @@
 $(function() {
     $( "#tabs" ).tabs();
   });
+  
 $(function() {
-        $( "#fechaNac" ).datepicker({
-        changeYear: true
+    $("#guardarDomicilioPersonal").click(function() {
+        var id_domicilio = $("#id_domicilio").val();
+        var id_personal = $("#idPersonal").val();
+        var calle = $("#calle").val();
+        var casa_nro = $("#casa_nro").val();
+        var piso = $("#piso").val();
+        var depto = $("#depto").val();
+        var barrio = $("#barrio").val();
+        var cp = $("#cp").val();
+        var localidad = $("#localidad").val();
+        var provincia = $("#provincia").val();
+        var pais = $("#pais").val();
+        $.post("?option=Personal&sub=domicilio&met=guardar",
+                {id_personal: id_personal, id_domicilio: id_domicilio,
+                    calle: calle, casa_nro: casa_nro, piso: piso,
+                    depto: depto, barrio: barrio, cp: cp,
+                    localidad: localidad, provincia: provincia,
+                    pais: pais
+                },
+        function(data) {
+            alert(data);
+            document.location.reload();
         });
-    $("#fechaNac").datepicker( "option", "dateFormat", "dd-mm-yy" );
-    });   
-$(function() {
-        var fecha = $("#fechaNac").attr("value");
-        $( "#fechaIngreso" ).datepicker();
-        $("#fechaNac").datepicker( "setDate", fecha );
-    }); 
+    });
+});
+
+
 $(function() {
     $("#agregarDatosLaborales").click(function () {
         var guardar = $("#guardarDatosLaborales").attr("value");
@@ -27,30 +45,23 @@ $(function() {
             document.location.reload();
           });        
     });
-})
+});
 
 $(function() {
     $("#agregarContactoProfesional").click(function () {
-        var guardar = $("#guardarDatosContacto").attr("value");
-        var idProfesional = $("#idPersonal").attr("value");
+        var guardar = $("#guardarDatosContacto").val();
+        var idPersonal = $("#idPersonal").val();
         var tipo = $("#tipoContacto").val();
         var contacto = $("#valorContacto").val();
         var observaciones = $("#observacionesContactoProfesional").val();
-        $.post("http://www.pequehogar.com.ar/Cronos/index.php?option=Personal&sub=contacto&met=nuevo",
-          {guardar: guardar, idProfesional: idProfesional, tipo: tipo, contacto: contacto, observaciones: observaciones},
+        $.post("?option=Personal&sub=contacto&met=nuevo",
+          {guardar: guardar, idProfesional: idPersonal, tipo: tipo, contacto: contacto, observaciones: observaciones},
           function(data) {
-            alert("Data Loaded: " + data);
-            $("#contenedorDetalleDatos").append('<div class="datoContacto" id="' + data + '">' +
-            '<div class="datoDetalle">' + $("#tipoContacto").val() + '</div>' +
-            '<div class="datoDetalle">' + $("#valorContacto").val() + '</div>' +
-            '<div class="datoDetalle">' + $("#observacionesContactoProfesional").val() + '</div>' +
-            '<div class="editcontrol">' +
-            '<a class="iconoX" href="JavaScript:void(0);" idContacto="' + data + '" idProfesional="' + idProfesional + '" title="Eliminar"></a>' +
-           '</div>' +
-           '</div>');
+            alert(data);
+            document.location.reload();
           });        
     });
-})
+});
 
 $(function() {
     $(".iconoX").click(function () {
@@ -64,14 +75,14 @@ $(function() {
        }
     );
     });
-})
+});
 
 
 $(function() {
     $("#foto").change(function () {
         ajaxFileUpload;
     });
-})
+});
 
 
 

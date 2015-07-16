@@ -1,6 +1,10 @@
 <?php
 require_once MODS_PATH . 'Personal' . DS . 'Modelos' . DS . 'IndexModelo.php';
 require_once BASE_PATH . 'LibQ' . DS . 'BarraHerramientas.php';
+require_once 'BarraHerramientasPersonal.php';
+require_once 'BotonesPersonal.php';
+require_once BASE_PATH . 'LibQ' . DS . 'ValidarFormulario.php';
+
 /**
  * Clase Personal Controlador 
  */
@@ -11,70 +15,9 @@ class Personal_Controladores_indexControlador extends Controladores_PersonalCont
     private $_datosLaborales;
     private $_datosContacto;
     private $_datosTerapias;
-    private $_paramBotonNuevo = array(
-        'href' => '?option=Personal&sub=index&cont=nuevo',
-        'classIcono' => 'icono-nuevo32',
-        'titulo' => 'Nuevo',
-        'class' => 'btn btn-primary'
-    );
-    /**
-     * Propiedad usada para configurar el boton ELIMINAR
-     * @var type Array
-     */
-    private $_paramBotonEliminar = array(
-        'href' => "\"javascript:void(0);\"",
-        'evento' => "onclick=\"javascript: submitbutton('Eliminar')\"",
-        'class' => 'btn btn-primary',
-    );
-
-    /**
-     * Propiedad usada para configurar el botón VOLVER
-     * @var type Array
-     */
-    private $_paramBotonVolver = array(
-        'href' => "javascript:history.back(1)",
-        'classIcono' => 'icono-volver32',
-        'titulo' => 'Volver',
-        'class' => 'btn btn-primary'
-    );
-
-    /**
-     * Propiedad usa para configurar el botón GUARDAR
-     * @var type Array
-     */
-    private $_paramBotonGuardar = array(
-        'href' => "\"javascript:void(0);\"",
-        'evento' => "onclick=\"javascript: submitbutton('Guardar')\"",
-        'class' => 'btn btn-primary'
-    );
-    private $_paramBotonInicio = array(
-        'href' => "?option=Index",
-        'classIcono' => 'icono-inicio32',
-        'titulo' => 'Inicio',
-        'class' => 'btn btn-primary'
-    );
-
-    /**
-     * Propiedad usada para configurar el botón LISTA
-     * @var type Array
-     */
-    private $_paramBotonLista = array(
-        'href' => 'index.php?option=Personal&sub=index',
-        'classIcono' => 'icono-lista32',
-        'titulo' => 'Lista',
-        'class' => 'btn btn-primary'
-    );
+    private $_bhp;
+    private $_listaSexos;
     
-    /**
-     * Propiedad usada para configurar el botón LISTA
-     * @var type Array
-     */
-    private $_paramBotonDirTelefonico = array(
-        'href' => 'index.php?option=&sub=index&met=dirTelefonico',
-        'titulo' => 'Telef.',
-        'classIcono' => 'icono-dirTelefonico32',
-        'class' => 'btn btn-primary'
-    );
 
     public function __construct()
     {
@@ -82,256 +25,149 @@ class Personal_Controladores_indexControlador extends Controladores_PersonalCont
         $this->_personal = new Personal_Modelos_IndexModelo();
         $this->_datosLaborales = new Personal_Modelos_laboralModelo(); //$this->cargarModelo('laboral');
         $this->_datosContacto = $this->cargarModelo('contacto');
+        $this->_bhp = new BarraHerramientasPersonal();
+        $this->_listaSexos = array('VARON', 'MUJER');
     }
 
-    public function index($pagina = false)
+    public function index()
     {
-        parent::getLibreria('paginador');
-        parent::getLibreria('Fechas');
-        
-        $menu = array(
-            array(
-                'onclick' => '',
-                'href' => "javascript:void(0)",
-                'title' => 'Buscar',
-                'class' => 'icono-buscar32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=exportExcel&sub=personal",
-                'title' => 'Exportar',
-                'class'  => 'icono-exportar32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Personal&sub=contacto",
-                'title' => 'Contactos',
-                'class'  => 'contacto_personal'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Personal&sub=index&cont=nuevo",
-                'title' => 'Nuevo',
-                'class'  => 'icono-nuevo32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "javascript:history.back(1)",
-                'title' => 'Volver',
-                'class'  => 'icono-volver32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Index",
-                'title' => 'Inicio',
-                'class'  => 'icono-inicio32'
-            )
-        );
-        $this->_vista->_barraHerramientas = $menu;
-        if ($_POST) {
-            $filtro = $this->_crearFiltro();
-            Session::set('filtroPersonal', $filtro);
-            $datos = $this->_personal->getAlgunosPersonal(0, 0, 'apellidos', $filtro);
-        } elseif (App_Session::get('filtroPersonal')) {
-//            $_POST = Session::get('post');
-            $filtro = App_Session::get('filtroPersonal');
-            $datos = $this->_personal->getAlgunosPersonal(0, 0, 'apellidos', $filtro);
-        } else {
-            App_Session::destroy('filtroPersonal');
-            $datos = $this->_personal->getTodoPersonal();
-        }
-//        echo '<pre>';print_r($datos);
-        $paginador = new Paginador();
-        $this->_vista->datos = $paginador->paginar($datos,$pagina);
-        $this->_vista->paginacion = $paginador->getView('prueba','?option=Personal&sub=index');
+        $this->isAutenticado();
+        $this->_vista->_barraHerramientas = $this->_bhp->getBarraHerramientasIndex();
+        $datos = $this->_personal->getTodoPersonal();
+        $this->_vista->datos = $datos;
         $this->_vista->titulo = 'Personal';
-//        $this->_vista->setJs(array('barra_herramientas'));
         $this->_vista->setVistaJs(array('lista_personal'));
-        if($pagina == 0){
-            $this->_vista->i = 1;
-        }else{
-            $this->_vista->i = (($pagina - 1) * LIMITE_REGISTROS) + 1;
-        }
         $this->_vista->renderizar('index', 'personal');
-    }
-    
-    
+    }    
 
     public function nuevo()
     {
-//        Session::accesoEstricto(array('usuario'),true);
+        $this->isAutenticado();
         parent::getLibreria('Fechas');
-        $menu = array(
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Personal&sub=index&cont=nuevo",
-                'title' => 'Nuevo',
-                'class'  => 'icono-nuevo32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Personal",
-                'title' => 'Lista',
-                'class'  => 'icono-lista32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "javascript:history.back(1)",
-                'title' => 'Volver',
-                'class'  => 'icono-volver32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Index",
-                'title' => 'Inicio',
-                'class'  => 'icono-inicio32'
-            )
-        );
-        $this->_vista->_barraHerramientas = $menu;
-        
-        $this->_vista->titulo = 'Nuevo Personal';
-        $this->_vista->setJs(array('validarNuevo','util'));
-        $this->_vista->setJs(array('jquery.validate.min'));
-
+        $this->_vista->_barraHerramientas = $this->_bhp->getBarraHerramientasNuevo();
+        $this->_vista->titulo = 'Nuevo Personal';        
+        $this->_vista->setVistaJs(array('validarNuevo','util'));
+        $this->_vista->setJs(array('bootstrapValidator.min'));
+        $this->_vista->listaSexos = $this->_listaSexos;
         $this->_vista->datos = $_POST;
-
-        if (parent::getIntPost('guardar') == 1) {
-            if (!parent::getTexto('apellidos')) {
-                $this->_vista->_msj_error = 'Debe ingresar el apellido';
-                $this->_vista->renderizar('nuevo', 'personal');
-                exit;
+        if ($this->getIntPost('guardar') == 1) {
+            $r = $this->_guardar();
+            if ($r){
+                parent::redireccionar('option=Personal&sub=index&cont=editar&id='.$r);
             }
-
-            if (!parent::getTexto('nombres')) {
-                $this->_vista->_msj_error = 'Debe ingresar el nombre';
-                $this->_vista->renderizar('nuevo', 'personal');
-                exit;
-            }
-
-            if (!parent::getTexto('nro_doc')) {
-                $this->_vista->_msj_error = 'Debe ingresar el número de documento';
-                $this->_vista->renderizar('nuevo', 'personal');
-                exit;
-            }
-            
-            if ($this->_personal->getPersonalByNro_doc($this->getPostParam('nro_doc'))) {
-                $this->_vista->_msj_error = 'El número de documento que intenta ingresar ya existe';
-                $this->_vista->renderizar('nuevo', 'personal');
-                exit;
-            }
-            
-            $fecha_nac = parent::getPostParam('fechaNac');
-            
-            if ($this->_personal->insertarPersonal(array(
-                'apellidos'=>parent::getPostParam('apellidos'),
-                'nombres'=>parent::getPostParam('nombres'),
-                'domicilio'=>parent::getPostParam('domicilio'),
-                'localidad'=>parent::getPostParam('localidad'),
-                'nacionalidad'=>parent::getPostParam('nacionalidad'),
-                'tipo_doc'=>parent::getIntPost('tipo_doc'),
-                'nro_doc'=>parent::getPostParam('nro_doc'),
-                'sexo'=>parent::getPostParam('sexo'),
-                'fecha_nac'=>Fecha::getFechaBd($fecha_nac)
-             ))){
-                $this->_msj_error = 'Datos Guardados';
-            }else{
-                $this->_msj_error = 'No se guardo';
-            }
-
-            parent::redireccionar('option=Personal');
         }
         $this->_vista->renderizar('nuevo', 'personal');
+    }
+    
+    private function _guardar()
+    {
+        $rtdo = '';
+        $datos = $this->_limpiarDatos();
+        $errores = $this->_validarPost($datos);
+        $aGuardarPersonal = $this->_prepararDatosPersonal($datos);
+        if ($errores->getRetEval()) {
+            $this->_vista->_msj_error = $errores->getErrString();
+        } else {
+            if (isset($datos['editar'])) {
+                $rtdo = $this->_personal->editarPersonal($aGuardarPersonal, 'id=' . $aGuardarPersonal['id']);
+            } else {
+                unset($aGuardarPersonal['id']);
+                $rtdo = $this->_personal->insertarPersonal($aGuardarPersonal);
+            }
+            if ($rtdo) {
+                $this->_vista->_mensaje = 'DATOS_GUARDADOS';
+            } else {
+                $this->_vista->_mensaje = 'DATOS_NO_GUARDADOS';
+            }
+        }
+        return $rtdo;
+    }
+    
+    /**
+     * Limpia los datos que vienen del Post
+     * @return array $datos
+     */
+    private function _limpiarDatos()
+    {
+        $datos['guardar'] = filter_input(INPUT_POST, 'guardar', FILTER_SANITIZE_NUMBER_INT);
+        $datos['editar'] = filter_input(INPUT_POST, 'editar', FILTER_SANITIZE_NUMBER_INT);
+        $datos['id'] = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $datos['apellidos'] = filter_input(INPUT_POST, 'apellidos', FILTER_SANITIZE_STRING);
+        $datos['nombres'] = filter_input(INPUT_POST, 'nombres', FILTER_SANITIZE_STRING);
+        $datos['nro_doc'] = filter_input(INPUT_POST, 'nro_doc', FILTER_SANITIZE_STRING);
+        $datos['calle'] = filter_input(INPUT_POST, 'calle', FILTER_SANITIZE_STRING);
+        $datos['casa_nro'] = filter_input(INPUT_POST, 'casa_nro', FILTER_SANITIZE_STRING);
+        $datos['barrio'] = filter_input(INPUT_POST, 'barrio', FILTER_SANITIZE_STRING);
+        $datos['id_domicilio'] = filter_input(INPUT_POST, 'id_domicilio', FILTER_SANITIZE_NUMBER_INT);
+        return $datos;
+    }
+    
+    private function _prepararDatosPersonal()
+    {
+        $datosPaciente = array(
+            'id' => parent::getPostParam('id'),
+            'apellidos' => parent::getPostParam('apellidos'),
+            'nombres' => parent::getPostParam('nombres'),
+            'nacionalidad' => parent::getPostParam('nacionalidad'),
+            'tipo_doc' => parent::getIntPost('tipo_doc'),
+            'nro_doc' => parent::getPostParam('nro_doc'),
+            'sexo' => parent::getPostParam('sexo'),
+            'fecha_nac' => parent::getPostParam('fechaNac')
+        );
+        return $datosPaciente;
+    }
+    
+    /**
+     * Validar los datos del POST
+     * @param array $datos
+     * @return \ValidarFormulario
+     */
+    private function _validarPost($datos)
+    {
+        $validar = new LibQ_ValidarFormulario();
+        $validar->ValidField($datos['apellidos'], 'text', 'El Apellido no es válido');
+        $validar->ValidField($datos['nombres'], 'text', 'El Nombre no es válido');
+        /* Domicilio */
+//        $validar->ValidField($datos['calle'], 'text', 'La Calle no es válida');
+        return $validar;
     }
 
     public function editar($id)
     {
         $this->isAutenticado();
-        parent::getLibreria('AjaxFileUploader.inc');
-        /** Barra de herramientas */
-        $bh = new LibQ_BarraHerramientas();
-        $bh->addBoton('Lista', $this->_paramBotonLista);
-        $bh->addBoton('Telef', $this->_paramBotonDirTelefonico);
-        $bh->addBoton('Nuevo', $this->_paramBotonNuevo);
-        $bh->addBoton('Volver', $this->_paramBotonVolver);
-        $bh->addBoton('Inicio', $this->_paramBotonInicio);
-        $this->_vista->_barraHerramientas = $bh->render();
-//            array(
-//                'onclick'=> '',
-//                'href'   => "?option=Personal&sub=index&cont=eliminar&id=$id",
-//                'title' => 'Eliminar',
-//                'class'  => 'icono-eliminar32'
-//            )        
-        if (!$this->filtrarInt($id)) {
-            $this->redireccionar('option=Personal');
-        }
-        
-        /** Si no encuentro el paciente envío al Index */
-        $idPers = $this->filtrarInt($id);
-        if (!$this->_personal->getPersonal("id = " . $idPers)) {
-            $this->redireccionar('option=Personal');
-        }
-        
+        $this->_vista->_barraHerramientas = $this->_bhp->getBarraHerramientasEditar();
+        $idPer = $this->_controlId($id);
         /** Cargo los archivos js */
         $this->_vista->setJs(array('bootstrapValidator.min'));
         $this->_vista->setVistaJs(array('validarNuevo', 'util'));
-//        $this->_vista->setVistaJs(array('tinymce/tinymce.min', 'iniciarTinyMce'));
-        
-//        $this->_vista->setJs(array('jquery.validate.min','ajaxfileupload'));
-//        $this->_vista->setJs(array('validarNuevo','util'));
-
-
-        if ($this->getIntPost('guardar') == 1) {
-            $this->_vista->datos = $_POST;
-
-            if (!parent::getTexto('apellidos')) {
-                $this->_vista->_msj_error = 'Debe ingresar el apellido';
-                $this->_vista->renderizar('editar', 'personal');
-                exit;
-            }
-
-            if (!parent::getTexto('nombres')) {
-                $this->_vista->_msj_error = 'Debe ingresar el nombre';
-                $this->_vista->renderizar('editar', 'personal');
-                exit;
-            }
-            
-            $fecha_nac = parent::getPostParam('fechaNac');
-            
-            if ($this->_personal->editarPersonal(array(
-                    'apellidos'=>parent::getPostParam('apellidos'),
-                    'nombres'=>parent::getPostParam('nombres'),
-                    'domicilio'=>parent::getPostParam('domicilio'),
-                    'localidad'=>parent::getPostParam('localidad'),
-                    'nacionalidad'=>parent::getPostParam('nacionalidad'),
-                    'tipo_doc'=>parent::getIntPost('tipo_doc'),
-                    'nro_doc'=>parent::getPostParam('nro_doc'),
-                    'sexo'=>parent::getPostParam('sexo'),
-                    'fecha_nac'=>fecha::getFechaBd($fecha_nac)
-             ), 'id = ' . $this->filtrarInt($id)
-                    ) > 0){
-                $this->_msj_error = 'Datos Modificados';
-            }else{
-                $this->_msj_error = 'No se modificó';
-            }
-
+        if ($this->getIntPost('editar') == 1) {
+            $this->_guardar();
+            $this->_guardarDomicilio();
+        }
+        $personal = $this->_personal->getPersonal("id = " . $idPer);
+        $this->_vista->datos = $personal;
+        $this->_vista->titulo = 'Editar Personal - ' . $personal->getApellidos() . ', ' . $personal->getNombres();
+        $this->_vista->domicilio = $personal->getDomicilio();
+        /** Envío los datos de Contacto */
+        $this->_vista->datosContacto = $personal->getContactos($this->filtrarInt($id));
+        /** Envío los datos de Familia */
+//        $this->_vista->datosFamilia = $personal->getFamilia();
+        $this->_vista->listaSexos = $this->_listaSexos;
+        $this->_vista->renderizar('editar', 'Personal');
+    }
+    
+    private function _controlId($id)
+    {
+        /** Si no viene id en el POST envío al Index */
+        if (!$this->filtrarInt($id)) {
             $this->redireccionar('option=Personal');
         }
-        //Si no es para guardar lleno el form con datos de la bd
-        $datos = $this->_personal->getPersonal($this->filtrarInt($id));
-//        setlocale(LC_TIME , 'es_ES');
-//        $datos['fecha_nac'] = fechas::getFechaAr($datos['fecha_nac']);
-        $this->_vista->titulo = 'Editar Personal - ' . $datos->getApellidos() . ', ' . $datos->getNombres();
-        $todos=$datos;
-        $this->_vista->datos = $todos;
-        $this->_vista->listaSexos = array('VARON','MUJER');
-        $this->_vista->listaTipoDoc = array(0=>'DNI',1=>'CI');
-        $this->_vista->listaNacionalidades = array('ARGENTINA','PARAGUAY','BRASIL');
-        $this->_vista->listaTerapias = $this->_datosLaborales->getTerapias();
-        $this->_vista->listaTerapias[] = array('id'=>'9','terapia'=>'ADMINISTRATIVO');
-        $this->_vista->datosLaborales = $datos->getDatosLaborales();
-        $this->_vista->datosContacto = $datos->getContactosPersonal();
-        $this->_vista->renderizar('editar', 'Personal');
-//        print_r($this->_datosLaborales->getTerapias());
+        /** Si no encuentro el paciente envío al Index */
+        $idPer = $this->filtrarInt($id);
+        if (!$this->_personal->existePersonal("id = " . $idPer)) {
+            $this->redireccionar('option=Personal');
+        }
+        return $idPer;
     }
     
     /**

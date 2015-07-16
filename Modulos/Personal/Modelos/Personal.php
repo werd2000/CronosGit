@@ -1,5 +1,6 @@
 <?php
 require_once BASE_PATH . 'LibQ' . DS . 'SClases' . DS . 'Persona' . DS . 'Persona.php';
+require_once BASE_PATH . 'LibQ' . DS . 'SClases' . DS . 'Persona' . DS . 'Domicilio.php';
 
 /**
  * Description of Personal
@@ -12,7 +13,7 @@ require_once 'ContactoModelo.php';
 require_once 'LaboralModelo.php';
 require_once 'IndexModelo.php';
 
-class Personal extends LibQ_Sclases_Persona_Persona
+class Personal_Modelos_Personal extends LibQ_Sclases_Persona_Persona
 {
     protected $_id;
     protected $_nomina;
@@ -37,7 +38,6 @@ class Personal extends LibQ_Sclases_Persona_Persona
         $this->_domicilio = $personal['domicilio'];
         $this->_localidad = $personal['localidad'];
         $this->_eliminado = $personal['eliminado'];
-        $this->_fecha_nac = $personal['fecha_nac'];
     }
     
     private function _getListaPacientes()
@@ -60,7 +60,6 @@ class Personal extends LibQ_Sclases_Persona_Persona
                 $resultado[] = new datosContactoPersonal($contacto);
             }
         }
-//        echo '<pre>';print_r($resultado);
         return $resultado;
     }
     
@@ -110,7 +109,7 @@ class Personal extends LibQ_Sclases_Persona_Persona
     public static function getPersonal($lista = array())
     {
         foreach ($lista as $datos) {
-            $resultado[] = new Personal($datos);
+            $resultado[] = new Personal_Modelos_Personal($datos);
         }
         return $resultado;
     }

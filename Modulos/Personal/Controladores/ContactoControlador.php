@@ -2,7 +2,7 @@
 /**
  * Clase Personal Controlador 
  */
-class contactoControlador extends personalControlador
+class Personal_Controladores_contactoControlador extends Controladores_PersonalControlador
 {
 
     private $_personal;
@@ -61,13 +61,13 @@ class contactoControlador extends personalControlador
 
     public function nuevo()
     {
-        if (parent::getInt('guardar') == 1) {
-            if (!parent::getTexto('tipo')) {
+        if (parent::getIntPost('guardar') == 1) {
+            if (!parent::getTextoPost('tipo')) {
                 echo 'Debe ingresar el tipo de contacto';
                 exit;
             }
 
-            if (!parent::getTexto('contacto')) {
+            if (!parent::getTextoPost('contacto')) {
                 echo 'Debe ingresar un dato de contacto';
                 exit;
             }

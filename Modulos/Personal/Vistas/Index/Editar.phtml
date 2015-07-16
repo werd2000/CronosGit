@@ -4,9 +4,10 @@
 <div id = "tabs">
     <ul>
         <li><a href="#tabs-1">Datos Principales</a></li>
-        <li><a href="#tabs-2">Datos de Contacto</a></li>
-        <li><a href="#tabs-DL">Datos Laborales</a></li>
-        <li><a href="#tabs-4">Foto</a></li>
+        <li><a href="#tabs-2">Domicilio</a></li>
+        <li><a href="#tabs-3">Datos de Contacto</a></li>
+        <li><a href="#tabs-4">Datos Laborales</a></li>
+        <li><a href="#tabs-5">Foto</a></li>
     </ul>
     <div id = "tabs-1">
         <form id="nuevo_personal" method="post" action="" class="form-horizontal" role="form">
@@ -38,7 +39,7 @@
             <div class="form-group">
             <label for="nacionalidad" class="required col-sm-2 control-label">Nacionalidad:</label>
             <div class="col-sm-10">
-                <select name="nacionalidad" id="nacionalidad">
+                <select name="nacionalidad" id="nacionalidad" class="form-control">
                 <?php
                     foreach ($this->listaNacionalidades as $nacionalidad) {
                         if ($this->datos->getNacionalidad() == $nacionalidad) {
@@ -54,7 +55,7 @@
             <div class="form-group">
             <label for="tipo_doc" class="required col-sm-2 control-label">Tipo Doc:</label>
             <div class="col-sm-10">
-            <select name="tipo_doc" id="tipo_doc">
+            <select name="tipo_doc" id="tipo_doc" class="form-control">
                 <?php
                     foreach ($this->listaTipoDoc as $indice=>$tipoDoc) {
                         if ($this->datos->getTipo_doc() == $indice) {
@@ -76,7 +77,7 @@
             <div class="form-group">
             <label for="sexo" class="required col-sm-2 control-label">Sexo:</label>
             <div class="col-sm-10">
-            <select name="sexo" id="sexo">
+            <select name="sexo" id="sexo" class="form-control">
                 <?php
                     foreach ($this->listaSexos as $sexo) {
                         if ($this->datos->getSexo() == $sexo) {
@@ -92,14 +93,25 @@
             <div class="form-group">
             <label for="fechaNac" class="required col-sm-2 control-label">Fecha Nacimiento:</label>
             <div class="col-sm-10">
-            <input type="date" name="fechaNac" id="fechaNac" value="<?php if ($this->datos->getFecha_nac()) echo $this->datos->getFecha_nac(); ?>"  class="hasDatepicker form-control">
+            <?php if ($this->datos->getFecha_nac()){
+            echo '<input type="date" name="fechaNac" id="fechaNac" value="' .
+                    $this->datos->getFecha_nac() . '"  class="form-control">'; 
+            } ?>
             </div>
             </div>
-            <input type="submit" class="btn btn-lg btn-primary btn-block" name="boton_guardar" value="Guardar">
+            <div class="form-group">
+                <div class="col-md-6 ui-corner-all">
+                    <input type="submit" class="btn btn-lg btn-danger btn-block col-md-6" name="boton_eliminar" value="Eliminar">
+                </div>
+                <div class="col-md-6 ui-corner-all">
+                    <input type="submit" class="btn btn-lg btn-primary btn-block" name="boton_guardar" value="Guardar">
+                </div>
+            </div>
         </form>
     </div>
-    <div id = "tabs-2"><?php include_once 'DatosContacto.php'; ?></div>
-    <div id = "tabs-DL"><?php include_once 'DatosLaborales.php'; ?></div>
-    <div id = "tabs-4"><?php include_once 'FotoPersonal.php'; ?></div>
+    <div id = "tabs-2"><?php include_once 'DatosDomicilio.php'; ?></div>
+    <div id = "tabs-3"><?php include_once 'DatosContacto.php'; ?></div>
+    <div id = "tabs-4"><?php include_once 'DatosLaborales.php'; ?></div>
+    <div id = "tabs-5"><?php include_once 'FotoPersonal.php'; ?></div>
 
 </div>

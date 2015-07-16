@@ -19,7 +19,7 @@
                 foreach ($this->datos as $personal) { 
                     echo '<tr id=' . $personal->getId() . '>';
                     echo '<td>';
-                    echo $this->i;
+                    echo $personal->getId();
                     echo '</td>';
                     echo '<td>';
                     echo $personal->getApellidos() . ', ' . $personal->getNombres();
@@ -33,13 +33,10 @@
                     echo '<td title="' . $personal->getEdad() . ' años">';
                     echo $personal->getFecha_nac();
                     echo '</td>';
-//                    echo '<td personal=' . $personal->getId() . '">';
-//                    echo '<img src="' . $personal->getFoto() . '" class="foto_usuario_32">';
-//                    echo '</td>';
-                    $this->i++;
-//                    echo '<span><img src="' . $personal->getFoto() . '" class="foto_usuario_128"></span>';
                     echo '</tr>';
                 }
                 ?>
             </tbody>
         </table>
+    </div>
+</div>

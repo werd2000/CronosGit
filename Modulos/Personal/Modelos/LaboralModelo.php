@@ -67,7 +67,7 @@ class Personal_Modelos_laboralModelo extends App_Modelo
                 ";
         $this->_db->setTipoDatos('Array');
         $this->_db->query($sql);
-        var_dump($this->_db->fetchRow());
+//        var_dump($this->_db->fetchRow());
         return $this->_db->fetchRow();
     }
     

@@ -1,45 +1,89 @@
-<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
-    <?php echo $this->titulo; ?>
+<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <h4><?php echo $this->titulo; ?></h4>
 </div>
 <div id = "tabs">
     <ul>
         <li><a href="#tabs-1">Datos Principales</a></li>
-        <li><a href="#tabs-2">Datos de Contacto</a></li>
-        <li><a href="#tabs-3">Datos Laborales</a></li>
-        <li><a href="#tabs-4">Foto</a></li>
-
+        <!--        <li><a href="#tabs-2">Datos de Contacto</a></li>
+                <li><a href="#tabs-3">Datos Laborales</a></li>
+                <li><a href="#tabs-4">Foto</a></li>-->
     </ul>
     <div id = "tabs-1">
-        <form id="nuevo_personal" method="post" action="<?php echo BASE_URL; ?>?option=Personal&sub=index&cont=nuevo">
-            <input type="hidden" name="guardar" value="1" />
-            <label for="apellidos" class="required">Apellidos:</label>
-            <input type="text" class="input" name="apellidos" id="apellidos" value="<?php if (isset($this->datos['apellidos'])) echo $this->datos['apellidos']; ?>" maxlength="25">
-            <label for="nombres" class="required">Nombres:</label>
-            <input type="text" class="input" name="nombres" id="nombres" value="<?php if (isset($this->datos['nombres'])) echo $this->datos['nombres']; ?>" placeholder="Ingrese el nombre" maxlength="25">
-            <label for="domicilio" class="optional">Domicilio:</label>
-            <input type="text" class="input" name="domicilio" id="domicilio" value="<?php if (isset($this->datos['domicilio'])) echo $this->datos['domicilio']; ?>" placeholder="Ingrese el domicilio" autocomplete="off">
-            <label for="localidad" class="optional">Localidad:</label>
-            <input type="text" class="input" name="localidad" id="localidad" value="<?php if (isset($this->datos['localidad'])) echo $this->datos['localidad']; ?>" placeholder="Ingrese la Localidad" autocomplete="on">
-            <label for="nacionalidad" class="required">Nacionalidad:</label>
-            <select name="nacionalidad" id="nacionalidad">
-                <option value="ARGENTINA" label="ARGENTINA">ARGENTINA</option>
-                <option value="PARAGUAY" label="PARAGUAY">PARAGUAY</option>
-            </select>
-            <label for="tipo_doc" class="optional">Tipo Doc:</label>
-            <select name="tipo_doc" id="tipo_doc">
-                <option value="0" label="DNI" selected="selected">DNI</option>
-                <option value="1" label="CI">CI</option>
-            </select>
-            <label for="nro_doc" class="required">DNI:</label>
-            <input type="text" class="input" name="nro_doc" id="nro_doc" value="<?php if (isset($this->datos['nro_doc'])) echo $this->datos['nro_doc']; ?>" placeholder="Ingrese el nro de documento">
-            <label for="sexo" class="optional">Sexo:</label>
-            <select name="sexo" id="sexo">
-                <option value="VARON" label="VARON">VARON</option>
-                <option value="MUJER" label="MUJER">MUJER</option>
-            </select>
-            <label for="fechaNac" class="required">Fecha Nacimiento:</label>
-            <input type="text" class="input" name="fecha_nac" id="fechaNac" value="<?php if (isset($this->datos['fecha_nac'])) echo $this->datos['fecha_nac']; ?>" placeholder="Haga click para ingresar la fecha de nacimiento" class="hasDatepicker">
-            <input type="submit" class="boton" name="boton_guardar" value="Guardar">
+        <form id="nuevo_personal" method="post" action="<?php echo BASE_URL; ?>?option=Personal&sub=index&cont=nuevo" class="form-horizontal" role="form">
+            <div class="col-md-7 ui-corner-all">
+                <input type="hidden" name="guardar" value="1" />
+                <div class="form-group">
+                    <label for="apellidos" class="required col-sm-2 control-label">Apellidos:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="apellidos"
+                            id="apellidos" maxlength="25">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nombres" class="required col-sm-2 control-label">Nombres:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="nombres"
+                            id="nombres" maxlength="25">
+                    </div>
+                </div>
+<!--                <div class="form-group">
+                    <label for="domicilio" class="optional col-sm-2 control-label">Domicilio:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="domicilio"
+                            id="domicilio" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="localidad" class="optional col-sm-2 control-label">Localidad:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="localidad"
+                               id="localidad" autocomplete="on">
+                    </div>
+                </div>-->
+                <div class="form-group">
+                    <label for="nacionalidad" class="required col-sm-2 control-label">Nacionalidad:</label>
+                    <div class="col-sm-10">
+                        <select name="nacionalidad" id="nacionalidad" class="form-control">
+                            <option value="ARGENTINA" label="ARGENTINA">ARGENTINA</option>
+                            <option value="PARAGUAY" label="PARAGUAY">PARAGUAY</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tipo_doc" class="optional col-sm-2 control-label">Tipo Doc:</label>
+                    <div class="col-sm-10">
+                        <select name="tipo_doc" id="tipo_doc" class="form-control">
+                            <option value="0" label="DNI" selected="selected">DNI</option>
+                            <option value="1" label="CI">CI</option>
+                        </select>
+                    </div>    
+                </div>
+                <div class="form-group">
+                    <label for="nro_doc" class="required col-sm-2 control-label">DNI:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="nro_doc"
+                            id="nro_doc">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sexo" class="optional col-sm-2 control-label">Sexo:</label>
+                    <div class="col-sm-10">
+                        <select name="sexo" id="sexo" class="form-control">
+                            <option value="VARON" label="VARON">VARON</option>
+                            <option value="MUJER" label="MUJER">MUJER</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="fechaNac" class="required col-sm-2 control-label">Fecha Nac.:</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" name="fechaNac"
+                               id="fechaNac">
+                    </div>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-lg btn-primary btn-block" 
+                   name="boton_guardar" value="Guardar">
         </form>
     </div>
     <div id = "tabs-2"><?php include_once 'DatosContacto.php'; ?></div>
