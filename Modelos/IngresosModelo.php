@@ -1,6 +1,7 @@
 <?php
+require_once APP_PATH . 'Modelo.php';
 
-class ingresosModelo extends Modelo
+class Modelos_ingresosModelo extends App_Modelo
 {
     private $_verEliminados = 0;
 
