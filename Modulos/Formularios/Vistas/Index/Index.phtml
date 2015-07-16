@@ -3,13 +3,13 @@
 </div>
 
 <div class="tabla">
-    <div id="formularios" class="lista_ul">
-        <ul>
+    <div class="container">
     <?php
     foreach ($this->datos as $formulario) { ?>
-            <li><a href="<?php echo BASE_URL.'Public'.DS.'Descargas'.DS.'Formularios'.DS.$formulario;?>">
-        <?php echo $formulario;?></a></li>
+        <div class="row">
+            <span class="glyphicon glyphicon-file" aria-hidden="true"></span><a href="<?php echo BASE_URL.'Public'.DS.'Descargas'.DS.'Formularios'.DS.$formulario;?>">
+            <?php echo $formulario;?></a>
+        </div>
      <?php }    ?>
-            </ul>
 </div>
-    </div>
+</div>
