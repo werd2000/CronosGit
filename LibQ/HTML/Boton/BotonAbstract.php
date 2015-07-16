@@ -10,6 +10,11 @@ class LibQ_Html_Boton_BotonAbstract implements LibQ_Html_Boton_BotonInterface
 {
 
     /**
+     * @var int con el id del boton
+     */
+    private $_id = '';
+    
+    /**
      * @var string con el contenido html
      */
     private $_botonHtml = '';
@@ -61,6 +66,15 @@ class LibQ_Html_Boton_BotonAbstract implements LibQ_Html_Boton_BotonInterface
         if (is_array($parametros)) {
             $this->_setOptions($parametros);
         }
+    }
+    
+    /**
+     * Establece el id del botón
+     * @param string $id 
+     */
+    public function setId($id)
+    {
+        $this->_id = $id;
     }
 
     /**
@@ -149,8 +163,9 @@ class LibQ_Html_Boton_BotonAbstract implements LibQ_Html_Boton_BotonInterface
         $this->_botonHtml .= '>';
         $this->_botonHtml .= $this->_titulo;
         if (isset($this->_icono) AND $this->_icono != '') {
-            $this->_botonHtml .= '<div class="thumbnail"><img src="' . $this->_icono . '" alt="' . $this->_titulo .
+            $this->_botonHtml .= '<div class="img-thumbnail"><img src="' . $this->_icono . '" alt="' . $this->_titulo .
                     '" class="' . $this->_class . '"></div>';
+//            $this->_botonHtml .= ' <span class="' . $this->_icono .'" aria-hidden="true"></span>';
         } else {
             if (isset($this->_spanClass)){
                 $this->_botonHtml .= '<span class="' . $this->_spanClass . '"> </span>';

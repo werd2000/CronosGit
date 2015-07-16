@@ -68,6 +68,9 @@ class MySQLAdapter implements ManejadorBaseDeDatosInterface
         }
         // lazy connect to MySQL
         $this->conectar();
+        if(DEBUG_SQL == 1){
+            echo $sql . '<br>';
+        }
         if (!$this->_result = mysqli_query($this->_link, $sql)) {
             throw new MySQLAdapterException('Error executing the specified query ' . $sql . mysqli_error($this->_link));
         }
@@ -118,7 +121,7 @@ class MySQLAdapter implements ManejadorBaseDeDatosInterface
         $query = 'UPDATE ' . $table . ' SET ' . $set 
                . (($where) ? ' WHERE ' . $where : '');
         $sql = new Sql($query);
-        echo $sql;
+//        echo $sql;
         $this->query($sql);
         return $this->getAffectedRows();  
     }

@@ -11,6 +11,7 @@ class LibQ_Hash
      */
     public static function getHash($algoritmo, $data, $key)
     {
+        echo 'hash';
         $hash = hash_init($algoritmo, HASH_HMAC, $key);
         hash_update($hash, $data);
         

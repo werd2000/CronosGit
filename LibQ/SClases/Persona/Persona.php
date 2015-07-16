@@ -22,7 +22,7 @@ abstract class LibQ_Sclases_Persona_Persona {
      * Devuelve el apellido y nombre de la persona
      * @var string
      */
-    protected $_AyN;
+//    protected $_AyN;
     /**
      * El objeto domicilio de la persona
      * @var Domicilio

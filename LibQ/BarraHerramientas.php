@@ -39,11 +39,9 @@ class LibQ_BarraHerramientas
     {
         $retorno = '<div class="btn-toolbar" role="toolbar" '
                 . 'aria-label="Toolbar with button groups">';
-        $retorno .= '<div class="btn-group">';
         foreach ($this->_botones as $boton) {
             $retorno .= $boton->render();
         }
-        $retorno .= '</div>';
         $retorno .= '</div>';
         return $retorno;
     }

@@ -36,8 +36,10 @@ class LibQ_Html_Boton_BotonDropDown extends LibQ_Html_Boton_BotonAbstract
      */
     public function render()
     {
-        $retorno = $this->_mostrarBotonPrincipal();
+        $retorno = '<div class="btn-group">';
+        $retorno .= $this->_mostrarBotonPrincipal();
         $retorno .= $this->_crearSubMenu($this->_childrens);
+        $retorno .= '</div>';
         return $retorno;
     }
 
@@ -47,8 +49,9 @@ class LibQ_Html_Boton_BotonDropDown extends LibQ_Html_Boton_BotonAbstract
                 . ' data-toggle="dropdown">';
         $this->_botonHtml .= $this->_titulo;
         if (isset($this->_icono) AND $this->_icono != '') {
-            $this->_botonHtml .= '<img src="' . $this->_icono . '" alt="' . $this->_titulo .
-                    '" class="' . $this->_class . '">';
+//            $this->_botonHtml .= '<img src="' . $this->_icono . '" alt="' . $this->_titulo .
+//                    '" class="' . $this->_class . '">';
+            $this->_botonHtml .= ' <span class="' . $this->_icono . '" aria-hidden="true"></span>';
             $this->_botonHtml .= '<span class="' . $this->_classIcono . '" title="' .
                     $this->_titulo . '"> </span>';
         } else {

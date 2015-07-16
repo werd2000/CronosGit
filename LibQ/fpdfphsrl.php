@@ -18,7 +18,7 @@ class FPDFphsrl extends FPDF
         $this->Cell(0, 17, utf8_decode('Pequeño Hogar SRL'), 0, 1, 'L');
         $this->SetFont('Helvetica', '', 9);
         $this->Cell(41);
-        $this->Cell(0, -5, utf8_decode('Salta 1957 - Tel. (0376) 4439049'), 0, 1, 'L');
+        $this->Cell(0, -5, utf8_decode('San Marcos 4069 - Tel. (0376) 4439049'), 0, 1, 'L');
         $this->Cell(41);
         $this->Cell(0, 15, utf8_decode('3300  Posadas  Misiones'), 0, 1, 'L');
         $this->Line(20, 33, 195, 33);
