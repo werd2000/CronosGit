@@ -141,10 +141,13 @@ class Controladores_pdfphsrlControlador extends App_Controlador
 
     public function facturacion($id)
     {
+        require_once BASE_PATH . 'Modelos' . DS . 'IngresosModelo.php';
+
         $datos = '';
-        $this->_modeloIngresos = $this->cargarModelo('ingresos');
+//        $this->_modeloIngresos = $this->cargarModelo('ingresos');
+        $this->_modeloIngresos = new Modelos_ingresosModelo();
         $datos['ingresos'] = $this->_modeloIngresos->getUltimoIngresoByOs($id);
-        if ($this->getInt('facturacion') == 1) {
+        if ($this->getIntPost('facturacion') == 1) {
             if (parent::getPostParam('leyenda') != '') {
                 $this->_leyenda = utf8_decode(strip_tags(parent::getPostParam('leyenda')));
             }
@@ -181,7 +184,9 @@ class Controladores_pdfphsrlControlador extends App_Controlador
 
     private function _facturaIps($pdf, $datos)
     {
-        $pacientes = $datos['paciente'];
+        if(!is_null($datos['paciente'])){
+            $pacientes = $datos['paciente'];
+        }
         $ingresos = $datos['ingresos'];
         setlocale(LC_TIME, 'es_ES');
         if ($this->_leyenda == '') {
@@ -259,7 +264,7 @@ class Controladores_pdfphsrlControlador extends App_Controlador
     {
         $datos = '';
         $this->_modeloPacientes = $this->cargarModelo('index', 'Paciente');
-        $paciente = $this->_modeloPacientes->getPaciente($id);
+        $paciente = $this->_modeloPacientes->getPaciente("id=$id");
 
 //        $this->_modeloTerapias = $this->cargarModelo('terapia', 'Paciente');
 //        $terapias = $paciente->getTerapias();
@@ -282,9 +287,7 @@ class Controladores_pdfphsrlControlador extends App_Controlador
 
     private function _constanciaAsistenciaRegular($pdf, $paciente)
     {
-//        $pacientes = $datos['pacientes'];
-//        $ingresos = $datos['ingresos'];
-        foreach ($paciente->getTerapias() as $terapia) {
+        foreach ($paciente->getObjTerapias() as $terapia) {
             $lista[] = $terapia->getTerapia();
         }
         $litaTerapias = implode(', ', $lista);
@@ -293,7 +296,7 @@ class Controladores_pdfphsrlControlador extends App_Controlador
             $this->_leyenda = str_repeat(" ", 21) . 'Se hace constar que ' .
                     $paciente->getApellidos() .
                     ', ' . $paciente->getNombres() . ', DNI: ' . $paciente->getNro_doc() .
-                    ', con diagnóstico médico ' . $paciente->getDiagnostico() .
+                    ', con diagnóstico médico ' . $paciente->getObjDiagnostico() .
                     ', asiste a nuestra institución semanalmente, recibiendo atención' .
                     ' terapéutica en las áreas de: ' . $litaTerapias . '.
                     La presente se expide a pedido ' .

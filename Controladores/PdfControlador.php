@@ -25,6 +25,7 @@ class Controladores_PdfControlador extends App_Controlador
     {
         $this->_modeloPaciente = new Paciente_Modelos_indexModelo();
         $paciente = $this->_modeloPaciente->getPaciente("id = $id");
+        $pac_os = $paciente->getOSocial();
         $this->_pdf->AddPage('p', 'legal');
         $this->_pdf->SetFont('Helvetica', 'B', 12);
         $this->_pdf->Cell(0, -40, 'SOLICITUD DE PRESTACION ESPECIAL', 0, 1, 'C');
@@ -33,10 +34,10 @@ class Controladores_PdfControlador extends App_Controlador
         $this->_pdf->Cell(130, -45, utf8_decode('Nombre y Apellido: ' . utf8_decode($paciente->getApellidos() .
                                 ', ' . utf8_decode($paciente->getNombres()))), 0, 0);
         $this->_pdf->Cell(50, -45, utf8_decode('DNI: ' . utf8_decode($paciente->getNro_doc())), 0, 1);
-        $this->_pdf->Cell(60, 60, utf8_decode('Nº de Afiliado: ' . utf8_decode($paciente->getOSocial()->getNro_afiliado())), 0, 0);
+        $this->_pdf->Cell(60, 60, utf8_decode('Nº de Afiliado: ' . utf8_decode($pac_os['nro_afiliado'])), 0, 0);
         $this->_pdf->Cell(70, 60, utf8_decode('Fecha de Nacimiento: ' . utf8_decode($paciente->getFecha_nac())), 0, 0);
         $this->_pdf->Cell(50, 60, 'Edad: ' . utf8_decode($paciente->getEdad()) . utf8_decode(' Años'), 0, 1);
-        $this->_pdf->Cell(0, -45, utf8_decode('Diagnóstico: ') . utf8_decode($paciente->getDiagnostico()), 0, 1);
+        $this->_pdf->Cell(0, -45, utf8_decode('Diagnóstico: ') . utf8_decode($paciente->getObjDiagnostico()), 0, 1);
         $mes_anio = $_GET['getV'];
         $fecha = new LibQ_Fecha('now');
         if($mes_anio != ''){
@@ -55,7 +56,7 @@ class Controladores_PdfControlador extends App_Controlador
         $this->_pdf->Cell(70, 60, utf8_decode('TERAPIAS'), 0, 0);
         $this->_pdf->Cell(0, 60, utf8_decode('CANTIDAD DE SESIONES'), 0, 1);
         $i = 0;
-        foreach ($paciente->getTerapias() as $terapia) {
+        foreach ($paciente->getObjTerapias() as $terapia) {
             if ($i == 0) {
                 $this->_pdf->Cell(10);
                 $this->_pdf->Cell(70, -45, utf8_decode($terapia->getTerapia()), 0, 0);
@@ -71,14 +72,14 @@ class Controladores_PdfControlador extends App_Controlador
 
         $this->_pdf->Cell(10);
         $this->_pdf->setY(150);
-        $this->_pdf->Cell(70, 60, utf8_decode($paciente->getOSocial()->getObservaciones()), 0, 1);
+        $this->_pdf->Cell(70, 60, utf8_decode($pac_os['pacos_observaciones']), 0, 1);
         $this->_pdf->Cell(0, 0, utf8_decode('Firma y Aclaracion Responsable'), 0, 1);
         $this->_pdf->Line(10, 235, 190, 235);
         $this->_pieIps($this->_pdf);
         /** Reverso */
         $this->_pdf->AddPage('p', 'legal');
         $this->_pdf->setY(50);
-        foreach ($paciente->getTerapias() as $terapia) {
+        foreach ($paciente->getObjTerapias() as $terapia) {
             $this->_pdf->Cell(0, 7, 'Terapia: ' . $terapia->getTerapia() . '         Firma del Profesional', 1, 1, '');
             $this->_pdf->Cell(0, 7, 'Fecha                                                               Firma del Padre', 1, 1, '');
             for ($fila = 1; $fila <= $terapia->getSesiones(); $fila++) {
@@ -95,6 +96,7 @@ class Controladores_PdfControlador extends App_Controlador
         $this->_modeloPaciente = $this->cargarModelo('index', 'Paciente');
         $pacientes = $this->_modeloPaciente->getPacientesByOs(1);
         foreach ($pacientes as $paciente) {
+                $pac_os = $paciente->getOSocial();
                 $this->_pdf->AddPage('p', 'legal');
                 $this->_pdf->SetFont('Helvetica', 'B', 12);
                 $this->_pdf->Cell(0, -40, 'SOLICITUD DE PRESTACION ESPECIAL', 0, 1, 'C');
@@ -103,10 +105,10 @@ class Controladores_PdfControlador extends App_Controlador
                 $this->_pdf->Cell(130, -45, utf8_decode('Nombre y Apellido: ' . utf8_decode($paciente->getApellidos() .
                                         ', ' . utf8_decode($paciente->getNombres()))), 0, 0);
                 $this->_pdf->Cell(50, -45, utf8_decode('DNI: ' . utf8_decode($paciente->getNro_doc())), 0, 1);
-                $this->_pdf->Cell(60, 60, utf8_decode('Nº de Afiliado: ' . utf8_decode($paciente->getOSocial()->getNro_afiliado())), 0, 0);
+                $this->_pdf->Cell(60, 60, utf8_decode('Nº de Afiliado: ' . utf8_decode($pac_os['nro_afiliado'])), 0, 0);
                 $this->_pdf->Cell(70, 60, utf8_decode('Fecha de Nacimiento: ' . utf8_decode($paciente->getFecha_nac())), 0, 0);
                 $this->_pdf->Cell(50, 60, 'Edad: ' . utf8_decode($paciente->getEdad()) . utf8_decode(' Años'), 0, 1);
-                $this->_pdf->Cell(0, -45, utf8_decode('Diagnóstico: ') . utf8_decode($paciente->getDiagnostico()), 0, 1);
+                $this->_pdf->Cell(0, -45, utf8_decode('Diagnóstico: ') . utf8_decode($paciente->getObjDiagnostico()), 0, 1);
                 $mes_anio = $_GET['getV'];
                 $fecha = new LibQ_Fecha('now');
                 if($mes_anio != ''){
@@ -125,7 +127,7 @@ class Controladores_PdfControlador extends App_Controlador
                 $this->_pdf->Cell(70, 60, utf8_decode('TERAPIAS'), 0, 0);
                 $this->_pdf->Cell(0, 60, utf8_decode('CANTIDAD DE SESIONES'), 0, 1);
                 $i = 0;
-                foreach ($paciente->getTerapias() as $terapia) {
+                foreach ($paciente->getObjTerapias() as $terapia) {
                     if ($i == 0) {
                         $this->_pdf->Cell(10);
                         $this->_pdf->Cell(70, -45, utf8_decode($terapia->getTerapia()), 0, 0);
@@ -141,14 +143,14 @@ class Controladores_PdfControlador extends App_Controlador
 
                 $this->_pdf->Cell(10);
                 $this->_pdf->setY(150);
-                $this->_pdf->Cell(70, 60, utf8_decode($paciente->getOSocial()->getObservaciones()), 0, 1);
+                $this->_pdf->Cell(70, 60, utf8_decode($pac_os['pacos_observaciones']), 0, 1);
                 $this->_pdf->Cell(0, 0, utf8_decode('Firma y Aclaracion Responsable'), 0, 1);
                 $this->_pdf->Line(10, 235, 190, 235);
                 $this->_pieIps($this->_pdf);
                 /** Reverso */
                 $this->_pdf->AddPage('p', 'legal');
                 $this->_pdf->setY(50);
-                foreach ($paciente->getTerapias() as $terapia) {
+                foreach ($paciente->getObjTerapias() as $terapia) {
                     $this->_pdf->Cell(0, 7, 'Terapia: ' . $terapia->getTerapia() . '         Firma del Profesional', 1, 1, '');
                     $this->_pdf->Cell(0, 7, 'Fecha                                                               Firma del Padre', 1, 1, '');
                     for ($fila = 1; $fila <= $terapia->getSesiones(); $fila++) {

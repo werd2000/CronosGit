@@ -1,6 +1,6 @@
 <?php
 
-class TareasControlador extends Controlador
+class Controladores_tareasControlador extends App_Controlador
 {
 
     public function __construct() 

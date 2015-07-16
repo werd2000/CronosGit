@@ -1,6 +1,6 @@
 <?php
 
-class ObrasSocialesControlador extends Controlador
+class Controladores_ObrasSocialesControlador extends App_Controlador
 {    
     public function __construct() 
     {

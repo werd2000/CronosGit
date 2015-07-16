@@ -1,6 +1,6 @@
 <?php
 
-class FormulariosControlador extends Controlador
+class Controladores_FormulariosControlador extends App_Controlador
 {
 
     public function __construct() 

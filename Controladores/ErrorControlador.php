@@ -1,6 +1,6 @@
 <?php
 
-class ErrorControlador extends Controlador
+class Controladores_errorControlador extends App_Controlador
 {
     public function __construct() {
         parent::__construct();
@@ -15,8 +15,8 @@ class ErrorControlador extends Controlador
     
     public function acceso($codigo)
     {
-        $this->_vista->titulo = $codigo['id'] . 'Error';
-        $this->_vista->mensaje = $this->_getError($codigo['id']);
+        $this->_vista->titulo = 'Error ' . $codigo;
+        $this->_vista->mensaje = $this->_getError($codigo);
         $this->_vista->renderizar('acceso','default');
     }
     

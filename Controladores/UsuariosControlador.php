@@ -1,6 +1,6 @@
 <?php
 
-class UsuariosControlador extends App_Controlador
+class Controladores_UsuariosControlador extends App_Controlador
 {    
     public function __construct() 
     {
