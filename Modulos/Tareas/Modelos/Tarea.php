@@ -46,12 +46,14 @@ class Tarea
     
     public function getFechaInicio()
     {
-        return fecha::getFechaAr($this->_fechaInicio);
+        $fecha = new LibQ_Fecha($this->_fechaInicio);
+        return $fecha->getDate();
     }
     
     public function getFechaFin()
     {
-        return fecha::getFechaAr($this->_fechaFin);
+        $fecha = new LibQ_Fecha($this->_fechaFin);
+        return $fecha->getDate();
     }
     
     public function getDescripcion()
@@ -128,7 +130,7 @@ class Tarea
     
     private function _getObjCreador($id)
     {
-        $usuario = new usuarioTareaModelo();
+        $usuario = new Tareas_Modelos_usuarioTareaModelo();
         return new Usuario($usuario->getUsuario($id));
     }
 }

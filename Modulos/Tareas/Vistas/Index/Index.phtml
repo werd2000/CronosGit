@@ -1,77 +1,78 @@
-<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
-    <?php echo $this->titulo; ?>
+<div class="panel panel-primary">
+<div class="panel-heading ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <h3 class="panel-title"><?php echo $this->titulo; ?></h3>
 </div>
-
-<div class="tabla">
-    <div class="filaTitulos">
-        <?php
-        echo '<div class="celda id"><b>Nº</b></div>';
-        echo '<div class="celda creado_por"><b>Creado por</b></div>';
-        echo '<div class="celda tipo_tarea"><b>Tipo</b></div>';
-        echo '<div class="celda fechaNac"><b>Inicia</b></div>';
-        echo '<div class="celda fechaNac"><b>Finaliza</b></div>';
-        echo '<div class="celda descripcion"><b>Descripción</b></div>';
-        echo '<div class="celda estado"><b>Estado</b></div>';
-//        echo '<div class="celda observaciones"><b>Observaciones</b></div>';
-        ?>
-    </div>
-</div>
-<div class="tabla">
+    <div class="panel-body">
+<table id="lista_tareas" class="">
+    <thead>
+        <tr>
+        <th>Nº</th>
+        <th>Creado por</th>
+        <th>Tipo</th>
+        <th>Inicia</th>
+        <th>Finaliza</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th>Observaciones</th>
+    </tr>
+    </thead>
+    <tbody>
     <?php
+    $i=0;
     foreach ($this->datos as $tarea) {
-        echo '<div id=' . $tarea->getId() . ' class="filaDatos ' . $tarea->getCaracter() . '">
-            <a href="' . BASE_URL . '?option=Tareas&sub=index&cont=editar&id=' . $tarea->getId() . '">';
-        echo '<div class="celda id">';
-        echo $this->i;
-        echo '</div>';
-        echo '<div ';
+        $caracter = '';
+        if ($tarea->getCaracter()=='urgente'){
+            $caracter = 'alert alert-danger';
+        }else if($tarea->getCaracter()=='proximo'){
+            $caracter = 'alert alert-warning';
+        }
+        echo '<tr id=' . $tarea->getId() . ' class="' . $caracter . '">';
+        echo '<td class="celda id">';
+        echo $tarea->getId();
+        echo '</td>';
+        echo '<td ';
         if(MOSTRAR_ICONOS == 1) {
             echo 'id="apellidos"';
         }
         echo ' class="celda creado_por"><b>';
         echo $tarea->getObjCreador()->getNombre();
-        echo '</b></div>';
-        echo '<div ';
+        echo '</b></td>';
+        echo '<td ';
         if(MOSTRAR_ICONOS == 1) {
             echo 'id="tipo_tarea"';
         }
         echo ' class="celda tipo_tarea">';
         echo $tarea->getTipo_tarea();
-        echo '</div>';
-        echo '<div ';
+        echo '</td>';
+        echo '<td ';
         if(MOSTRAR_ICONOS == 1) {
             echo 'id=fecha_nac';
         }
         echo ' class="celda fechaInicio">';
         echo $tarea->getFechaInicio();
-        echo '</div>';
-        echo '<div ';
+        echo '</td>';
+        echo '<td ';
         if(MOSTRAR_ICONOS == 1) {
             echo 'id="fecha_nac"';
         }
          echo ' class="celda fechaFin">';
         echo $tarea->getFechaFin();
-        echo '</div>';
-        echo '<div class="celda descripcion">';
+        echo '</td>';
+        echo '<td class="celda descripcion">';
         echo $tarea->getDescripcion();
-        echo '</div>';
-        echo '<div class="celda estado">';
+        echo '</td>';
+        echo '<td class="celda estado">';
         echo $tarea->getEstado();
-        echo '</div>';
-//        echo '<div class="celda observaciones">';
-//        echo $tarea->getObservaciones();
-//        echo '</div>';
+        echo '</td>';
+        echo '<td class="celda observaciones">';
+        echo $tarea->getObservaciones();
+        echo '</td>';
         
-        $this->i++;
-        echo '</a></div>';
+        $i++;
+        echo '</tr>';
     }
     ?>
+    </tbody>
+</table>
 </div>
-<div id="paginacion">
-<?php if (isset($this->paginacion)) echo $this->paginacion; ?>
 </div>
-<?php if (Session::accesoViewEstricto(array('usuario'))): ?>
-    <!--Si el nivel es especial muestro el link-->
-    <a href="<?php BASE_URL; ?>?option=Personal&sub=nuevo">Nuevo</a>
-<?php endif; ?>
-<!--</div>-->

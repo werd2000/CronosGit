@@ -1,98 +1,105 @@
 <?php
+require_once BASE_PATH . 'LibQ' . DS . 'BarraHerramientas.php';
+require_once MODS_PATH . 'Tareas' . DS . 'Modelos' . DS . 'IndexModelo.php';
+
 /**
  * Clase Tareas Controlador 
  */
-class indexControlador extends tareasControlador
+class Tareas_Controladores_indexControlador extends Controladores_tareasControlador
 {
 
     private $_tareas;
     protected $_listaTipoTareas = array('TAREA','EVENTO','NOTA','PAGO');
     protected $_listaEstados = array('SIN ASIGNAR','MANTENER','RESUELTO','RECHAZADO');
     protected $_listaRepetir = array('NUNCA','DIARIAMENTE','SEMANALMENTE','MENSUALMENTE','ANUALMENTE');
+    protected $_mes31 = array(1,3,5,7,8,10,12);
+    private $_paramBotonNuevo = array(
+        'href' => '?option=Tareas&sub=index&cont=nuevo',
+        'classIcono' => 'icono-nuevo32',
+        'titulo' => 'Nuevo',
+        'class' => 'btn btn-primary'
+    );
+    /**
+     * Propiedad usada para configurar el botón VOLVER
+     * @var type Array
+     */
+    private $_paramBotonVolver = array(
+        'href' => "javascript:history.back(1)",
+        'classIcono' => 'icono-volver32',
+        'titulo' => 'Volver',
+        'class' => 'btn btn-primary'
+    );
+
+    /**
+     * Propiedad usa para configurar el botón GUARDAR
+     * @var type Array
+     */
+    private $_paramBotonGuardar = array(
+        'href' => "\"javascript:void(0);\"",
+        'evento' => "onclick=\"javascript: submitbutton('Guardar')\"",
+        'class' => 'btn btn-primary'
+    );
+    private $_paramBotonInicio = array(
+        'href' => "?option=Index",
+        'classIcono' => 'icono-inicio32',
+        'titulo' => 'Inicio',
+        'class' => 'btn btn-primary'
+    );
+
+    /**
+     * Propiedad usada para configurar el botón LISTA
+     * @var type Array
+     */
+    private $_paramBotonLista = array(
+        'href' => 'index.php?option=Tareas&sub=index',
+        'classIcono' => 'icono-lista32',
+        'titulo' => 'Lista',
+        'class' => 'btn btn-primary'
+    );
+    private $_paramBotonExportar = array(
+        'href' => 'index.php?option=exportExcel&sub=tareas',
+        'classIcono' => 'icono-lista32',
+        'titulo' => 'Lista',
+        'class' => 'btn btn-primary'
+    );
 
     public function __construct()
     {
         parent::__construct();
-        $this->_tareas = $this->cargarModelo('index');
+        $this->_tareas = new Tareas_Modelos_indexModelo();
     }
 
     public function index($pagina = false)
     {
-        $menu = array(
-            array(
-                'onclick'=> '',
-                'href'   => "?option=exportExcel&sub=tareas",
-                'title' => 'Exportar',
-                'class'  => 'icono-exportar32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Tareas&sub=index&cont=nuevo",
-                'title' => 'Nuevo',
-                'class'  => 'icono-nuevo32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "javascript:history.back(1)",
-                'title' => 'Volver',
-                'class'  => 'icono-volver32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Index",
-                'title' => 'Inicio',
-                'class'  => 'icono-inicio32'
-            )
-        );
-        $this->_vista->_barraHerramientas = $menu;
-        
-        parent::getLibreria('paginador');
+        $this->isAutenticado();
         parent::getLibreria('Fechas');
-        $paginador = new Paginador();
+        /** Barra de herramientas */
+        $bh = new LibQ_BarraHerramientas();
+        $bh->addBoton('Lista', $this->_paramBotonLista);
+        $bh->addBoton('Nuevo', $this->_paramBotonNuevo);
+        $bh->addBoton('Volver', $this->_paramBotonVolver);
+        $bh->addBoton('Inicio', $this->_paramBotonInicio);
+        $this->_vista->_barraHerramientas = $bh->render();
+        parent::getLibreria('Fechas');
 //        print_r($this->_tareas->getTareas());
-        $datos = $this->_tareas->getTareas();
-        $this->_vista->datos = $paginador->paginar($datos,$pagina);
-        $this->_vista->paginacion = $paginador->getView('prueba','?option=Tareas&sub=index');
+        $this->_vista->datos = $this->_tareas->getTareas();
         $this->_vista->titulo = 'Tareas';
-        if($pagina == 0){
-            $this->_vista->i = 1;
-        }else{
-            $this->_vista->i = (($pagina - 1) * LIMITE_REGISTROS) + 1;
-        }
+        $this->_vista->setVistaJs(array('lista_tareas'));
+        $this->_vista->setVistaCss(array('tareas'));        
         $this->_vista->renderizar('index', 'tarea');
     }
 
     public function nuevo()
     {
-        $menu = array(
-            array(
-                'onclick'=> '',
-                'href'   => "?option=exportExcel&sub=tareas",
-                'title' => 'Exportar',
-                'class'  => 'icono-exportar32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Tareas&sub=index&cont=nuevo",
-                'title' => 'Nuevo',
-                'class'  => 'icono-nuevo32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "javascript:history.back(1)",
-                'title' => 'Volver',
-                'class'  => 'icono-volver32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Index",
-                'title' => 'Inicio',
-                'class'  => 'icono-inicio32'
-            )
-        );
-        $this->_vista->_barraHerramientas = $menu;
+        $this->isAutenticado();
+        /** Barra de herramientas */
+        $bh = new LibQ_BarraHerramientas();
+        $bh->addBoton('Lista', $this->_paramBotonLista);
+        $bh->addBoton('Nuevo', $this->_paramBotonNuevo);
+        $bh->addBoton('Volver', $this->_paramBotonVolver);
+        $bh->addBoton('Inicio', $this->_paramBotonInicio);
+        $this->_vista->_barraHerramientas = $bh->render();
         
-//        Session::accesoEstricto(array('usuario'),true);
         $this->_vista->titulo = 'Nueva Tarea';
         $this->_vista->setJs(array('jquery.validate.min','util'));
         $this->_vista->setJs(array('tinymce/jscripts/tiny_mce/tiny_mce','iniciarTinyMce'));
@@ -103,10 +110,9 @@ class indexControlador extends tareasControlador
         $this->_vista->listaRepetir = $this->_listaRepetir;
         $this->_vista->listaEstados = $this->_listaEstados;
         $this->_vista->datos = $_POST;
-//        $this->_vista->datos['depende_de'] = $_SESSION['id_usuario'];
 
-        if (parent::getInt('guardar') == 1) {
-            if (!parent::getTexto('fechaInicio')) {
+        if (parent::getIntPost('guardar') == 1) {
+            if (!parent::getTextoPost('fechaInicio')) {
                 $this->_vista->_msj_error = 'Debe ingresar la fecha de inicio';
                 $this->_vista->renderizar('nuevo', 'tarea');
                 exit;
@@ -121,7 +127,7 @@ class indexControlador extends tareasControlador
                     $multiplicador = 7;
                     break;
                 case 'MENSUALMENTE':
-                    $veces = 24;
+                    $veces = 6;
                     $multiplicador = 30;
                     break;
                 case 'ANUALMENTE':
@@ -132,20 +138,27 @@ class indexControlador extends tareasControlador
                     $veces = 1;
                     break;
             }
-            $fechaInicio = new DateTime(fechas::getFechaBd(parent::getPostParam('fechaInicio')));
-            $fechaFin = new DateTime(fechas::getFechaBd(parent::getPostParam('fechaFin')));
+            $fechaInicio = new LibQ_Fecha(parent::getPostParam('fechaInicio'));
+            $fechaFin    = new LibQ_Fecha(parent::getPostParam('fechaFin'));
             for ($index = 0; $index < $veces; $index++) {
                 if ($index > 0){
-                    $fechaInicio->add(new DateInterval('P'. $multiplicador . 'D'));
-                    $fechaFin->add(new DateInterval('P'. $multiplicador . 'D'));
+                    if (in_array($fechaInicio->getMes(),  $this->_mes31)){
+                        $multiplic = $multiplicador + 1;
+                        $fechaInicio->add(new DateInterval('P'. $multiplic . 'D'));
+                        $fechaFin->add(new DateInterval('P'. $multiplic . 'D'));
+                    }else{
+                        $multiplic = $multiplicador;
+                        $fechaInicio->add(new DateInterval('P'. $multiplic . 'D'));
+                        $fechaFin->add(new DateInterval('P'. $multiplic . 'D'));
+                    }
                 }
                 if ($this->_tareas->insertarTareas(array(
                         'id'=>'',
-                        'id_creador'=>  Session::get('id_usuario'),
+                        'id_creador'=> App_Session::get('id_usuario'),
                         'depende_de'=>parent::getPostParam('depende_de'),
                         'tipo_tarea'=>parent::getPostParam('tipo_tarea'),
-                        'fechaInicio'=>date_format($fechaInicio, 'Y-m-d'),
-                        'fechaFin'=>  date_format($fechaFin, 'Y-m-d'),
+                        'fechaInicio'=>$fechaInicio->format('Y-m-d'),
+                        'fechaFin'=>$fechaFin->format('Y-m-d'),
                         'descripcion'=>parent::getPostParam('descripcion'),
                         'estado'=>parent::getPostParam('estado'),
                         'observaciones'=>parent::getPostParam('observaciones')
@@ -162,45 +175,14 @@ class indexControlador extends tareasControlador
 
     public function editar($id)
     {
-        $menu = array(
-            array(
-                'onclick'=> '',
-                'href'   => "?option=exportExcel&sub=tareas",
-                'title' => 'Exportar',
-                'class'  => 'icono-exportar32'
-            ),
-            array(
-                'onclick' => '',
-                'href' => "?option=Tareas",
-                'title' => 'Lista',
-                'class' => 'icono-lista32'
-            ),
-            array(
-                'onclick' => '',
-                'href' => "?option=Tareas&sub=index&cont=eliminar&id=$id",
-                'title' => 'Eliminar',
-                'class' => 'icono-eliminar32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Tareas&sub=index&cont=nuevo",
-                'title' => 'Nuevo',
-                'class'  => 'icono-nuevo32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "javascript:history.back(1)",
-                'title' => 'Volver',
-                'class'  => 'icono-volver32'
-            ),
-            array(
-                'onclick'=> '',
-                'href'   => "?option=Index",
-                'title' => 'Inicio',
-                'class'  => 'icono-inicio32'
-            )
-        );
-        $this->_vista->_barraHerramientas = $menu;
+        $this->isAutenticado();
+        /** Barra de herramientas */
+        $bh = new LibQ_BarraHerramientas();
+        $bh->addBoton('Lista', $this->_paramBotonLista);
+        $bh->addBoton('Nuevo', $this->_paramBotonNuevo);
+        $bh->addBoton('Volver', $this->_paramBotonVolver);
+        $bh->addBoton('Inicio', $this->_paramBotonInicio);
+        $this->_vista->_barraHerramientas = $bh->render();
         parent::getLibreria('Fechas');        
         if (!$this->filtrarInt($id)) {
             $this->redireccionar('option=Tareas');
@@ -213,17 +195,19 @@ class indexControlador extends tareasControlador
         $this->_vista->listaTipoTareas = $this->_listaTipoTareas;
         $this->_vista->listaEstados = $this->_listaEstados;
         $this->_vista->titulo = 'Editar Tareas';
-        $this->_vista->setJs(array('jquery.validate.min','tinymce/jscripts/tiny_mce/tiny_mce','validarNuevo','iniciarTinyMce','util'));
-        $this->_vista->setCss(array('tiny_mce/themes/simple/skins/default/ui'));
+        $this->_vista->setVistaJs(array('jquery.validate.min','tinymce/jscripts/tiny_mce/tiny_mce','validarNuevo','iniciarTinyMce','util'));
+        $this->_vista->setVistaCss(array('tiny_mce/themes/simple/skins/default/ui'));
         
-        if ($this->getInt('guardar') == 1) {
+        if ($this->getIntPost('guardar') == 1) {
             $this->_vista->datos = $_POST;
+            $fechaInicio = parent::getPostParam('fechaInicio');
+            $fechaFin = parent::getPostParam('fechaFin');
             if ($this->_tareas->editarTareas(array(
                 'id_creador'=>parent::getPostParam('id_creador'),
                 'depende_de'=>parent::getPostParam('depende_de'),
                 'tipo_tarea'=>parent::getPostParam('tipo_tarea'),
-                'fechaInicio'=>fecha::getFechaBd(parent::getPostParam('fechaInicio')),
-                'fechaFin'=>fecha::getFechaBd(parent::getPostParam('fechaFin')),
+                'fechaInicio'=>$fechaInicio,
+                'fechaFin'=>$fechaFin,
                 'descripcion'=>parent::getPostParam('descripcion'),
                 'estado'=>parent::getPostParam('estado'),
                 'observaciones'=>parent::getPostParam('historial') . parent::getPostParam('observaciones')
@@ -237,7 +221,6 @@ class indexControlador extends tareasControlador
             $this->redireccionar('option=Tareas');
         }
         //Si no es para guardar lleno el form con datos de la bd
-//        print_r ($this->_tareas->getTarea($this->filtrarInt($id)));
         $this->_vista->datos = $this->_tareas->getTarea($this->filtrarInt($id));
         $this->_vista->renderizar('editar', 'Tareas');
     }

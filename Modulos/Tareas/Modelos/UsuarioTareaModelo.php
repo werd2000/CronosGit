@@ -3,7 +3,7 @@
 /**
  * Clase Modelo Personal que extiende de la clase Modelo
  */
-class usuarioTareaModelo extends Modelo
+class Tareas_Modelos_usuarioTareaModelo extends App_Modelo
 {
 
     private $_verEliminados = false;

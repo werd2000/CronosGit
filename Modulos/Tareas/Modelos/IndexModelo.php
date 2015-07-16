@@ -5,7 +5,7 @@ require_once 'Tarea.php';
 /**
  * Clase Modelo Tareas que extiende de la clase Modelo
  */
-class indexModelo extends Modelo
+class Tareas_Modelos_indexModelo extends App_Modelo
 {
 
     private $_verEliminados = false;
@@ -81,6 +81,7 @@ class indexModelo extends Modelo
 
     public function editarTareas(array $valores, $condicion)
     {
+        var_dump($valores);
         return $this->_db->editar('cronos_tareas', $valores, $condicion);
     }
 

@@ -1,14 +1,19 @@
-<div id="titulo" class="tituloModulo ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
-    <?php echo $this->titulo; ?>
+<div id="titulo" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    <h4><?php echo $this->titulo; ?></h4>
 </div>
-<div>
-<form id="nueva_tarea" method="post" action="">
+<div id = "tabs">
+    <ul>
+        <li><a href="#tabs-1">Datos Principales</a></li>
+    </ul>
+    <div id = "tabs-1">
+<form id="nueva_tarea" method="post" action="" class="form-horizontal" role="form">
     <input type="hidden" name="guardar" value="1" />
     <input type="hidden" name="depende_de" value="<?php echo $this->datos->getDepende_de(); ?>" />
     <input type="hidden" name="id_creador" value="<?php echo $this->datos->getId_creador(); ?>" />
-
-    <label for="depende_de" class="required">Depende de:</label>
-    <select class="select" name="depende_de" id="depende_de">
+    <div class="form-group">
+    <label for="depende_de" class="required col-sm-2 control-label">Depende de:</label>
+    <div class="col-sm-10">
+    <select class="form-control" name="depende_de" id="depende_de">
         <option value="0" label="Ninguno">Ninguno</option>
         <?php
         foreach ($this->listaTareas as $tarea) { ?>
@@ -24,10 +29,12 @@
             </option>
        <?php } ?>
     </select>
-
-    
-    <label for="tipo_tarea" class="required">Tipo de Tarea:</label>
-    <select class="select" name="tipo_tarea" id="tipo_tarea">
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="tipo_tarea" class="required col-sm-2 control-label">Tipo de Tarea:</label>
+    <div class="col-sm-10">
+    <select class="form-control" name="tipo_tarea" id="tipo_tarea">
         <?php
         foreach ($this->listaTipoTareas as $tipoTarea) {
             if ($this->datos->getTipo_tarea() == $tipoTarea) {
@@ -38,15 +45,32 @@
             echo "<option value=\"$tipoTarea\" label=\"$tipoTarea\" $seleccionado>$tipoTarea</option>";
        }?>
     </select>
-
-    <label for="fechaInicio" class="required">Fecha Inicio:</label>
-    <input type="text" class="input" class="hasDatepicker" name="fechaInicio" id="fechaInicio" value="<?php echo $this->datos->getFechaInicio(); ?>" placeholder="Ingrese fecha inicio">
-    <label for="fechaFin" class="optional">Fecha Fin:</label>
-    <input type="text" class="input" class="hasDatepicker" name="fechaFin" id="fechaFin" value="<?php echo $this->datos->getFechaFin(); ?>" placeholder="Ingrese fecha fin">
-    <label for="descripcion" class="optional">Descripción:</label>
-    <input type="text" class="input" name="descripcion" id="descripcion" value="<?php if ($this->datos->getDescripcion()) echo $this->datos->getDescripcion(); ?>" placeholder="Ingrese la descripcion" autocomplete="on">
-    <label for="estado" class="optional">Estado:</label>    
-    <select class="select" name="estado" id="estado">
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="fechaInicio" class="required col-sm-2 control-label">Fecha Inicio:</label>
+    <div class="col-sm-10">
+    <?php echo '<input type="date" class="form-control" class="hasDatepicker" name="fechaInicio" id="fechaInicio" value="'.
+            $this->datos->getFechaInicio() . '" placeholder="Ingrese fecha inicio">'; ?>
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="fechaFin" class="col-sm-2 control-label">Fecha Fin:</label>
+    <div class="col-sm-10">
+    <?php echo '<input type="date" class="form-control" name="fechaFin" id="fechaFin" value="'.
+            $this->datos->getFechaFin() . '" placeholder="Ingrese fecha fin">'; ?>
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="descripcion" class="col-sm-2 control-label">Descripción:</label>
+    <div class="col-sm-10">
+    <input type="text" class="form-control" name="descripcion" id="descripcion" value="<?php if ($this->datos->getDescripcion()) echo $this->datos->getDescripcion(); ?>" placeholder="Ingrese la descripcion" autocomplete="on">
+    </div>
+    </div>
+    <div class="form-group">
+        <label for="estado" class="col-sm-2 control-label">Estado:</label>
+        <div class="col-sm-10">
+    <select class="form-control" name="estado" id="estado">
         <?php
         foreach ($this->listaEstados as $estado) {
             if ($this->datos->getEstado() == $estado) {
@@ -56,12 +80,21 @@
             echo "<option value=\"$estado\" label=\"$estado\" $seleccionado>$estado</option>";
        }?>
     </select>
-    
-    <label for="historial" class="required">Historial:</label>
-    <textarea class="input mceEditor" name="historial" id="historial" rows="6"><?php if ($this->datos->getObservaciones()) echo $this->datos->getObservaciones(); ?></textarea>
-    <label for="observaciones" class="required">Observaciones:</label>
-    <textarea class="input mceEditor defaultSimpleSkin" name="observaciones" id="observaciones" rows="6"> </textarea>
-
-    <input type="submit" class="boton" name="boton_guardar" value="Guardar">
+        </div>
+    </div>
+    <div class="form-group">
+    <label for="historial" class="required col-sm-2 control-label">Historial:</label>
+    <div class="col-sm-10">
+    <textarea class="form-control mceEditor" name="historial" id="historial" rows="6"><?php if ($this->datos->getObservaciones()) echo $this->datos->getObservaciones(); ?></textarea>
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="observaciones" class="required col-sm-2 control-label">Observaciones:</label>
+    <div class="col-sm-10">
+    <textarea class="form-control mceEditor defaultSimpleSkin" name="observaciones" id="observaciones" rows="6"> </textarea>
+    </div>
+    </div>
+    <input type="submit" class="btn btn-lg btn-primary btn-block" name="boton_guardar" value="Guardar">
 </form>
+</div>
 </div>
