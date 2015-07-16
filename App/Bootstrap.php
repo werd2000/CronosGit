@@ -37,7 +37,6 @@ class App_Bootstrap
         /* Obtengo los argumentos para la función que quiero ejecutar */
         $args = $this->_request->getArgumentos();
         /* Control y carga del módulo */
-        
         $this->_controlModulo($modulo);
         $this->_controlControlador($modulo, $metodo, $args);
         $this->_controlMetodo($metodo, $args);

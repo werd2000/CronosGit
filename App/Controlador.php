@@ -167,6 +167,7 @@ abstract class App_Controlador {
     /**
      * Obtiene el entero que viene en una clave del $_POST
      * @param string $clave
+     * returns <b>FALSE</b> if the variable is not set and <b>NULL</b> if the filter fails.
      * @return int 
      */
     protected function getIntPost($clave) {
@@ -250,7 +251,7 @@ abstract class App_Controlador {
     
     public function isAutenticado()
     {
-        if (!App_Session::get('autenticado')){
+        if (!App_Session::get('autenticado') || App_Session::tiempo()){
             $this->redireccionar(URL_LOGIN);
         }
     }

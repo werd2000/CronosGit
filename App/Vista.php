@@ -276,7 +276,7 @@ class App_Vista
                     $ruta = 'Usuarios/Vistas/Login/';
                 }
                 $this->_css[] = BASE_URL . 'Modulos/' . 
-                        $ruta . '/css/'. $archivoCss . '.css';
+                        $ruta . '/Css/'. $archivoCss . '.css';
             }
         } else {
             throw new Exception('Error de CSS');

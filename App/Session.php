@@ -26,7 +26,7 @@ class App_Session
             if (is_array($clave)) {
                 $this->_destroyArray($clave);
             } else {
-                $this->_destroyClave($clave);
+                self::_destroyClave($clave);
             }
         } else {
             session_destroy();
@@ -204,7 +204,7 @@ class App_Session
     {
         /** Si no está definida la variable tiempo en la session o
           no está definido el tiempo de session genero error */
-        if (!App_Session::get('tiempo') || !defined('SESSION_TIME')) {
+        if (!App_Session::get('tiempo') && !defined('SESSION_TIME')) {
             throw new Exception('No se ha definido el tiempo de sesion');
         }
 

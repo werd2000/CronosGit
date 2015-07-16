@@ -7,7 +7,7 @@ define('DEFAULT_LAYOUT', 'Default');
 define('IMAGEN_PUBLICA', BASE_URL . 'Public/Img/');
 define('ICONOS', BASE_URL . 'Vistas/Layout/Default/Img/iconos/');
 
-define('SESSION_TIME',1);
+define('SESSION_TIME',40);
 
 define('HASH_KEY', '50d8bab41b8c2');
 
@@ -27,5 +27,7 @@ define('MOSTRAR_ICONOS',1);
 define('MAX_FILE_SIZE',600000);
 
 define('URL_LOGIN','option=Usuarios&cont=login');
+
+define('DEBUG_SQL',0);
 
 //define('NOMBRE_EMPRESA','PEQUEÑO HOGAR SRL');

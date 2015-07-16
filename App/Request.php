@@ -24,7 +24,7 @@ Class App_Request
         'Turnos',
         'Formularios',
         'Impuestos',
-        'PagoImpuestos',
+        'ObrasSociales',
         'Registro',
         'Configuracion'
     );
