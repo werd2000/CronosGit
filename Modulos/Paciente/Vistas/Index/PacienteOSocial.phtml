@@ -1,0 +1,38 @@
+<div class="panel panel-primary">
+    <div class="panel-heading ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+        <h3 class="panel-title"><?php echo $this->titulo; ?></h3>
+    </div>
+
+    <div class="panel-body">
+        <table id="lista_dirTelefonico" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Id.</th>
+                    <th>Apellidos y Nombres</th>
+                    <th>Obra Social</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->datos as $id=>$pac) { ?>
+                    <tr>
+                        <td class="id">
+                            <?php echo $id; ?>
+                        </td>
+                        <td class="apellidos">
+                            <?php echo $pac['ayn']; ?>
+                        </td>
+                        <td class="tabla_contacto">
+                            <?php
+                                echo $pac['os']; 
+                            ?>
+                        </td>
+                        <td class="observaciones">
+                            <?php // echo $pac['observaciones'] ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>

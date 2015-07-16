@@ -28,6 +28,34 @@ $(function() {
     });
 });
 
+$(function() {
+    $("#guardarDomicilioPaciente").click(function() {
+        var id_domicilio = $("#id_domicilio").val();
+        var id_paciente = $("#idPaciente").val();
+        var calle = $("#calle").val();
+        var casa_nro = $("#casa_nro").val();
+        var piso = $("#piso").val();
+        var depto = $("#depto").val();
+        var barrio = $("#barrio").val();
+        var cp = $("#cp").val();
+        var localidad = $("#localidad").val();
+        var provincia = $("#provincia").val();
+        var pais = $("#pais").val();
+        $.post("?option=Paciente&sub=domicilio&met=guardar",
+                {id_paciente: id_paciente, id_domicilio: id_domicilio,
+                    calle: calle, casa_nro: casa_nro, piso: piso,
+                    depto: depto, barrio: barrio, cp: cp,
+                    localidad: localidad, provincia: provincia,
+                    pais: pais
+                },
+        function(data) {
+            alert(data);
+            document.location.reload();
+        });
+//    alert(id_domicilio + id_paciente + calle + casa_nro + piso + depto + barrio + cp + localidad + provincia + pais);
+    });
+});
+
 
 $(function() {
     $("#agregarTerapiaPaciente").click(function() {
@@ -100,6 +128,7 @@ $(function() {
         });
     });
 });
+
 
 $(function() {
     $("#guardarObraSocialPaciente").click(function() {

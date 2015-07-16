@@ -29,10 +29,10 @@
                 <?php echo $paciente->getNro_doc(); ?>
             </td>
             <td>
-                <?php echo $paciente->getFecha_nac() . ' (' . $paciente->getEdad() .')'; ?>
+                <?php echo $paciente->getFecha_nac() . ' <span class="badge">' . $paciente->getEdad() .'</span>'; ?>
             </td>
             <td>
-                <?php echo $paciente->getDiagnostico(); ?>
+                <?php echo $paciente->getObjDiagnostico(); ?>
             </td>
 <!--            <td><img src="<?php echo $paciente->getFoto() ?>" class="foto_usuario_128"></td>-->
         </tr>

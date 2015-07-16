@@ -1,9 +1,12 @@
 <?php
 require_once MODS_PATH . 'Personal' . DS . 'Modelos' . DS . 'Personal.php';
+require_once MODS_PATH . 'ObrasSociales' . DS . 'Modelos' . DS . 'ObraSocial.php';
 require_once APP_PATH . 'Modelo.php';
 require_once 'Paciente.php';
 require_once 'ContactoPaciente.php';
 require_once 'DomicilioPaciente.php';
+require_once 'TerapiaPaciente.php';
+require_once 'DiagnosticoPaciente.php';
 require_once MODS_PATH . 'Terapias' . DS . 'Modelos' . DS . 'Terapia.php';
 
 /**
@@ -60,10 +63,12 @@ class Paciente_Modelos_indexModelo extends App_Modelo
         $resultado = array();
         if (is_array($lista) and count($lista) > 0) {
             foreach ($lista as $datos) {
-                $pac = new Paciente_Modelos_Paciente($datos);
-                $pac->setDomicilio($this->getDomicilioPaciente("id_paciente=" . $datos['id']));
-                $pac->setContactos($this->getContactosPaciente("id_paciente=" . $datos['id']));
-                $resultado[] = $pac;
+                $resultado[] = $this->_crearPaciente($datos);
+//                $pac = new Paciente_Modelos_Paciente($datos);
+//                $pac->setDomicilio($this->getDomicilioPaciente("id_paciente=" . $datos['id']));
+//                $pac->setContactos($this->getContactosPaciente("id_paciente=" . $datos['id']));
+//                $pac->setObjOSocialPaciente($this->getOSocialPaciente("idPaciente=" . $datos['id']));
+//                $resultado[] = $pac;
             }
         }
         return $resultado;
@@ -79,8 +84,11 @@ class Paciente_Modelos_indexModelo extends App_Modelo
         $pac = new Paciente_Modelos_Paciente($datos);
         $pac->setDomicilio($this->getDomicilioPaciente("id_paciente=" . $datos['id']));
         $pac->setContactos($this->getContactosPaciente("id_paciente=" . $datos['id']));
-        $pac->setFamilia($this->getFamiliaPaciente("id_paciente=" . $datos['id']));
-        $pac->setEducacion($this->getEducacionPaciente("id_paciente=" . $datos['id']));
+        $pac->setObjFamilia($this->getFamiliaPaciente("id_paciente=" . $datos['id']));
+        $pac->setObjEducacion($this->getEducacionPaciente("id_paciente=" . $datos['id']));
+        $pac->setObjOSocialPaciente($this->getOSocialPaciente("idPaciente=" . $datos['id']));
+        $pac->setObjTerapias($this->getTerpiasPaciente("idPaciente=" . $datos['id']));
+        $pac->setObjDiagnostico($this->getDiagnostico("id_paciente=" . $datos['id']));
         return $pac;
     }
     
@@ -96,6 +104,7 @@ class Paciente_Modelos_indexModelo extends App_Modelo
     
     public function _crearFamiliaPaciente($lista)
     {
+        require_once 'FamiliaPaciente.php';
         $resultado = array();
         if (is_array($lista) and count($lista) > 0) {
             foreach ($lista as $datos) {
@@ -117,6 +126,7 @@ class Paciente_Modelos_indexModelo extends App_Modelo
 
     public function _crearEducacionPaciente($datos)
     {
+        require_once 'EducacionPaciente.php';
         $resultado = new EducacionPaciente($datos);
         return $resultado;
     }
@@ -170,13 +180,16 @@ class Paciente_Modelos_indexModelo extends App_Modelo
      */
     public function getPacientesByOs($idOsocial)
     {
-        $sql = 'SELECT osPaciente.*, pacientes.* FROM cronos_paciente_os as osPaciente, 
-            cronos_pacientes as pacientes 
+        $sql = 'SELECT osPaciente.id, osPaciente.idPaciente, osPaciente.idOSocial,
+            osPaciente.nro_afiliado, osPaciente.pacos_observaciones, pacientes.* 
+            FROM cronos_paciente_os as osPaciente, cronos_pacientes as pacientes 
             WHERE osPaciente.idOSocial = ' . $idOsocial .
                 ' AND osPaciente.idPaciente = pacientes.id AND pacientes.eliminado = ' .
                 $this->_verEliminados . ' ORDER BY pacientes.apellidos, pacientes.nombres';
         $this->_db->setTipoDatos('Array');
         $this->_db->query($sql);
+//        echo '<pre>';
+//        var_dump($this->_db->fetchall());
         return $this->_crearPacientes($this->_db->fetchall());
     }
 
@@ -226,12 +239,46 @@ class Paciente_Modelos_indexModelo extends App_Modelo
         return $this->_crearPaciente($this->_db->fetchRow());
     }
     
+    /**
+     * Verifica que exista un paciente
+     * @param $where parametro de consulta
+     * @return boolean
+     */
+    public function existePaciente($where)
+    {
+        $retorno = false;
+        $sql = "SELECT * FROM cronos_pacientes WHERE $where";
+        $this->_db->setTipoDatos('Array');
+        $this->_db->query($sql);
+        if($this->_db->fetchRow()){
+            $retorno = true;
+        }
+        return $retorno;
+    }
+    
     public function getTerpias()
     {
         $sql = "SELECT * FROM cronos_terapias";
         $this->_db->setTipoDatos('Array');
         $this->_db->query($sql);
         return $this->_crearTerapias($this->_db->fetchall());
+    }
+    
+    public function getTerpiasPaciente($where)
+    {
+        $sql = "SELECT * FROM cronos_pacientes_terapia WHERE $where ";
+        $this->_db->setTipoDatos('Array');
+        $this->_db->query($sql);
+        return $this->_crearTerapiasPaciente($this->_db->fetchall());
+    }
+    
+    public function getDiagnostico($where)
+    {
+        $sql = "SELECT * FROM cronos_diagnosticos_pacientes WHERE $where ";
+        $this->_db->setTipoDatos('Array');
+        $this->_db->query($sql);
+        return $this->_crearDiagnosticoPaciente($this->_db->fetchRow());
+//        return 'Q90';
     }
 
     public function insertarPaciente(array $valores)
@@ -243,21 +290,35 @@ class Paciente_Modelos_indexModelo extends App_Modelo
     {
         return $this->_db->insert('cronos_domicilios_pacientes', $valores);
     }
+    
+    public function modificarDomicilioPaciente(array $valores,$condicion)
+    {
+        return $this->_db->editar('cronos_domicilios_pacientes', $valores, $condicion);
+    }
+    
+    public function insertarDiagnosticoPaciente(array $valores)
+    {
+        return $this->_db->insert('cronos_diagnosticos_pacientes', $valores);
+    }
 
     public function editarPaciente(array $valores, $condicion)
     {
         return $this->_db->editar('cronos_pacientes', $valores, $condicion);
     }
     
-    public function editarDomicilioPaciente(array $valores, $condicion)
+//    public function editarDomicilioPaciente(array $valores, $condicion)
+//    {
+//        return $this->_db->editar('cronos_domicilios_pacientes', $valores, $condicion);
+//    }
+    
+    public function editarDiagnosticoPaciente(array $valores, $condicion)
     {
-        return $this->_db->editar('cronos_domicilios_pacientes', $valores, $condicion);
+        return $this->_db->editar('cronos_diagnosticos_pacientes', $valores, $condicion);
     }
 
     public function eliminarPaciente($condicion)
     {
         return $this->_db->editar('cronos_pacientes', array('eliminado' => 1), $condicion);
-//        return $this->_db->eliminar('cronos_pacientes', $condicion);
     }
 
     /**
@@ -304,6 +365,29 @@ class Paciente_Modelos_indexModelo extends App_Modelo
         $this->_db->query($sql);
         return $this->_crearContactos($this->_db->fetchall());
     }
+    
+    public function getOSocialPaciente($where)
+    {
+        $this->_verEliminados = 0;
+        $sql = 'SELECT * FROM cronos_paciente_os WHERE eliminado = ' .
+                $this->_verEliminados . ' AND ' . $where . ' ORDER BY id';
+        $this->_db->setTipoDatos('Array');
+        $this->_db->query($sql);
+        $datosOSocial = $this->_db->fetchRow();
+//        $id = intval($datosOSocial['idOSocial']);
+//        $sql = 'SELECT * FROM cronos_obrassociales WHERE eliminado = ' .
+//                $this->_verEliminados . ' AND id = ' . $id . ' ORDER BY id';
+//        $this->_db->setTipoDatos('Array');
+//        $this->_db->query($sql);
+//        return $this->_crearOSocial($this->_db->fetchRow());
+        return $datosOSocial;
+    }
+    
+    private function _crearOSocial($oSocial)
+    {
+        $resultado = new ObrasSociales_Modelos_ObraSocial($oSocial);
+        return $resultado;
+    }
 
     private function _crearContactos($lista)
     {
@@ -324,6 +408,30 @@ class Paciente_Modelos_indexModelo extends App_Modelo
                 $resultado[] = new Terapias_Modelos_Terapia($datos);
             }
         }
+        return $resultado;
+    }
+    
+    private function _crearTerapiasPaciente($lista)
+    {
+        require_once MODS_PATH . 'Terapias' . DS . 'Modelos' . DS . 'IndexModelo.php';
+        $resultado = array();
+        if (is_array($lista) and count($lista) > 0) {
+            foreach ($lista as $datos) {
+//                print_r($datos);
+                $tp = new TerapiaPaciente($datos);
+                $terapiaModelo = new indexModelo();
+                $terapia = $terapiaModelo->getTerapia($datos['idTerapia']);
+                $tp->setTerapia($terapia['terapia']);
+                $resultado[] = $tp;
+            }
+        }
+        return $resultado;
+    }
+    
+    private function _crearDiagnosticoPaciente($lista)
+    {
+        $resultado = '';
+        $resultado = new DiagnosticoPaciente($lista);
         return $resultado;
     }
     

@@ -12,9 +12,9 @@ require_once 'TerapiaModelo.php';
 class TerapiaPaciente
 {
     protected $_id;
-    protected $_idPaciente;
+//    protected $_idPaciente;
     protected $_idTerapia;
-    protected $_idProfesional;
+//    protected $_idProfesional;
     protected $_sesiones;
     protected $_observaciones;
     protected $_eliminado;
@@ -37,10 +37,10 @@ class TerapiaPaciente
         return $this->_idTerapia;
     }
     
-    public function getIdProfesional()
-    {
-        return $this->_idProfesional;
-    }
+//    public function getIdProfesional()
+//    {
+//        return $this->_idProfesional;
+//    }
     
     public function getSesiones()
     {
@@ -66,15 +66,20 @@ class TerapiaPaciente
     {
         return $this->_terapia;
     }
+    
+    public function setTerapia($terapia)
+    {
+        $this->_terapia = $terapia;
+    }
 
     public function __construct($datos)
     {
-        $this->_id = $datos['pac'];
-        $this->_idPaciente = $datos['idPaciente'];
-        $this->_idProfesional = $datos['idProfesional'];
+        $this->_id = $datos['id'];
+//        $this->_idPaciente = $datos['idPaciente'];
+//        $this->_idProfesional = $datos['idProfesional'];
         $this->_profesional = $this->_getProfesional($datos['idProfesional']);
         $this->_idTerapia = $datos['idTerapia'];
-        $this->_terapia = $this->_getTerapia($this->_idTerapia);
+//        $this->_terapia = $this->_getTerapia($this->_idTerapia);
         $this->_sesiones = $datos['sesiones'];
         $this->_observaciones = $datos['observaciones'];
         if (isset($datos['eliminado'])){
@@ -101,7 +106,7 @@ class TerapiaPaciente
     private function _getProfesional($idProfesional)
     {
         $datos = new Paciente_Modelos_personalPacienteModelo();
-        $personal = new Personal($datos->getPersonal($idProfesional));
+        $personal = new Personal_Modelos_Personal($datos->getPersonal($idProfesional));
         return $personal;
     }
     

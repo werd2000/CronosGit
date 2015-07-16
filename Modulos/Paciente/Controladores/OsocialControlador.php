@@ -34,7 +34,7 @@ class Paciente_Controladores_OsocialControlador extends pacienteControlador
                     'idPaciente' => parent::getPostParam('idPaciente'),
                     'idOSocial' => parent::getPostParam('idObraSocial'),
                     'nro_afiliado' => parent::getPostParam('nroAfiliado'),
-                    'observaciones' => parent::getPostParam('observaciones')
+                    'pacos_observaciones' => parent::getPostParam('observaciones')
                         ), "id=" . parent::getPostParam('id'));
             } else {
                 $respuesta = 'nuevo';
@@ -42,7 +42,7 @@ class Paciente_Controladores_OsocialControlador extends pacienteControlador
                     'idPaciente' => parent::getPostParam('idPaciente'),
                     'idOSocial' => parent::getPostParam('idObraSocial'),
                     'nro_afiliado' => parent::getPostParam('nroAfiliado'),
-                    'observaciones' => parent::getPostParam('observaciones')
+                    'pacos_observaciones' => parent::getPostParam('observaciones')
                         ));
             }
 

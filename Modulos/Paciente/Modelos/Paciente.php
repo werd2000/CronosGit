@@ -1,17 +1,17 @@
 <?php
 require_once BASE_PATH . 'LibQ' . DS . 'SClases' . DS . 'Persona' . DS . 'Persona.php';
-require_once 'TerapiaModelo.php';
-require_once 'TerapiaPaciente.php';
-require_once 'FamiliaPaciente.php';
-require_once 'FamiliaModelo.php';
-require_once 'OsocialModelo.php';
-require_once 'ObraSocialPaciente.php';
-require_once 'PlanTratamientoModelo.php';
-require_once 'PlanTratamiento.php';
-require_once 'HTerapeuticaModelo.php';
-require_once 'HTerapeutica.php';
-require_once 'EducacionPacienteModelo.php';
-require_once 'EducacionPaciente.php';
+//require_once 'TerapiaModelo.php';
+//require_once 'TerapiaPaciente.php';
+//require_once 'FamiliaPaciente.php';
+//require_once 'FamiliaModelo.php';
+//require_once 'OsocialModelo.php';
+//require_once 'ObraSocialPaciente.php';
+//require_once 'PlanTratamientoModelo.php';
+//require_once 'PlanTratamiento.php';
+//require_once 'HTerapeuticaModelo.php';
+//require_once 'HTerapeutica.php';
+//require_once 'EducacionPacienteModelo.php';
+//require_once 'EducacionPaciente.php';
 require_once BASE_PATH . 'LibQ' . DS . 'SClases' . DS . 'Persona' . DS . 'Domicilio.php';
 
 /**
@@ -22,46 +22,66 @@ require_once BASE_PATH . 'LibQ' . DS . 'SClases' . DS . 'Persona' . DS . 'Domici
 class Paciente_Modelos_Paciente extends LibQ_Sclases_Persona_Persona
 {
     protected $_id;
-    protected $_diagnostico;
-    protected $_observaciones;
-    protected $_eliminado;
+//    protected $_observaciones;
+//    protected $_nro_afiliado;
+//    protected $_pacos_observaciones;
+//    protected $_eliminado = false;
     protected $_estado;
-//    protected $_objContactos;
     protected $_objTerapias;
-    protected $_objFamilia;
-    protected $_objOSocial;
-    protected $_objPlanTratamiento;
-    protected $_objHTerapeutica;
-    protected $_educacion;
+//    protected $_objFamilia;
+//    protected $_objOSocial;
+//    protected $_objPlanTratamiento;
+//    protected $_objHTerapeutica;
+    protected $_objEducacion;
+    protected $_objOSocialPaciente;
+    protected $_objDiagnostico;
     /**
      * Familia
      * @var array
      */
-    protected $_familia;
+//    protected $_familia;
 
     public function __construct($paciente=array())
     {
         parent::__construct($paciente);
         $this->_id = $paciente['id'];
-        $this->_diagnostico = $paciente['diagnostico'];
-        $this->_eliminado = $paciente['eliminado'];
-        $this->_observaciones = $paciente['observaciones'];
+//        $this->_diagnostico = $paciente['diagnostico'];
+//        $this->_eliminado = $paciente['eliminado'];
+//        $this->_observaciones = $paciente['observaciones'];
         $this->_estado = $paciente['estado'];
+//        if(isset($paciente['nro_afiliado'])){
+//            $this->_nro_afiliado = $paciente['nro_afiliado'];
+//        }
+//        if(isset($paciente['pacos_observaciones'])){
+//            $this->_pacos_observaciones = $paciente['pacos_observaciones'];
+//        }
     }
     
-    /**
-     * Estabece los datos del domicilio de la persona
-     * @param Array $domicilio
-     */
-    public function setDomicilio(DomicilioPaciente $domicilio)
+    public function setObjTerapias($datos)
     {
-        $this->_domicilio = $domicilio;
+        $this->_objTerapias = $datos;
     }
     
-    public function getDomicilio()
+    public function getObjTerapias()
     {
-        return $this->_domicilio;
+        return $this->_objTerapias;
     }
+    
+    public function getObjDiagnostico()
+    {
+        return $this->_objDiagnostico;
+    }
+    
+    public function setObjDiagnostico($datos)
+    {
+        $this->_objDiagnostico = $datos;
+    }
+
+
+//    public function getDomicilio()
+//    {
+//        return $this->_domicilio;
+//    }
     
 
     /**
@@ -84,10 +104,10 @@ class Paciente_Modelos_Paciente extends LibQ_Sclases_Persona_Persona
         return $this->_id;
     }
 
-    public function getDiagnostico()
-    {
-        return $this->_diagnostico;
-    }
+//    public function getDiagnostico()
+//    {
+//        return $this->_diagnostico;
+//    }
 
     public function getLocalidad()
     {
@@ -98,22 +118,16 @@ class Paciente_Modelos_Paciente extends LibQ_Sclases_Persona_Persona
     {
         return $this->_estado;
     }
-
-
-    /** Obtiene una colección de Terapias
-     * @return TerapiaPaciente 
-     */
-    private function _getTerapias()
-    {
-        $terapiaModelo = new Paciente_Modelos_terapiaModelo();
-        $datos = $terapiaModelo->getTerapias($this->_id);
-        return TerapiaPaciente::getTerapias($datos);
-    }
-
-    public function getTerapias()
-    {
-        return $this->_getTerapias();
-    }
+    
+//    public function getNro_afiliado()
+//    {
+//        return $this->_nro_afiliado;
+//    }
+    
+//    public function getPacos_observaciones()
+//    {
+//        return $this->_pacos_observaciones;
+//    }
 
     public function getEdad()
     {
@@ -137,28 +151,21 @@ class Paciente_Modelos_Paciente extends LibQ_Sclases_Persona_Persona
     {
         return $this->_familia;
     }
-
-    private function _getOSocial()
-    {
-        $oSocialModelo = new Paciente_Modelos_oSocialModelo();
-        $datos = $oSocialModelo->getOSocialPaciente($this->_id);
-        return new ObraSocialPaciente($datos);
-    }
     
-    public function getEducacion()
+    public function setObjOSocialPaciente($oSocial)
     {
-        $educacionModelo = new Paciente_Modelos_educacionPacienteModelo();
-        $datos = $educacionModelo->getEducacionPaciente($this->_id);
-        return new EducacionPaciente($datos);
+        $this->_objOSocialPaciente = $oSocial;
     }
 
     public function getOSocial()
     {
-        return $this->_getOSocial();
+        return $this->_objOSocialPaciente;
     }
 
     public function getPlanTratamiento()
     {
+        require_once 'PlanTratamientoModelo.php';
+        require_once 'PlanTratamiento.php';
         $planModelo = new planTratamientoModelo();
         $datos = $planModelo->getPlanTratamientoAnio($this->_id, date("Y"));
         return new PlanTratamiento($datos);
@@ -203,16 +210,21 @@ class Paciente_Modelos_Paciente extends LibQ_Sclases_Persona_Persona
      * Estabece los datos de educacion de la persona
      * @param Array $educacion
      */
-    public function setEducacion($educacion)
+    public function setObjEducacion($educacion)
     {
-        $this->_educacion = $educacion;
+        $this->_objEducacion = $educacion;
+    }
+    
+    public function getObjEducacion()
+    {
+        return $this->_objEducacion;
     }
     
     /**
      * Estabece el array de contactos de la persona
      * @param Array $familia
      */
-    public function setFamilia(Array $familia)
+    public function setObjFamilia(Array $familia)
     {
         $this->_familia = $familia;
     }

@@ -58,7 +58,7 @@ class Paciente_Modelos_personalPacienteModelo extends App_Modelo
         $this->_db->query($sql);
 //        print_r($this->_db->fetchall());
 //        return $this->_db->fetchall();
-        return Personal::getPersonal($this->_db->fetchall());
+        return Personal_Modelos_Personal::getPersonal($this->_db->fetchall());
     }
 
     public function getPersonal($id)

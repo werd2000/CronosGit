@@ -54,13 +54,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($this->datosTerapia as $terapia): ?>
-                        <tr id="<?php if ($terapia->getId()) echo $terapia->getId(); ?>"
+                    <?php foreach ($this->datosTerapia as $terapia){ ?>
+                        <tr <?php if ($terapia->getId()) echo "id=".$terapia->getId(); ?>
                             class="detalleDato">
-                            <td><?php if ($terapia->getIdTerapia()) echo $terapia->getTerapia(); ?></td>
+                            <td><?php // print_r($terapia->getProfesional());
+                            if ($terapia->getTerapia()){
+                                echo $terapia->getTerapia(); 
+                            }?></td>
                             <td>
                                 <?php
-                                if ($terapia->getIdProfesional() && $terapia->getIdProfesional() != '') {
+                                if (!is_null($terapia->getProfesional()->getId())) {
                                     echo $terapia->getProfesional();
                                 } else {
                                     echo '-';
@@ -97,7 +100,7 @@
                                 </a>
                             </td>
                         </tr>
-                    <?php endforeach ?>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>

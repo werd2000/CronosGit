@@ -30,6 +30,14 @@ class Paciente_Modelos_oSocialModelo extends App_Modelo
         $this->_db->query($sql);
         return $this->_db->fetchall();
     }
+    
+    public function obtenerOSocial($where)
+    {
+        $sql = "select * from cronos_obrassociales where " . $where . " AND eliminado = $this->_verEliminados";
+        $this->_db->setTipoDatos('Array');
+        $this->_db->query($sql);
+        return $this->_db->fetchRow();
+    }
 
     public function getOSocialPaciente($id)
     {

@@ -3,9 +3,10 @@
 require_once BASE_PATH . 'LibQ' . DS . 'Bd' . DS . 'Sql.php';
 require_once BASE_PATH . 'LibQ' . DS . 'jpgraph' . DS . 'src' . DS . 'jpgraph.php';
 require_once BASE_PATH . 'LibQ' . DS . 'jpgraph' . DS . 'src' . DS . 'jpgraph_bar.php';
-require_once BASE_PATH . 'LibQ' . DS . 'BarraHerramientas.php';
 require_once BASE_PATH . 'LibQ' . DS . 'ValidarFormulario.php';
 require_once MODS_PATH . 'Paciente' . DS . 'Modelos' . DS . 'IndexModelo.php';
+require_once 'BarraHerramientasPacientes.php';
+require_once 'BotonesPacientes.php';
 
 /**
  * Clase Paciente Controlador 
@@ -20,73 +21,10 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
     private $_datosOSocial;
     private $_listaSexos;
     private $_personal;
-    private $_listaProfesionales;
     private $_estadoPaciente = array('EVALUACION', 'ACTIVO');
-    private $_paramBotonNuevo = array(
-        'href' => '?option=Paciente&sub=index&cont=nuevo',
-        'classIcono' => 'icono-nuevo32',
-        'titulo' => 'Nuevo',
-        'class' => 'btn btn-primary'
-    );
-
-    /**
-     * Propiedad usada para configurar el boton ELIMINAR
-     * @var type Array
-     */
-    private $_paramBotonEliminar = array(
-        'href' => "\"javascript:void(0);\"",
-        'evento' => "onclick=\"javascript: submitbutton('Eliminar')\"",
-        'class' => 'btn btn-primary'
-    );
-
-    /**
-     * Propiedad usada para configurar el botón VOLVER
-     * @var type Array
-     */
-    private $_paramBotonVolver = array(
-        'href' => "javascript:history.back(1)",
-        'classIcono' => 'icono-volver32',
-        'titulo' => 'Volver',
-        'class' => 'btn btn-primary'
-    );
-
-    /**
-     * Propiedad usa para configurar el botón GUARDAR ALUMNO
-     * @var type Array
-     */
-    private $_paramBotonGuardar = array(
-        'href' => "\"javascript:void(0);\"",
-        'evento' => "onclick=\"javascript: submitbutton('Guardar')\"",
-        'class' => 'btn btn-primary'
-    );
-    private $_paramBotonInicio = array(
-        'href' => "?option=Index",
-        'classIcono' => 'icono-inicio32',
-        'titulo' => 'Inicio',
-        'class' => 'btn btn-primary'
-    );
-
-    /**
-     * Propiedad usada para configurar el botón LISTA
-     * @var type Array
-     */
-    private $_paramBotonLista = array(
-        'href' => 'index.php?option=Paciente&sub=index',
-        'classIcono' => 'icono-lista32',
-        'titulo' => 'Lista',
-        'class' => 'btn btn-primary'
-    );
-
-    /**
-     * Propiedad usada para configurar el botón LISTA
-     * @var type Array
-     */
-    private $_paramBotonDirTelefonico = array(
-        'href' => 'index.php?option=Paciente&sub=index&met=dirTelefonico',
-        'titulo' => 'Telef.',
-        'classIcono' => 'icono-dirTelefonico32',
-        'class' => 'btn btn-primary'
-    );
+    private $_arrayEscuelas = Array(array('id' => '0476','denominacion' => 'Pequeño Hogar' ));
+    private $_bt;
+    private $_bhp;
 
     /**
      * Constructor de la clase Index
@@ -102,6 +40,8 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         $this->_datosOSocial = $this->cargarModelo('osocial');
         $this->_personal = $this->cargarModelo('personalPaciente');
         $this->_listaSexos = array('VARON', 'MUJER');
+        $this->_bt = new BotonesPacientes();
+        $this->_bhp = new BarraHerramientasPacientes();
     }
 
     /**
@@ -112,20 +52,14 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
     {
         $this->isAutenticado();
         /** Barra de herramientas */
-        $bh = new LibQ_BarraHerramientas();
-        $bh->addBoton('DropDown', $this->_crearBotonImprimir());
-        $bh->addBoton('Telef', $this->_paramBotonDirTelefonico);
-        $bh->addBoton('Nuevo', $this->_paramBotonNuevo);
-        $bh->addBoton('Volver', $this->_paramBotonVolver);
-        $bh->addBoton('Inicio', $this->_paramBotonInicio);
-        $this->_vista->_barraHerramientas = $bh->render();
+//        $bh = new BarraHerramientasPacientes();
+        $this->_vista->_barraHerramientas = $this->_bhp->getBarraHerramientasIndex();
         $datos = $this->_paciente->getPacientes();
         $this->_vista->estadisticas = $this->_datosEstadistica($datos);
         $this->_vista->datos = $datos;
         /** Establezco el titulo */
         $this->_vista->titulo = 'Pacientes';
         $this->_vista->setVistaJs(array('lista_pacientes'));
-        /** Muestro la vista */
         $this->_vista->renderizar('index', 'paciente');
     }
 
@@ -136,197 +70,87 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
     {
         $this->isAutenticado();
         /** Barra de herramientas */
-        $bh = new LibQ_BarraHerramientas();
-        $bh->addBoton('Lista', $this->_paramBotonLista);
-        $bh->addBoton('Nuevo', $this->_paramBotonNuevo);
-        $bh->addBoton('Volver', $this->_paramBotonVolver);
-        $bh->addBoton('Inicio', $this->_paramBotonInicio);
-        $this->_vista->_barraHerramientas = $bh->render();
+        $bh = new BarraHerramientasPacientes();
+        $this->_vista->_barraHerramientas = $bh->getBarraHerramientasDirTelefonico();
         $datos = $this->_paciente->getPacientes();
         $this->_vista->datos = $datos;
         /** Establezco el titulo */
         $this->_vista->titulo = 'Directorio Telefónico de Pacientes';
         $this->_vista->setVistaJs(array('lista_telefonos'));
-        /** Muestro la vista */
         $this->_vista->renderizar('dirTelefonico', 'paciente');
+    }
+    
+    /**
+     * Método para listar los pacientes por obra social
+     */
+    public function listaOSocial()
+    {
+        $this->isAutenticado();
+        /** Barra de herramientas */
+        $bh = new BarraHerramientasPacientes();
+        $this->_vista->_barraHerramientas = $bh->getBarraHerramientasListaOSocial();
+        $datos = $this->_paciente->getPacientes();
+        foreach ($datos as $pac) {
+            $os = $pac->getOSocial();
+            $idOs = intval($os['idOSocial']);
+            $nos = $this->_datosOSocial->obtenerOSocial("id = $idOs");
+            $vista[$pac->getId()]=array(
+                'ayn' => $pac->getAyN(),
+                'os' => $nos['denominacion'],
+//                'observaciones' = $pac->getPacos_observaciones()
+            );
+        }
+        $this->_vista->listaOSociales = $this->_datosOSocial->getOSociales();
+        $this->_vista->datos = $vista;
+        $this->_vista->titulo = 'Directorio Pacientes por Obra Social';
+        $this->_vista->setVistaJs(array('lista_pacienteOSocial'));
+        $this->_vista->renderizar('pacienteOSocial', 'paciente');
     }
 
     public function nuevo()
     {
         $this->isAutenticado();
         parent::getLibreria('Fechas');
-//        Session::accesoEstricto(array('usuario'),true);
-        /** Barra de herramientas */
-        $bh = new LibQ_BarraHerramientas();
-        $bh->addBoton('Telef', $this->_paramBotonLista);
-        $bh->addBoton('Telef', $this->_paramBotonDirTelefonico);
-        $bh->addBoton('Nuevo', $this->_paramBotonNuevo);
-        $bh->addBoton('Volver', $this->_paramBotonVolver);
-        $bh->addBoton('Inicio', $this->_paramBotonInicio);
-        $this->_vista->_barraHerramientas = $bh->render();
-        /** Estado del paciente * */
+//        $bh = new BarraHerramientasPacientes();
+        $this->_vista->_barraHerramientas = $this->_bhp->getBarraHerramientasNuevo();
         $this->_vista->estadosPaciente = $this->_estadoPaciente;
         $this->_vista->titulo = 'Nuevo Paciente';
         $this->_vista->setVistaJs(array('validarNuevo', 'util'));
         $this->_vista->setJs(array('bootstrapValidator.min'));
         $this->_vista->listaSexos = $this->_listaSexos;
-
-        $this->_vista->datos = $_POST;
-
-        if (parent::getIntPost('guardar') == 1) {
-            if (!parent::getTextoPost('apellidos')) {
-                $this->_vista->_msj_error = 'Debe ingresar el apellido';
-                $this->_vista->renderizar('nuevo', 'paciente');
-                exit;
-            }
-
-            if (!parent::getTextoPost('nombres')) {
-                $this->_vista->_msj_error = 'Debe ingresar el nombre';
-                $this->_vista->renderizar('nuevo', 'paciente');
-                exit;
-            }
-
-            if (!parent::getTextoPost('nro_doc')) {
-                $this->_vista->_msj_error = 'Debe ingresar el número de documento';
-                $this->_vista->renderizar('nuevo', 'paciente');
-                exit;
-            }
-
-            $fecha_nac = parent::getPostParam('fecha_nac');
-
-            $newIdPaciente = $this->_paciente->insertarPaciente(array(
-                'estado' => parent::getPostParam('estado'),
-                'apellidos' => parent::getPostParam('apellidos'),
-                'nombres' => parent::getPostParam('nombres'),
-                'nacionalidad' => parent::getPostParam('nacionalidad'),
-                'tipo_doc' => parent::getIntPost('tipo_doc'),
-                'nro_doc' => parent::getPostParam('nro_doc'),
-                'sexo' => parent::getPostParam('sexo'),
-                'fecha_nac' => LibQ_Fecha::getFechaBd($fecha_nac),
-                'diagnostico' => parent::getPostParam('diagnostico')
-            ));
-            if ($newIdPaciente) {
-                $this->_msj_error = 'Datos Guardados';
-            } else {
-                $this->_msj_error = 'No se guardo';
-            }
-
-            if ($this->_paciente->insertarDomicilioPaciente(
-                            array(
-                                'id_paciente' => $newIdPaciente,
-                                'tipo_domicilio' => 'Real',
-                    ))) {
-                $this->_msj_error = 'Datos Guardados';
-            } else {
-                $this->_msj_error = 'No se guardo';
-            }
-
-            parent::redireccionar('option=Paciente');
+        $this->_vista->datos = $_POST;        
+        if ($this->getIntPost('guardar') == 1) {
+            $this->_guardar();
         }
         $this->_vista->renderizar('nuevo', 'Paciente');
     }
 
-    private function _crearBotonImprimir($id = null)
-    {
-        $fecha = new LibQ_Fecha();
-        if (intval($fecha->time_details->m) >= 12) {
-            $fechaImpresion = '01/' . intval($fecha->getAnio() + 1);
-        } else {
-            $fechaImpresion = $fecha->getMes() . '/' . $fecha->getAnio();
-        }
-        if ($id != null) {
-            $_paramBotonImprimir = array(
-                'class' => 'btn dropdown-toggle btn-primary',
-                'titulo' => 'Imprimir',
-                'classIcono' => 'icono-imprimir32 dropdown',
-                'children' => array(0 => $this->_botonNotaPedido($fechaImpresion, $id),
-                    1 => $this->_botonConstanciaRehabilitacion($id)),
-            );
-        } else {
-            $_paramBotonImprimir = array(
-                'class' => 'btn dropdown-toggle btn-primary',
-                'titulo' => 'Imprimir',
-                'classIcono' => 'icono-imprimir32 dropdown',
-                'children' => array(0 => $this->_botonNotaPedido($fechaImpresion, $id))
-            );
-        }
-        return $_paramBotonImprimir;
-    }
-
-    private function _botonNotaPedido($fechaImpresion, $id)
-    {
-        if ($id == null) {
-            $href_pedido = "index.php?option=pdf&sub=pedidosIps&getV=$fechaImpresion";
-        } else {
-            $href_pedido = "index.php?option=pdf&sub=pedidoIps&id=$id&getV=$fechaImpresion";
-        }
-        $retorno = array(
-            'titulo' => 'NOTA PEDIDO IPS',
-            'href' => $href_pedido,
-            'children' => Array(),
-        );
-        return $retorno;
-    }
-
-    private function _botonConstanciaRehabilitacion($id)
-    {
-        $retorno = array(
-                'titulo' => 'CONSTANCIA DE REHABILITACION',
-                'href' => "index.php?option=pdfphsrl&sub=constanciaAsistenciaRegular&id=$id",
-                'children' => Array(),
-        );
-        return $retorno;
-    }
-
+    
     public function editar($id)
     {
         $this->isAutenticado();
-//        parent::getLibreria('AjaxFileUploader.inc');
-        /** Barra de herramientas */
-        $bh = new LibQ_BarraHerramientas();
-        $bh->addBoton('DropDown', $this->_crearBotonImprimir($id));
-        $bh->addBoton('Telef', $this->_paramBotonLista);
-        $bh->addBoton('Telef', $this->_paramBotonDirTelefonico);
-        $bh->addBoton('Nuevo', $this->_paramBotonNuevo);
-        $bh->addBoton('Volver', $this->_paramBotonVolver);
-        $bh->addBoton('Inicio', $this->_paramBotonInicio);
-        $this->_vista->_barraHerramientas = $bh->render();
-
-        /** Si no viene id en el POST envío al Index */
-        if (!$this->filtrarInt($id)) {
-            $this->redireccionar('option=Paciente');
-        }
-
-        /** Si no encuentro el paciente envío al Index */
-        $idPac = $this->filtrarInt($id);
-        if (!$this->_paciente->getPaciente("id = " . $idPac)) {
-            $this->redireccionar('option=Paciente');
-        }
-        /** Establezco el título */
+        $this->_vista->_barraHerramientas = $this->_bhp->getBarraHerramientasEditar($id);
+        $idPac = $this->_controlId($id);
         $this->_vista->titulo = 'Editar Paciente';
-        /** Estado del paciente * */
         $this->_vista->estadosPaciente = $this->_estadoPaciente;
         /** Cargo los archivos js */
         $this->_vista->setJs(array('bootstrapValidator.min'), TRUE);
         $this->_vista->setVistaJs(array('validarNuevo', 'util', 'tag-it'));
         $this->_vista->setVistaJs(array('tinymce/tinymce.min', 'iniciarTinyMce'));
-
         /** Si el Post viene con guardar = 1 */
         if ($this->getIntPost('editar') == 1) {
             $this->_guardar();
+            $this->_guardarDiagnostico();
             $this->_guardarDomicilio();
-//            $this->redireccionar('?option=Paciente&sub=index&cont=editar&id='.$idPac);
         }
         /** Si no es para guardar lleno el form con datos de la bd */
         $paciente = $this->_paciente->getPaciente("id = " . $idPac);
         /** Envío los datos a la vista */
         $this->_vista->datos = $paciente;
         $this->_vista->domicilio = $paciente->getDomicilio();
-
         /** Envío los datos de Terapia */
         $this->_vista->listaTerapias = $this->_paciente->getTerpias();
-        $this->_vista->datosTerapia = $paciente->getTerapias();
-        //$this->_vista->up = $ajaxFileUploader->showFileUploader('if1');
+        $this->_vista->datosTerapia = $paciente->getObjTerapias();
         /** Envío los datos de Contacto */
         $this->_vista->datosContacto = $paciente->getContactos($this->filtrarInt($id));
         /** Envío los datos de Familia */
@@ -336,15 +160,23 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         $this->_vista->listaOSociales = $this->_datosOSocial->getOSociales();
         $this->_vista->listaSexos = $this->_listaSexos;
         $this->_vista->listaProfesionales = $this->_personal->getAlgunosPersonal(0, 0, 'apellidos', "personal.nomina='TERAPEUTAS' OR personal.nomina='DOCENTES'");
-//        $this->_vista->hTerapeutica = $paciente->getHTerapeuticas();
-        $this->_vista->datosEducacion = $paciente->getEducacion();
-        $this->_vista->listaEscuelas = Array(
-            array(
-                'id' => '0476',
-                'denominacion' => 'Pequeño Hogar'
-            )
-        );
+        $this->_vista->datosEducacion = $paciente->getObjEducacion();
+        $this->_vista->listaEscuelas = $this->_arrayEscuelas;
         $this->_vista->renderizar('editar', 'Paciente');
+    }
+    
+    private function _controlId($id)
+    {
+        /** Si no viene id en el POST envío al Index */
+        if (!$this->filtrarInt($id)) {
+            $this->redireccionar('option=Paciente');
+        }
+        /** Si no encuentro el paciente envío al Index */
+        $idPac = $this->filtrarInt($id);
+        if (!$this->_paciente->existePaciente("id = " . $idPac)) {
+            $this->redireccionar('option=Paciente');
+        }
+        return $idPac;
     }
 
     private function _guardar()
@@ -359,6 +191,7 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
             if (isset($datos['editar'])) {
                 $rtdo = $this->_paciente->editarPaciente($aGuardarPaciente, 'id=' . $aGuardarPaciente['id']);
             } else {
+                unset($aGuardarPaciente['id']);
                 $rtdo = $this->_paciente->insertarPaciente($aGuardarPaciente);
             }
             if ($rtdo) {
@@ -394,6 +227,24 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         }
         return $rtdo;
     }
+    
+    private function _guardarDiagnostico()
+    {
+        $rtdo = '';
+        $aGuardarDiagnostico = $this->_prepararDatosDiagnostico();
+            if (null != $aGuardarDiagnostico['id']) {
+                $idPac = $aGuardarDiagnostico['id_paciente'];
+                $rtdo = $this->_paciente->editarDiagnosticoPaciente($aGuardarDiagnostico, 'id_paciente=' . $idPac);
+            } else {
+                $rtdo = $this->_paciente->insertarDiagnosticoPaciente($aGuardarDiagnostico);
+            }
+            if ($rtdo) {
+                $this->_vista->_mensaje = 'DATOS_GUARDADOS';
+            } else {
+                $this->_vista->_mensaje = 'DATOS_DIAGNOSTICOS_NO_GUARDADOS';
+            }
+        return $rtdo;
+    }
 
     /**
      * Limpia los datos que vienen del Post
@@ -407,7 +258,6 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         $datos['apellidos'] = filter_input(INPUT_POST, 'apellidos', FILTER_SANITIZE_STRING);
         $datos['nombres'] = filter_input(INPUT_POST, 'nombres', FILTER_SANITIZE_STRING);
         $datos['nro_doc'] = filter_input(INPUT_POST, 'nro_doc', FILTER_SANITIZE_STRING);
-        $datos['diagnostico'] = filter_input(INPUT_POST, 'diagnostico', FILTER_SANITIZE_STRING);
         $datos['calle'] = filter_input(INPUT_POST, 'calle', FILTER_SANITIZE_STRING);
         $datos['casa_nro'] = filter_input(INPUT_POST, 'casa_nro', FILTER_SANITIZE_STRING);
         $datos['barrio'] = filter_input(INPUT_POST, 'barrio', FILTER_SANITIZE_STRING);
@@ -426,7 +276,7 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         $validar->ValidField($datos['apellidos'], 'text', 'El Apellido no es válido');
         $validar->ValidField($datos['nombres'], 'text', 'El Nombre no es válido');
         /* Domicilio */
-        $validar->ValidField($datos['calle'], 'text', 'La Calle no es válida');
+//        $validar->ValidField($datos['calle'], 'text', 'La Calle no es válida');
         return $validar;
     }
 
@@ -464,10 +314,20 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
         );
         return $datosPaciente;
     }
+    
+    private function _prepararDatosDiagnostico()
+    {
+        $datosDiagnostico = array(
+            'id_paciente' => parent::getPostParam('id'),
+            'id' => parent::getPostParam('id_diagnostico'),
+            'diagnostico' => parent::getPostParam('diagnostico')
+        );
+        return $datosDiagnostico;
+    }
 
     /**
      * Elimina los datos de un paciente
-     * @param type $id 
+     * @param int $id 
      */
     public function eliminar($id)
     {
@@ -476,15 +336,8 @@ class Paciente_Controladores_IndexControlador extends pacienteControlador
          */
 //        $this->_acl->acceso('eliminar_post');
 
-        if (!$this->filtrarInt($id)) {
-            $this->redireccionar('option=Paciente');
-        }
-
-        if (!$this->_paciente->getPaciente($this->filtrarInt($id))) {
-            $this->redireccionar('option=Paciente');
-        }
-
-        if ($this->_paciente->eliminarPaciente('id = ' . $this->filtrarInt($id)) > 0) {
+        $idPac = $this->_controlId($id);
+        if ($this->_paciente->eliminarPaciente('id = ' . $this->filtrarInt($idPac)) > 0) {
             $this->_msj_error = 'Datos Eliminados';
         } else {
             $this->_msj_error = 'No se pudo eliminar el registro';
