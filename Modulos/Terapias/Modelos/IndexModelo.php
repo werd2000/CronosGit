@@ -5,7 +5,7 @@ require_once 'Terapia.php';
 /**
  * Clase Modelo Terapias que extiende de la clase Modelo
  */
-class indexModelo extends Modelo
+class indexModelo extends App_Modelo
 {
 
     private $_verEliminados = false;
